@@ -30,10 +30,11 @@ define([
         "widgets/leftPanel/leftPanel",
         "dojo/query",
         "dojo/topic",
-        "dojo/on"
+        "dojo/on",
+        "dojo/dom-class"
 
     ],
-    function (declare, lang, dom, _WidgetBase, nls, portal, connect, Deferred, esriRequest, leftPanelContent, query, topic, on) {
+    function (declare, lang, dom, _WidgetBase, nls, portal, connect, Deferred, esriRequest, leftPanelContent, query, topic, on, domClass) {
 
         //========================================================================================================================//
 
@@ -44,6 +45,8 @@ define([
                 _self.createPortal().then(function () {
                     _self.queryGroup().then(function () {
                         topic.subscribe("queryGroupItem", dojo.hitch(_self._portal, _self.queryGroupForItems));
+                        topic.subscribe("queryItemInfo", dojo.hitch(_self._portal, _self.queryItemInfo));
+
                         topic.subscribe("signIn", lang.hitch(_self, _self.portalSignIn));
                         var leftPanelObj = new leftPanelCollection();
                     });
@@ -128,6 +131,12 @@ define([
                 if (obj) {
                     lang.mixin(settings, obj);
                 }
+                setTimeout(function () {
+                    if (query(".dijitDialogPaneContentArea")[0]) {
+                        query(".dijitDialogPaneContentArea")[0].childNodes[0].innerHTML = nls.signInDialogText;
+                    }
+                }, 800);
+                topic.publish("hideProgressIndicator");
                 // first, request the group to see if it's public or private
                 esriRequest({
                     // group rest URL
@@ -138,6 +147,7 @@ define([
                     callbackParamName: 'callback',
                     load: function (response) {
                         // sign-in flag
+                        //clearTimeout(stagedSearch);
                         var signInRequired = (response.access !== 'public') ? true : false;
                         // if sign-in is required
                         if (signInRequired) {
@@ -176,7 +186,6 @@ define([
             },
 
             queryGroupForItems: function (queryString, number, sortfields, sortorder, deferedObj, NextQuery) {
-                var _self = this;
                 var params;
                 if (!NextQuery) {
                     params = {
@@ -191,11 +200,23 @@ define([
                 }
                 this.queryItems(params).then(function (data) {
                     deferedObj.resolve(data);
-
                 });
                 return deferedObj;
             },
 
+            queryItemInfo: function (itemURL, defObj) {
+                esriRequest({
+                    url: itemURL,
+                    callbackParamName: "callback",
+                    load: function (data) {
+                        defObj.resolve(data);
+                    },
+                    error: function (e) {
+                        defObj.resolve();
+                    }
+                });
+                return defObj;
+            },
             portalSignIn: function (def) {
                 var _self = this;
                 if (!def) {
@@ -203,8 +224,11 @@ define([
                 }
                 _self._portal.signIn().then(function (loggedInUser) {
                     if (loggedInUser) {
+                        if (!dojo.configData.ApplicationSettings.token) {
+                            dojo.configData.ApplicationSettings.token = loggedInUser.credential.token;
+                        }
                         if (query(".esriCTSignIn")[0]) {
-                            query(".esriCTSignIn")[0].style.display = "none";
+                            domClass.add(query(".esriCTSignIn")[0], "displayNoneAll");
                         }
                         _self.globalUser = loggedInUser;
                         def.resolve();

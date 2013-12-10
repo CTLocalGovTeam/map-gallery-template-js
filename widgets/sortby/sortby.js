@@ -25,32 +25,56 @@ define([
         "dijit/_WidgetsInTemplateMixin",
         "dojo/i18n!nls/localizedStrings",
         "dojo/query",
+        "dojo/_base/lang",
         "dojo/topic",
         "dojo/Deferred",
-        "dojo/dom-construct"
+        "dojo/dom-construct",
+        "dojo/dom-class",
+        "dojo/dom-attr",
+        "dojo/on"
     ],
-    function (declare, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, query, topic, Deferred, domConstruct) {
+    function (declare, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, query, lang, topic, Deferred, domConstruct, domClass, domAttr, on) {
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
             nls: nls,
             postCreate: function () {
-                var sortByDate = true;
-                var _self = this;
-                this.sortByLabel.innerHTML = nls.sortByDateText;
-                this.sortByLabel.onclick = function () {
-                    if (sortByDate) {
-                        dojo.sortBy = "modified";
-                        _self._sortPodOrder(dojo.sortBy, this, nls.sortByViewText);
-                        sortByDate = false;
+                var flagSortByDate = true;
+                domAttr.set(this.sortByLabel, "innerHTML", nls.sortByDateText);
+                this.own(on(this.sortByLabel, "click", lang.hitch(this, function () {
+                    topic.publish("showProgressIndicator");
+                    if (flagSortByDate) {
+                        flagSortByDate = this._sortByDate(this.sortByLabel, flagSortByDate);
                     } else {
-                        dojo.sortBy = "numViews";
-                        _self._sortPodOrder(dojo.sortBy, this, nls.sortByDateText);
-                        sortByDate = true;
+                        flagSortByDate = this._sortByViews(this.sortByLabel, flagSortByDate);
                     }
-                }
+                })));
+                this.own(on(this.sortByViewMbl, "click", lang.hitch(this, function () {
+                    flagSortByDate = this._sortByViews(this.sortByLabel, flagSortByDate);
+                })));
+                this.own(on(this.sortByDateMbl, "click", lang.hitch(this, function () {
+                    flagSortByDate = this._sortByDate(this.sortByLabel, flagSortByDate);
+                })));
             },
 
-            _sortPodOrder: function (sortOrder, _self, text) {
+            _sortByDate: function (sortByLabel, flagSortByDate) {
+                dojo.sortBy = "modified";
+                this._sortPodOrder(dojo.sortBy, sortByLabel, nls.sortByViewText);
+                flagSortByDate = false;
+                domClass.remove(query(".tickmark")[0], "tickmark");
+                domClass.add(query(".sortByDateMbl")[0], "tickmark");
+                return flagSortByDate;
+            },
+
+            _sortByViews: function (sortByLabel, flagSortByDate) {
+                dojo.sortBy = "numViews";
+                this._sortPodOrder(dojo.sortBy, sortByLabel, nls.sortByDateText);
+                flagSortByDate = true;
+                domClass.remove(query(".tickmark")[0], "tickmark");
+                domClass.add(query(".sortByViewMbl")[0], "tickmark");
+                return flagSortByDate;
+            },
+
+            _sortPodOrder: function (sortOrder, sortByLabel, text) {
                 var numberOfItems;
                 if (dojo.configData.gridView) {
                     numberOfItems = 9;
@@ -60,7 +84,7 @@ define([
                 var defObj = new Deferred();
                 topic.publish("queryGroupItem", dojo.queryString, numberOfItems, sortOrder, "desc", defObj);
                 defObj.then(function (data) {
-                    _self.innerHTML = text;
+                    domAttr.set(sortByLabel, "innerHTML", text);
                     dojo.nextQuery = data.nextQueryParams;
                     dojo.prevQuery = null;
                     topic.publish("createPods", data.results);

@@ -26,9 +26,10 @@ define([
         "dijit/_TemplatedMixin",
         "dijit/_WidgetsInTemplateMixin",
         "dojo/query",
-        "dojo/dom-class"
+        "dojo/dom-class",
+        "dojo/dom-construct"
     ],
-    function (declare, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, domClass) {
+    function (declare, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, domClass, domConstruct) {
 
         //========================================================================================================================//
 
@@ -36,6 +37,9 @@ define([
             templateString: template,
             postCreate: function () {
                 this.own(on(this.settingsIcon, "click", lang.hitch(this, function () {
+                    if ((query(".esriCTSortByContainer")[0].children.length <= 0) && (query(".esriCTsortby")[0])) {
+                        domConstruct.place(query(".esriCTsortby")[0], query(".esriCTSortByContainer")[0]);
+                    }
                     this._slideLeftPanel();
                 })));
             },
@@ -48,11 +52,8 @@ define([
                     domClass.toggle(query(".esriCTInnerLeftPanelTop")[0], "esriCTShiftRight");
                 }
                 if (query(".esriCTInnerLeftPanelBottom")[0]) {
+                    domClass.remove(query(".esriCTInnerLeftPanelBottom")[0], "displayNone");
                     domClass.toggle(query(".esriCTInnerLeftPanelBottom")[0], "esriCTInnerLeftPanelBottomShift");
-
-                    if (domClass.contains(query(".esriCTInnerLeftPanelBottom")[0], "displayNone")) {
-                        domClass.replace(query(".esriCTInnerLeftPanelBottom")[0], "displayBlock", "displayNone");
-                    }
                 }
                 if (query(".esriCTSearchIcon")[0]) {
                     domClass.toggle(query(".esriCTSearchIcon")[0], "displayNone");
@@ -63,9 +64,7 @@ define([
                 }
                 if (query(".esriCTRightPanel")[0]) {
                     domClass.toggle(query(".esriCTRightPanel")[0], "esriCTShiftRight");
-                }
-                if (!domClass.contains(query(".esriCTInnerLeftPanelBottom")[0], "esriCTInnerLeftPanelBottomShift")) {
-                    domClass.replace(query(".esriCTInnerLeftPanelBottom")[0], "displayNone", "displayBlock");
+                    domClass.toggle(query(".esriCTRightPanel")[0], "esriCTShiftRightPanel");
                 }
 
                 if (query(".esriCTMenuTabLeft")[0]) {

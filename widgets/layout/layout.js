@@ -24,14 +24,17 @@ define([
         "dijit/_TemplatedMixin",
         "dijit/_WidgetsInTemplateMixin",
         "dojo/i18n!nls/localizedStrings",
+        "dojo/_base/lang",
         "dojo/Deferred",
         "dojo/dom-class",
         "dojo/dom-style",
         "dojo/topic",
         "dojo/query",
-        "dojo/dom-attr"
+        "dojo/dom-attr",
+        "dojo/dom-geometry",
+        "dojo/on"
     ],
-    function (declare, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, Deferred, domClass, domStyle, topic, query, domAttr) {
+    function (declare, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, lang, Deferred, domClass, domStyle, topic, query, domAttr, domGeom, on) {
 
         //========================================================================================================================//
 
@@ -39,20 +42,20 @@ define([
             templateString: template,
             nls: nls,
             postCreate: function () {
-                this.layoutLabel.innerHTML = nls.layoutText;
-                var _self = this;
-                this.toggleLayout.onclick = function () {
+                domAttr.set(this.layoutLabel, "innerHTML", nls.layoutText);
+                this.own(on(this.toggleLayout, "click", lang.hitch(this, function () {
+                    topic.publish("showProgressIndicator");
                     var numberOfItems;
                     if (!dojo.configData.gridView) {
                         dojo.configData.gridView = true;
                         numberOfItems = 9;
-                        domAttr.set(_self.layoutTitle, "title", nls.gridViewTitle);
-                        domClass.replace(_self.layoutTitle, "icon-grid", "icon-list");
+                        domAttr.set(this.layoutTitle, "title", nls.listViewTitle);
+                        domClass.replace(this.layoutTitle, "icon-list", "icon-grid");
                     } else {
                         dojo.configData.gridView = false;
                         numberOfItems = 4;
-                        domAttr.set(_self.layoutTitle, "title", nls.listViewTitle);
-                        domClass.replace(_self.layoutTitle, "icon-list", "icon-grid");
+                        domAttr.set(this.layoutTitle, "title", nls.gridViewTitle);
+                        domClass.replace(this.layoutTitle, "icon-grid", "icon-list");
                     }
                     var defObj = new Deferred();
                     topic.publish("queryGroupItem", dojo.queryString, numberOfItems, dojo.sortBy, "desc", defObj);
@@ -65,10 +68,12 @@ define([
                         } else {
                             domClass.replace(query(".pagination")[0], "displayBlockAll", "displayNoneAll");
                         }
+                        topic.publish("hideProgressIndicator");
                     }, function (err) {
                         alert(err.message);
+                        topic.publish("hideProgressIndicator");
                     });
-                }
+                })));
             }
         });
     });

@@ -1,211 +1,240 @@
-﻿@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (-webkit-min-device-pixel-ratio: 2) {
-    html, body {
+﻿@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (-webkit-min-device-pixel-ratio: 2)
+{
+    html, body
+    {
         font-size: 14px !important;
     }
 }
 
-@media only screen and (min-device-width : 641px) and (max-device-width : 1280px) {
+@media only screen and (min-device-width : 641px) and (max-device-width : 1280px)
+{
 
-    html, body {
+    html, body
+    {
         font-size: 14px !important;
     }
 
-    input {
+    input
+    {
         font-size: 14px !important;
     }
 
-    textarea {
+    textarea
+    {
         font-size: 14px !important;
     }
 
-    font {
-        font-family: Verdana !important;
+    font
+    {
+        font-family: 'Lato' ,sans-serif !important;
         font-size: 14px !important;
     }
 }
 
-@media screen and (min-width: 1080px) and (max-width: 1280px) {
-    html, body {
+@media screen and (min-width: 1024px) and (max-width: 1280px)
+{
+    html, body
+    {
         font-size: 14px !important;
     }
 
-    input {
+    input
+    {
         font-size: 14px !important;
     }
 
-    textarea {
+    textarea
+    {
         font-size: 14px !important;
     }
 
-    font {
-        font-family: Verdana !important;
+    font
+    {
+        font-family: 'Lato' ,sans-serif !important;
         font-size: 14px !important;
     }
 
-    .esriCTContentdiv {
+    .esriCTContentdiv
+    {
         width: 100% !important;
     }
 
-    .esriCTResetfilter {
+    .esriCTResetfilter
+    {
         font-size: 14px;
     }
 
-    .esriCTLeftPanel {
-        width: 35%;
-    }
 
-    .esriCTRightPanel {
-        width: 65%;
-    }
-
-    .esriCTListAppcontent {
+    .esriCTListAppcontent
+    {
         line-height: 16px;
     }
 
-    .esriCTApplicationBox {
-        padding: 0 5% 0 0;
+    .esriCTApplicationBox
+    {
+        margin: 0 5% 0 0;
     }
 }
 
-@media screen and (min-width: 768px) and (max-width: 1080px) {
-    html, body {
+@media screen and (min-width: 768px) and (max-width: 1024px)
+{
+    html, body
+    {
         font-size: 14px !important;
     }
 
-    input {
+    input
+    {
         font-size: 14px !important;
     }
 
-    textarea {
+    textarea
+    {
         font-size: 14px !important;
     }
 
-    font {
-        font-family: Verdana !important;
+    font
+    {
+        font-family: 'Lato' ,sans-serif !important;
         font-size: 14px !important;
     }
 
-    .esriCTContentdiv {
+    .esriCTContentdiv
+    {
         width: 100% !important;
     }
 
-    .esriCTResetfilter {
+    .esriCTResetfilter
+    {
         font-size: 14px;
     }
 
-    .esriCTSearch {
+    .esriCTSearch
+    {
         width: 180px;
     }
 
-    .esriCTSearchIcon {
+    .esriCTSearchIcon
+    {
         margin-left: 91%;
     }
 
-    .esriCTLeftPanel {
-        width: 35%;
-    }
-
-    .esriCTRightPanel {
-        width: 65%;
-    }
-
-    .esriCTListAppcontent {
+    .esriCTListAppcontent
+    {
         line-height: 16px;
     }
 
-    .esriCTautosuggest {
+    .esriCTautosuggest
+    {
         width: 180px;
     }
 
-    .esriCTApplicationBox {
-        padding: 0 5% 0 0;
+    .esriCTApplicationBox
+    {
+        margin: 0 4% 0 0;
     }
 }
 
-@media screen and (min-width: 641px) and (max-width:767px) {
-    html, body {
+@media screen and (min-width: 641px) and (max-width:767px)
+{
+    html, body
+    {
         font-size: 14px !important;
     }
 
-    input {
+    input
+    {
         font-size: 14px !important;
     }
 
-    textarea {
+    textarea
+    {
         font-size: 14px !important;
     }
 
-    font {
-        font-family: Verdana !important;
+    font
+    {
+        font-family: 'Lato' ,sans-serif !important;
         font-size: 14px !important;
     }
 
-    .esriCTContentdiv {
+    .esriCTContentdiv
+    {
         width: 100% !important;
     }
 
-    .esriCTResetfilter {
+    .esriCTResetfilter
+    {
         font-size: 14px;
     }
 
-    .esriCTSearch {
+    .esriCTSearch
+    {
         width: 150px;
     }
 
-    .esriCTSearchIcon {
+    .esriCTSearchIcon
+    {
         margin-left: 91%;
     }
 
-    .esriCTLeftPanel {
-        width: 35%;
-    }
-
-    .esriCTRightPanel {
-        width: 65%;
-    }
-
-    .esriCTListAppcontent {
+    .esriCTListAppcontent
+    {
         line-height: 16px;
     }
 
-    .esriCTautosuggest {
+    .esriCTautosuggest
+    {
         width: 150px;
     }
 
-    .esriCTApplicationBox {
+    .esriCTApplicationBox
+    {
         padding: 0 12% 0 0;
     }
+    .esriCTGalleryName
+    {
+        display: none;
+    }
 }
 
-@media screen and (min-width: 321px) and (max-width: 640px) {
-    html, body {
+@media screen and (min-width: 321px) and (max-width: 640px)
+{
+    html, body
+    {
         font-size: 14px !important;
         overflow-x: hidden;
         -webkit-text-size-adjust: none;
     }
 
-    font {
-        font-family: Verdana !important;
+    font
+    {
+        font-family: 'Lato' ,sans-serif !important;
         font-size: 14px;
     }
 
-    input {
+    input
+    {
         font-size: 14px !important;
     }
 
-    textarea {
+    textarea
+    {
         font-size: 14px !important;
     }
 
-    .esriCTContentdiv {
+    .esriCTContentdiv
+    {
         width: 100% !important;
     }
 
-    .esriCTMenuTabLeft {
+    .esriCTMenuTabLeft
+    {
         width: 100%;
     }
 
-    .esriCTSignIn {
+    .esriCTSignIn
+    {
         float: left;
         padding: 0 5px;
         position: absolute !important;
@@ -213,16 +242,19 @@
         top: 0px;
     }
 
-    .esriCTSignInIcon, .esriCTLayout, .esriCTSortViews {
+    .esriCTSignInIcon, .esriCTLayout, .esriCTSortViews
+    {
         display: none;
     }
 
-    .esriCTMenuTabRight {
+    .esriCTMenuTabRight
+    {
         width: 100%;
         height: 48px;
     }
 
-    .esriCTMenuIcon {
+    .esriCTMenuIcon
+    {
         background-position: right center;
         cursor: pointer;
         margin: 5px 0px 0 0;
@@ -230,7 +262,8 @@
         color: white;
     }
 
-    .esriCTInfoIcon {
+    .esriCTInfoIcon
+    {
         background-position: right center;
         float: right;
         cursor: pointer;
@@ -239,333 +272,416 @@
         color: white;
     }
 
-    .esriCTLeftPanel {
-        width: 100%;
+    .esriCTLeftPanel
+    {
+        max-width: 100% !important;
     }
-    /*
-        .esriCTInnerLeftPanelTop{border-left: 2px solid #007AC2;
-            margin-left: 45px;
-            padding: 0;
-            position: relative;
-            width: 90%;
-        	top:-48px;
-        	background:#ddd;
-        	}
-        .esriCTInnerLeftPanelBottom{border-right: 2px solid #007AC2;
-            margin-right: 45px;
 
-            position: relative;
-            width: 90%;
-        	top:-48px;
-        	background:#ddd;
-        	}
-        	*/
-    .esriCTPadding {
+    .esriCTPadding
+    {
         padding: 15px;
         clear: both;
     }
 
-    .esriCTInnerLeftPanelBottom {
+    .esriCTInnerLeftPanelBottom
+    {
         float: left;
         padding: 0;
     }
 
-    .esriCTInnerLeftPanelTop {
+    .esriCTInnerLeftPanelTop
+    {
         float: right;
         padding: 0;
     }
 
-    .esriCTListView {
+    .esriCTListView
+    {
         display: block;
     }
 
-    .esriCTGridView {
+    .esriCTGridView
+    {
         display: none;
     }
 
-    .esriCTAppIcon {
+    .esriCTAppIcon
+    {
         display: none;
     }
 
-    .esriCTAppTitle {
+    .esriCTAppTitle
+    {
         display: block;
     }
 
-    .esriCTGalleryNameCategories, .esriCTGalleryNameSample {
+    .esriCTGalleryNameCategories, .esriCTGalleryNameSample
+    {
         display: block;
-        padding: 0px 15px;
+        padding: 5px 15px;
         font-size: 24px;
+        background: #fff;
     }
 
-    .esriCTImageTopPanel {
+    .esriCTImageTopPanel
+    {
         background: none;
         border: none;
         width: 100%;
     }
 
-    .esriCTRightPanel {
+    .esriCTRightPanel
+    {
         width: 100%;
+        margin-left: 0px;
     }
 
-    .esriCTApplicationListBox {
+    .esriCTApplicationListBox
+    {
         padding-left: 10px !important;
         margin-bottom: 10px;
     }
 
-    .esriCTImageContainerList {
+    .esriCTImageContainerList
+    {
         width: 30%;
     }
 
-    .esriCTListContent {
+    .esriCTListContent
+    {
         padding-left: 0px;
         margin-left: 32%;
     }
 
-    .esriCTListMdfDate {
+    .esriCTListMdfDate
+    {
         display: none;
     }
 
-    .esriCTEyewatch {
+    .esriCTEyewatch
+    {
         clear: both;
         padding-left: 5px;
     }
 
-    .esriCTListAppcontent {
+    .esriCTListAppcontent
+    {
         border: none;
         line-height: 16px;
     }
 
-    .esriCTEyewatch span.eye {
+    .esriCTEyewatch span.eye
+    {
         padding-top: 3px;
     }
 
-    .esriCTText {
-        height: 40px;
+    .esriCTText
+    {
         overflow: hidden;
     }
 
-    .esriCTLogo {
+    .esriCTLogo
+    {
         /* float: left;*/
         padding: 15px 0 0 15px;
     }
 
-    .esriCTLeftText {
-        padding: 0 15px;
+    .esriCTLeftText
+    {
+        padding: 15px 15px;
     }
     /*input display*/
-    .esriCTSettinInfoMenu {
+    .esriCTSettinInfoMenu
+    {
         display: block;
         float: left;
         width: 10%;
     }
 
-    .esriCTSettinInfo {
+    .esriCTSettinInfo
+    {
         display: block;
         float: left;
         width: 12%;
     }
 
-    .esriCTSearchInput {
+    .esriCTSearchInput
+    {
         float: left;
         width: 78%;
         overflow: hidden;
         margin: 0px;
     }
 
-    .esriCTSearch {
+    .esriCTSearch
+    {
         width: 100% !important;
     }
 
     /*//input display*/
 
-    .esriCTDetailsLeftPanel {
+    .esriCTDetailsLeftPanel
+    {
+        float: left;
+        width: 60%;
+    }
+
+    .esriCTDetailsRightPanel
+    {
         float: left;
         width: 100%;
     }
 
-    .esriCTDetailsRightPanel {
-        float: left;
-        width: 100%;
-    }
-
-    .esriCTDetailLeftInfo {
+    .esriCTDetailLeftInfo
+    {
         display: none;
     }
 
-    .esriCTDetailsApplicationType {
-        padding: 4px;
-    }
-
-    .esriCTInnerLeftPanelTopMap {
+    .esriCTInnerLeftPanelTopMap
+    {
         display: none;
     }
 
-    .esriCTRightPanelmap {
+    .esriCTRightPanelmap
+    {
         display: none;
     }
 
-    .esriCTlegendLayer {
+    .esriCTlegendLayer
+    {
         margin-top: 1px;
     }
 
-    .esriCTCategoriesHead {
+    .esriCTCategoriesHead
+    {
         font-size: 14px;
         padding: 10px 0px;
     }
 
-    .esriCTsortby {
+    .esriCTsortby
+    {
         display: block;
         width: 100%;
         padding-top: 10px;
         font-size: 14px !important;
     }
 
-    .esriCTsorthead {
+    .esriCTsorthead
+    {
         padding: 0 0px 15px 15px;
     }
 
-    .esriCTSortMenu ul {
+    .esriCTSortMenu ul
+    {
         list-style: none;
         margin: 0;
         padding: 0;
     }
 
-    .esriCTSortMenu ul li {
+    .esriCTSortMenu ul li
+    {
         padding: 5px 15px;
         cursor: pointer;
     }
 
-    .esriCTShiftRight {
+    .esriCTShiftRight
+    {
         left: 90%;
         position: absolute;
         width: 10%;
         overflow: hidden;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
     }
 
-    .esriCTShiftLeft {
+    .esriCTShiftLeft
+    {
         position: absolute;
         right: 90%;
         overflow: hidden;
     }
 
-    .esriCTInnerLeftPanelBottomShift {
+    .esriCTInnerLeftPanelBottomShift
+    {
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
         width: 90%;
     }
 
-    .esriCTShiftLeftPanel {
+    .esriCTShiftLeftPanel
+    {
         position: absolute;
         left: 10%;
         width: 90%;
     }
 
-    .displayNone {
+    .displayNone
+    {
         display: none;
     }
 
-    .displayBlock {
+    .displayBlock
+    {
         display: block;
     }
 
-    .esriCTCategoriesMedia {
+    .esriCTCategoriesMedia
+    {
         float: left;
         padding-left: 15px;
     }
 
     /*leftpanel adsulte*/
-    .esriCTRightPanel {
+    .esriCTRightPanel
+    {
         position: absolute;
         height: 100%;
         z-index: 10;
     }
 
-    .esriCTInnerLeftPanelBottom {
+    .esriCTInnerLeftPanelBottom
+    {
         position: absolute;
         z-index: 9;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
     }
 
-    .esriCTInnerLeftPanelTop {
+    .esriCTInnerLeftPanelTop
+    {
         position: absolute;
         z-index: 8;
         left: -1px;
     }
 
-    .esriCTResetfilter {
+    .esriCTResetfilter
+    {
         font-size: 14px;
         padding-right: 15px;
         padding-top: 0px;
     }
 
-    .esriCTLeftHead {
-        padding: 5px 15px;
+    .esriCTLeftHead
+    {
+        padding: 15px 20px;
         margin-bottom: 10px;
     }
 
-    .blueTheme .esriCTListAppcontent {
+    .blueTheme .esriCTListAppcontent
+    {
         border: none;
     }
 
-    .esriCTAppImage {
+    .esriCTAppImage
+    {
         width: auto;
         height: 92px;
     }
 
-    .esriCTAppTitle {
+    .esriCTAppTitle
+    {
         width: 75%;
         display: none;
     }
 
-    .esriCTImageTopPanel {
+    .esriCTImageTopPanel
+    {
         background: none !important;
-        border: none;
+        border: none !important;
     }
 
-    .esriCTListAppcontent {
+    .esriCTListAppcontent
+    {
         margin-bottom: 5px;
     }
 
-    .esriCTautosuggest {
+    .esriCTautosuggest
+    {
         position: absolute;
-        top: 84px;
+        top: 82px;
         width: 77.6% !important;
         background: #fff;
         height: 100px;
         overflow: auto;
-        border-left: 1px solid #ededed;
-        border-right: 1px solid #ededed;
-        border-bottom: 1px solid #ededed;
+        border-left: 1px solid #007ac2;
+        border-right: 1px solid #007ac2;
+        border-bottom: 1px solid #007ac2;
         z-index: 100;
     }
+    .esriCTDetailsRightPanel
+    {
+        margin-left: 0px;
+        background: #fff;
+    }
+    .esriCTDetailsInnerRightPanel
+    {
+        padding: 25px;
+    }
+    .esriCTReviewContainer
+    {
+        padding: 15px 0px;
+    }
+    .esriCTDetailsMap
+    {
+        padding: 25px 25px 0 25px;
+    }
+    .esriCTDetailsMapImage
+    {
+        width: 100%;
+        height: 100%;
+    }
+    .esriCTDetailsApplicationType
+    {
+        margin-top: -21px;
+        right: -2px;
+    }
 }
-
-@media screen and (max-width: 320px) {
-    html, body {
+@media screen and (max-width: 320px)
+{
+    html, body
+    {
         overflow-x: hidden;
         font-size: 14px !important;
         -webkit-text-size-adjust: none;
     }
 
-    font {
-        font-family: Verdana !important;
+    font
+    {
+        font-family: 'Lato' ,sans-serif !important;
         font-size: 14px;
     }
 
-    input {
+    input
+    {
         font-size: 14px !important;
     }
 
-    textarea {
+    textarea
+    {
         font-size: 14px !important;
     }
 
-    .esriCTContentdiv {
+    .esriCTContentdiv
+    {
         width: 100% !important;
     }
 
-    .esriCTMenuTabLeft {
+    .esriCTMenuTabLeft
+    {
         width: 100%;
     }
 
-    .esriCTSignIn {
+    .esriCTSignIn
+    {
         float: left;
         padding: 0 0px;
         position: absolute !important;
@@ -573,16 +689,19 @@
         top: 0px;
     }
 
-    .esriCTSignInIcon, .esriCTLayout, .esriCTSortViews {
+    .esriCTSignInIcon, .esriCTLayout, .esriCTSortViews
+    {
         display: none;
     }
 
-    .esriCTMenuTabRight {
+    .esriCTMenuTabRight
+    {
         width: 100%;
         height: 48px;
     }
 
-    .esriCTMenuIcon {
+    .esriCTMenuIcon
+    {
         background-position: right center;
         cursor: pointer;
         margin: 5px 0px 0 0;
@@ -590,7 +709,8 @@
         color: white;
     }
 
-    .esriCTInfoIcon {
+    .esriCTInfoIcon
+    {
         background-position: right center;
         float: right;
         cursor: pointer;
@@ -599,364 +719,517 @@
         color: white;
     }
 
-    .esriCTLeftPanel {
-        width: 100%;
+    .esriCTLeftPanel
+    {
+        max-width: 100% !important;
     }
-    /*
-        .esriCTInnerLeftPanelTop{border-left: 2px solid #007AC2;
-            margin-left: 45px;
-            padding: 0;
-            position: relative;
-            width: 90%;
-        	top:-48px;
-        	background:#ddd;
-        	}
-        .esriCTInnerLeftPanelBottom{border-right: 2px solid #007AC2;
-            margin-right: 45px;
 
-            position: relative;
-            width: 90%;
-        	top:-48px;
-        	background:#ddd;
-        	}
-        	*/
-    .esriCTPadding {
+    .esriCTPadding
+    {
         padding: 15px;
         clear: both;
     }
 
-    .esriCTInnerLeftPanelBottom {
+    .esriCTInnerLeftPanelBottom
+    {
         float: left;
         padding: 0;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
     }
 
-    .esriCTInnerLeftPanelTop {
+    .esriCTInnerLeftPanelTop
+    {
         float: right;
         padding: 0;
     }
 
-    .esriCTListView {
+    .esriCTListView
+    {
         display: block;
     }
 
-    .esriCTGridView {
+    .esriCTGridView
+    {
         display: none;
     }
 
-    .esriCTAppIcon {
+    .esriCTAppIcon
+    {
         display: none;
     }
 
-    .esriCTAppTitle {
+    .esriCTAppTitle
+    {
         display: block;
     }
 
-    .esriCTGalleryNameCategories, .esriCTGalleryNameSample {
+    .esriCTGalleryNameCategories, .esriCTGalleryNameSample
+    {
         display: block;
-        padding: 0px 15px;
+        padding: 5px 15px;
         font-size: 24px;
+        background: #fff;
     }
 
-    .esriCTImageTopPanel {
+    .esriCTImageTopPanel
+    {
         background: none;
-        border: none;
+        border: none !important;
         width: 100%;
     }
 
-    .esriCTRightPanel {
+    .esriCTRightPanel
+    {
         width: 100%;
+        margin-left: 0px;
     }
 
-    .esriCTApplicationListBox {
+    .esriCTApplicationListBox
+    {
         padding-left: 10px !important;
         margin-bottom: 10px;
     }
 
-    .esriCTListContent {
+    .esriCTListContent
+    {
         padding-left: 0px;
         margin-left: 33%;
     }
 
-    .esriCTListMdfDate {
+    .esriCTListMdfDate
+    {
         display: none;
     }
 
-    .esriCTEyewatch {
+    .esriCTEyewatch
+    {
         clear: both;
         padding-left: 5px;
     }
 
-    .esriCTListAppcontent {
+    .esriCTListAppcontent
+    {
         border: none;
         line-height: 16px;
     }
 
-    .esriCTEyewatch span.eye {
+    .esriCTEyewatch span.eye
+    {
         padding-top: 3px;
     }
 
-    .esriCTText {
-        height: 40px;
+    .esriCTText
+    {
         overflow: hidden;
     }
 
-    .esriCTLogo {
-        /* float: left;*/
+    .esriCTLogo
+    {
         padding: 15px 0 0 15px;
     }
 
-    .esriCTLeftText {
-        padding: 0 15px;
+    .esriCTLeftText
+    {
+        padding: 15px 15px;
     }
     /*input display*/
-    .esriCTSettinInfoMenu {
+    .esriCTSettinInfoMenu
+    {
         display: block;
         float: left;
         width: 10%;
     }
 
-    .esriCTSettinInfo {
+    .esriCTSettinInfo
+    {
         display: block;
         float: left;
         width: 12%;
     }
 
-    .esriCTSearchInput {
+    .esriCTSearchInput
+    {
         float: left;
         width: 78%;
         overflow: hidden;
         margin: 0px;
     }
 
-    .esriCTSearch {
+    .esriCTSearch
+    {
         width: 100% !important;
     }
 
 
     /*//input display*/
-    .esriCTDetailsLeftPanel {
+    .esriCTDetailsLeftPanel
+    {
         float: left;
         width: 100%;
     }
 
-    .esriCTDetailsRightPanel {
+    .esriCTDetailsRightPanel
+    {
         float: left;
         width: 100%;
+        background: #fff;
     }
 
-    .esriCTDetailLeftInfo {
+    .esriCTDetailLeftInfo
+    {
         display: none;
     }
 
-    .esriCTDetailsApplicationType {
-        padding: 4px;
-    }
-
-    .esriCTInnerLeftPanelTopMap {
+    .esriCTInnerLeftPanelTopMap
+    {
         display: none;
     }
 
-    .esriCTRightPanelmap {
+    .esriCTRightPanelmap
+    {
         display: none;
     }
 
-    .esriCTlegendLayer {
+    .esriCTlegendLayer
+    {
         margin-top: 1px;
     }
 
-    .blueTheme .esriCTCategoriesHead {
+    .blueTheme .esriCTCategoriesHead
+    {
         font-size: 14px;
         padding: 10px 0px;
     }
 
-    .esriCTsortby {
+    .esriCTsortby
+    {
         display: block;
         width: 100%;
         padding-top: 10px;
     }
 
-    .esriCTsorthead {
+    .esriCTsorthead
+    {
         padding: 0 0px 15px 15px;
     }
 
-    .esriCTSortMenu ul {
+    .esriCTSortMenu ul
+    {
         list-style: none;
         margin: 0;
         padding: 0;
     }
 
-    .esriCTSortMenu ul li {
+    .esriCTSortMenu ul li
+    {
         padding: 5px 15px;
         cursor: pointer;
     }
 
-    .esriCTShiftRight {
+    .esriCTShiftRight
+    {
         position: absolute;
         left: 86%;
         width: 14%;
         overflow: hidden;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
     }
 
-    .esriCTShiftLeft {
+    .esriCTShiftLeft
+    {
         position: absolute;
         right: 86%;
         overflow: hidden;
     }
 
-    .esriCTInnerLeftPanelBottomShift {
+    .esriCTInnerLeftPanelBottomShift
+    {
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
         width: 86%;
     }
 
-    .esriCTShiftLeftPanel {
+    .esriCTShiftLeftPanel
+    {
         position: absolute;
         left: 14%;
         width: 86%;
     }
 
-    .displayNone {
+    .displayNone
+    {
         display: none;
     }
 
-    .displayBlock {
+    .displayBlock
+    {
         display: block;
     }
 
-    .esriCTCategoriesMedia {
+    .esriCTCategoriesMedia
+    {
         float: left;
         padding-left: 15px;
     }
 
     /*leftpanel adsulte*/
-    .esriCTRightPanel {
+    .esriCTRightPanel
+    {
         position: absolute;
         height: 100%;
         z-index: 10;
     }
 
-    .esriCTInnerLeftPanelBottom {
+    .esriCTInnerLeftPanelBottom
+    {
         position: absolute;
         z-index: 9;
     }
 
-    .esriCTInnerLeftPanelTop {
+    .esriCTInnerLeftPanelTop
+    {
         position: absolute;
         z-index: 8;
         left: -1px;
     }
 
-    .esriCTResetfilter {
+    .esriCTResetfilter
+    {
         font-size: 14px;
         padding-right: 15px;
         padding-top: 0px;
     }
 
-    .esriCTLeftHead {
-        padding: 5px 15px;
+    .esriCTLeftHead
+    {
+        padding: 15px 20px;
         margin-bottom: 10px;
     }
 
-    .blueTheme .esriCTListAppcontent {
+    .blueTheme .esriCTListAppcontent
+    {
         border: none;
         padding: 0px;
     }
 
-    .esriCTAppImage {
+    .esriCTAppImage
+    {
         width: auto;
         height: 54px;
     }
 
-    .esriCTAppTitle {
+    .esriCTAppTitle
+    {
         width: 75%;
         display: none;
     }
 
-    .esriCTImageTopPanel {
+    .esriCTImageTopPanel
+    {
         background: none !important;
         border: none !important;
     }
 
-    .esriCTAppListTitle {
+    .esriCTAppListTitle
+    {
         margin: 0px;
     }
 
-    .esriCTImageContainerList {
+    .esriCTImageContainerList
+    {
         width: 30%;
     }
 
-    .esriCTautosuggest {
+    .esriCTautosuggest
+    {
         position: absolute;
         top: 84px;
         width: 77% !important;
         background: #fff;
         height: 100px;
         overflow: auto;
-        border-left: 1px solid #ededed;
-        border-right: 1px solid #ededed;
-        border-bottom: 1px solid #ededed;
+        border-left: 1px solid #007ac2;
+        border-right: 1px solid #007ac2;
+        border-bottom: 1px solid #007ac2;
         z-index: 100;
     }
 
-    .esriCTListAppcontent {
+    .esriCTListAppcontent
+    {
         margin-bottom: 5px;
     }
 
-    .esriCTApplicationType {
+    .esriCTApplicationType
+    {
         margin-top: -1px;
         width: 100%;
         padding: 2px 0px;
     }
+    .esriCTDetailsInnerRightPanel
+    {
+        padding: 25px;
+    }
+    .esriCTComments div
+    {
+        clear: both;
+    }
+    .esriCTReviewContainer
+    {
+        padding: 15px 0px;
+    }
+    .esriCTDetailsRightPanel
+    {
+        margin-left: 0px;
+        background: #fff;
+    }
+    .esriCTDetailsMap
+    {
+        padding: 25px 25px 0 25px;
+    }
+    .esriCTDetailsMapImage
+    {
+        width: inherit;
+        height: inherit;
+    }
+    .esriCTDetailsApplicationType
+    {
+        margin-top: -21px;
+        right: -2px;
+    }
+
 }
 
-@media screen and (max-width: 240px) {
-    .esriCTSettinInfoMenu {
+@media screen and (max-width: 240px)
+{
+    .esriCTSettinInfoMenu
+    {
         display: block;
         float: left;
         width: 10%;
     }
 
-    .esriCTSettinInfo {
+    .esriCTSettinInfo
+    {
         display: block;
         float: left;
         width: 12%;
     }
 
-    .esriCTSearchInput {
+    .esriCTSearchInput
+    {
         float: left;
         width: 78%;
         overflow: hidden;
         margin: 0px;
     }
 
-    .esriCTSearch {
+    .esriCTSearch
+    {
         width: 100% !important;
     }
 
-    .esriCTInfoIcon {
+    .esriCTInfoIcon
+    {
         font-size: 20px;
     }
 
-    .esriCTMenuIcon {
+    .esriCTMenuIcon
+    {
         font-size: 16px;
     }
 
-    .esriCTAppImage {
+    .esriCTAppImage
+    {
         height: 41px;
     }
 
-    .esriCTautosuggest {
+    .esriCTautosuggest
+    {
         position: absolute;
         top: 84px;
         width: 77% !important;
         background: #fff;
         height: 100px;
         overflow: auto;
-        border-left: 1px solid #ededed;
-        border-right: 1px solid #ededed;
-        border-bottom: 1px solid #ededed;
+        border-left: 1px solid #007ac2;
+        border-right: 1px solid #007ac2;
+        border-bottom: 1px solid #007ac2;
         z-index: 100;
     }
 
-    .esriCTGalleryName {
+    .esriCTGalleryName
+    {
         font-size: 18px;
+    }
+
+    .esriCTDetailsRightPanel
+    {
+        margin-left: 0px;
+        background: #fff;
+    }
+
+    .esriCTDetailsInnerRightPanel
+    {
+        padding: 15px;
+    }
+
+    .esriCTComments div
+    {
+        clear: both;
+    }
+
+    .esriCTReviewContainer
+    {
+        padding: 15px 0px;
+    }
+
+    .esriCTDetailsMap
+    {
+        padding: 15px 15px 0 15px;
+    }
+
+    .esriCTDetailsMapImage
+    {
+        width: inherit;
+        height: inherit;
+    }
+
+    .esriCTDetailsApplicationType
+    {
+        margin-top: -21px;
+        right: -2px;
+    }
+}
+@media screen and (max-width: 480px)
+{
+    #dijit_Dialog_0
+    {
+        width: 196px !important;
+    }
+
+    .dijitDialogTitleBar:
+    {
+        width: 100% !important;
+    }
+
+    .dijitDialogPaneContent
+    {
+        width: 180px !important;
+    }
+
+    #widget_dijit_form_ValidationTextBox_0
+    {
+        width: 99% !important;
     }
 }

@@ -28,16 +28,17 @@ define([
         "dojo/query",
         "dojo/dom-class"
     ],
-    function (declare, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,  query, domClass) {
+    function (declare, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, domClass) {
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
             postCreate: function () {
-                var _self = this;
                 this.own(on(this.infoIcon, "click", lang.hitch(this, function () {
-                    _self._slideRightPanel();
+                    this._slideRightPanel();
                 })));
             },
+
             _slideRightPanel: function () {
+                domClass.add(query(".esriCTInnerLeftPanelBottom")[0], "displayNone");
                 if (query(".esriCTMenuTab")[0]) {
                     domClass.toggle(query(".esriCTMenuTab")[0], "esriCTShiftLeft");
                 }
@@ -46,6 +47,10 @@ define([
                 }
                 if (query(".esriCTLeftPanel")[0]) {
                     domClass.toggle(query(".esriCTLeftPanel")[0], "esriCTShiftLeftPanel");
+                }
+                if (query(".esriCTSearchIcon")[0]) {
+                    domClass.toggle(query(".esriCTSearchIcon")[0], "displayNone");
+                    domClass.toggle(query(".esriCTSearchItemInput")[0], "displayNone");
                 }
                 if (domClass.contains(query(".esriCTRightPanel")[0], "esriCTShiftLeft")) {
                     domClass.replace(query(".esriCTInnerLeftPanelTop")[0], "displayBlock", "displayNone");

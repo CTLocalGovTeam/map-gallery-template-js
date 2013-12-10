@@ -28,9 +28,13 @@ define([
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
         "dijit/_WidgetsInTemplateMixin",
-        "dojo/i18n!nls/localizedStrings"
+        "dojo/query",
+        "dojo/on",
+        "dojo/i18n!nls/localizedStrings",
+        "dojo/dom-class",
+        "dojo/topic"
     ],
-    function (declare, domConstruct, lang, array, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls) {
+    function (declare, domConstruct, lang, array, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, on, nls, domClass, topic) {
 
         //========================================================================================================================//
 
@@ -47,7 +51,8 @@ define([
             * @name widgets/appHeader/appHeader
             */
             postCreate: function () {
-
+                topic.subscribe("showProgressIndicator", lang.hitch(this, this.showProgressIndicator));
+                topic.subscribe("hideProgressIndicator", lang.hitch(this, this.hideProgressIndicator));
                 /**
                 * add applicationHeaderParentContainer to div for header panel and append to esriCTParentDivContainer container
                 *
@@ -96,6 +101,7 @@ define([
             * @memberOf widgets/appHeader/appHeader
             */
             _loadApplicationHeaderIcon: function () {
+                topic.publish("showProgressIndicator");
                 this._loadIcons("shortcut icon", dojo.configData.ApplicationFavicon);
                 this._loadIcons("apple-touch-icon-precomposed", dojo.configData.ApplicationIcon);
                 this._loadIcons("apple-touch-icon", dojo.configData.ApplicationIcon);
@@ -105,7 +111,20 @@ define([
                 * @private
                 * @memberOf widgets/appHeader/appHeader
                 */
-                this.applicationHeaderIcon.src = dojoConfig.baseURL + dojo.configData.ApplicationIcon;
+                domAttr.set(this.applicationHeaderIcon, "src", dojoConfig.baseURL + dojo.configData.ApplicationIcon);
+                this.own(on(this.applicationHeaderIcon, "click", lang.hitch(this, function () {
+                    if (query(".esriCTitemDetails")[0]) {
+                        dojo.destroy(query(".esriCTitemDetails")[0]);
+                        domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");
+                    }
+                    if (query(".esriCTDetailsLeftPanel")[0]) {
+                        domClass.add(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
+                        domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
+                        domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
+                        domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");
+                        domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
+                    }
+                })));
             },
             _loadIcons: function (rel, iconPath) {
                 var icon = domConstruct.create("link");
@@ -113,6 +132,14 @@ define([
                 icon.type = "image/x-icon";
                 icon.href = dojoConfig.baseURL + iconPath;
                 document.getElementsByTagName('head')[0].appendChild(icon);
+            },
+
+            showProgressIndicator: function () {
+                domClass.replace(this.divLoadingIndicator, "displayBlockAll", "displayNoneAll");
+            },
+
+            hideProgressIndicator: function () {
+                domClass.replace(this.divLoadingIndicator, "displayNoneAll", "displayBlockAll");
             }
         });
     });

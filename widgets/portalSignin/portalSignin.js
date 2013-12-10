@@ -30,9 +30,10 @@ define([
         "dojo/query",
         "widgets/leftPanel/leftPanel",
         "dojo/on",
-        "dojo/dom-construct"
+        "dojo/dom-construct",
+        "dojo/dom-attr"
     ],
-    function (declare, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, topic, lang, Deferred, nls, query, leftPanelContent, on, domConstruct) {
+    function (declare, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, topic, lang, Deferred, nls, query, leftPanelContent, on, domConstruct, domAttr) {
 
         //========================================================================================================================//
 
@@ -40,7 +41,7 @@ define([
             templateString: template,
             nls: nls,
             postCreate: function () {
-                this.signInLabel.innerHTML = nls.signInText;
+                domAttr.set(this.signInLabel, "innerHTML", nls.signInText);
                 this.own(on(this.signInContainer, "click", lang.hitch(this, function () {
                     var defObj = new Deferred();
                     topic.publish("signIn", defObj);

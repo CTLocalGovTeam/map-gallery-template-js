@@ -30,9 +30,11 @@ define([
         "dojo/Deferred",
         "dojo/dom-construct",
         "dojo/topic",
-        "dojo/dom-class"
+        "dojo/dom-class",
+        "dojo/query",
+        "dojo/dom-geometry"
     ],
-    function (declare, domStyle, domAttr, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Deferred, domConstruct, topic, domClass) {
+    function (declare, domStyle, domAttr, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Deferred, domConstruct, topic, domClass, query, domGeom) {
 
         //========================================================================================================================//
 
@@ -82,8 +84,11 @@ define([
                 this.own(on(this.txtItemSearch, "dblclick", lang.hitch(this, function (evt) {
                     this._clearDefaultText(evt);
                 })));
-                this.own(on(this.divAddressContainer, "blur", lang.hitch(this, function () {
+                this.own(on(this.divAddressContainer, "blur", lang.hitch(this, function (evt) {
                     domClass.replace(this.autoResults, "displayNoneAll", "displayBlockAll");
+                })));
+                this.own(on(this.hideText, "click", lang.hitch(this, function (evt) {
+                    this._hideText();
                 })));
             },
             /**
@@ -128,7 +133,6 @@ define([
                                     * before the timeout
                                     */
                                     this.stagedSearch = setTimeout(function () {
-
                                         _self._locateItems(_self.autoResults);
                                     }, 500);
                                 }
@@ -142,17 +146,41 @@ define([
                 }
             },
 
+            _hideText: function () {
+                this.txtItemSearch.value = dojo.configData.LocatorSettings.itemsLocator[0].LocatorDefaultAddress;
+                this.lastSearchString = lang.trim(this.txtItemSearch.value);
+                if (domGeom.position(this.autoResults).h > 0) {
+                    domClass.replace(this.autoResults, "displayNoneAll", "displayBlockAll");
+                }
+                topic.publish("clearFilter");
+            },
+
             _locateItems: function (node) {
                 var _self = this;
                 var defObj = new Deferred();
-                topic.publish("queryGroupItem", this.txtItemSearch.value + ' AND group:("' + dojo.configData.ApplicationSettings.group + '")', 100, "numViews", "desc", defObj);
+                topic.publish("queryGroupItem", "%" + this.txtItemSearch.value + "%" + ' AND group:("' + dojo.configData.ApplicationSettings.group + '")', 100, "numViews", "desc", defObj);
                 defObj.then(function (data) {
                     domConstruct.empty(_self.autoResults);
                     if (data.results.length > 0) {
                         domClass.replace(_self.autoResults, "displayBlockAll", "displayNoneAll");
                         for (var i in data.results) {
-                            var spanResults = domConstruct.create('div', { "innerHTML": data.results[i].title }, node);
-                            _self.own(on(spanResults, "click", function () {
+                            this.spanResults = domConstruct.create('div', { "innerHTML": data.results[i].title }, node);
+                            domAttr.set(this.spanResults, "searchedItem", data.results[i].id);
+                            _self.own(on(this.spanResults, "click", function () {
+                                var itemId = domAttr.get(this, "searchedItem");
+                                var numberOfItems;
+                                if (dojo.configData.gridView) {
+                                    numberOfItems = 9;
+                                } else {
+                                    numberOfItems = 4;
+                                }
+                                var defObj = new Deferred();
+                                dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (id: ("' + itemId + '"))';
+                                topic.publish("queryGroupItem", dojo.queryString, numberOfItems, dojo.sortBy, "desc", defObj);
+                                defObj.then(function (data) {
+                                    topic.publish("createPods", data.results);
+                                    domClass.replace(query(".pagination")[0], "displayNoneAll", "displayBlockAll");
+                                });
                                 domAttr.set(_self.txtItemSearch, "value", this.innerHTML);
                                 domAttr.set(_self.txtItemSearch, "defaultItem", this.innerHTML);
                                 domConstruct.empty(_self.autoResults);

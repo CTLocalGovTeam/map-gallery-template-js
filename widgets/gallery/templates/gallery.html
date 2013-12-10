@@ -1,10 +1,77 @@
-﻿<div data-dojo-attach-point="galleryView" class="esriCTRightPanel">
+﻿<div data-dojo-attach-point="galleryView" class="esriCTRightPanel esriCTShiftRightPanel">
     <div class="esriCTInnerRightPanel">
         <div data-dojo-attach-point="itemPodsList" class="esriCTListView">
         </div>
         <div class="pagination">
-                <span data-dojo-attach-point="galleryPrevious" class="icon-left-open-big icon-arrow"><a></a></span>
-                <span  data-dojo-attach-point="galleryNext" class="icon-right-open-big icon-arrow"><a></a></span>
-         </div>
+            <div data-dojo-attach-point="galleryPrevious" class="icon-left-open-big icon-arrowLeft">
+                <a></a>
+            </div>
+            <div data-dojo-attach-point="galleryNext" class="icon-right-open-big icon-arrowRight">
+                <a></a>
+            </div>
+        </div>
+    </div>
+    <div data-dojo-attach-point="detailsLeftPanel" class="esriCTDetailsLeftPanel displayNoneAll">
+        <div class="esriCTDetailsMap">
+            <div class="esriCTDetailsMapImage">
+                <img data-dojo-attach-point="appThumbnail" />
+            </div>
+            <div data-dojo-attach-point="appTypeTag" class="esriCTDetailsApplicationType">
+            </div>
+        </div>
+        <div class="esriCTDetailLeftInfo">
+            <div class="divclear">
+                <div class="esriCTDetailsleftLbl">
+                    ${nls.appCategoryText}</div>
+                <div data-dojo-attach-point="itemCategory" class="esriCTDetailsleftxt">
+                </div>
+            </div>
+            <div class="divclear">
+                <div class="esriCTDetailsleftLbl">
+                    ${nls.appTypeText}</div>
+                <div data-dojo-attach-point="applicationType" class="esriCTDetailsleftxt">
+                </div>
+            </div>
+            <div class="divclear">
+                <div class="esriCTDetailsleftLbl">
+                    ${nls.appOwnerText}</div>
+                <div data-dojo-attach-point="itemSubmittedBy" class="esriCTDetailsleftxt">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-dojo-attach-point="detailsRightPanel" class="esriCTDetailsRightPanel displayNoneAll">
+        <div class="esriCTDetailsInnerRightPanel">
+            <div class="esriCTDetalsListView">
+                <div class="esriCTDetalsApplicationListBox">
+                    <div data-dojo-attach-point="detailsListContent" class="esriCTDetailsListContent">
+                        <div class="esriCTAppListTitle">
+                            <div class="esriCTAppListTitleRight">
+                                <div class="divclear">
+                                    <div data-dojo-attach-point="appTitle" class="esriCTListAppTitle">
+                                    </div>
+                                </div>
+                                <div class="esriCTComments">
+                                    <div data-dojo-attach-point="ratingsContainer" class="esriCTRatings">
+                                    </div>
+                                    <div data-dojo-attach-point="numOfCommentsViews">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="esriCTListAppcontent">
+                            <div data-dojo-attach-point="itemSnippet" class="esriCTAppHeadlineInner">
+                            </div>
+                            <div class="esriCTTryitnow">
+                                <a data-dojo-attach-point="btnTryItNow" class="esriCTbtn esriCTbtnTryitnow esriCTbtnPrimary">
+                                </a>
+                            </div>
+                        </div>
+                        <div data-dojo-attach-point="detailsContent" class="esriCTDetailsListContent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

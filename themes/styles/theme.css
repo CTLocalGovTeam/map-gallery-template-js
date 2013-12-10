@@ -1,8 +1,8 @@
 ﻿body
 {
     background: #fff;
-    font-family: Verdana;
-    font-size: 11px;
+    font-family: 'Lato' ,sans-serif;
+    font-size: 12px;
     margin: 0;
     padding: 0;
 }
@@ -11,7 +11,7 @@ input
 {
     -webkit-appearance: none;
     border-radius: 0;
-    font-size: 11px !important;
+    font-size: 12px !important;
     color: #6E6E6E;
 }
 
@@ -19,13 +19,13 @@ textarea
 {
     -webkit-appearance: none;
     border-radius: 0;
-    font-size: 11px !important;
+    font-size: 12px !important;
 }
 
 font
 {
-    font-family: Verdana !important;
-    font-size: 11px;
+    font-family: 'Lato' ,sans-serif !important;
+    font-size: 12px;
 }
 
 .maincontainer
@@ -45,9 +45,14 @@ font
     font-weight: normal;
 }
 
+.breakWord
+{
+    word-wrap: break-word;
+}
+
 .esriCTContentdiv
 {
-    margin: 0 auto; /*width:1200px;*/
+    margin: 0 auto;
     clear: both;
     text-align: left;
 }
@@ -57,7 +62,7 @@ font
 {
     width: 100%;
     float: left;
-    line-height: 35px;
+    line-height: 34px;
     z-index: 12;
 }
 
@@ -74,6 +79,7 @@ font
 .esriCTHomeIcon
 {
     float: left;
+    cursor: pointer;
 }
 
 .esriCTGalleryName
@@ -129,19 +135,21 @@ font
 input
 {
     height: 25px;
-    vertical-align: middle;
-    width: 90%;
-    padding: 0 8% 0 2%;
     margin-top: 5px;
+    padding: 0 22% 0 2%;
+    vertical-align: middle;
+    width: 76%;
 }
 
 .esriCTSearchIcon
 {
     float: right !important;
-    margin-top: -35px;
+    margin-top: -30px;
     color: #aaa !important;
     font-size: 15px;
-    padding: 4px 0px !important;
+    padding: 0px 0px !important;
+    position: relative;
+    z-index: 1000;
 }
 
 .esriCTSortIcon
@@ -180,29 +188,48 @@ input
 {
     display: none;
 }
+
+.esriCTSearchItemInput::-ms-clear
+{
+    display: none;
+}
+
+.dijitInputInner::-ms-clear
+{
+    display: none;
+}
+
 /*//////--- top menu CSS -////////*/
 /*left panel*/
 .esriCTLeftPanel
 {
     float: left;
-    width: 30%;
+    max-width: 350px;
 }
 
 .esriCTInnerLeftPanelTop
 {
-    padding: 25px 15px 0px 15px;
+    padding: 25px 30px 0px 15px;
 }
 
 .esriCTInnerLeftPanelBottom
 {
-    padding: 25px 15px 0px 15px;
+    padding: 0px 30px 0px 15px;
 }
-
+.esriCTLogo
+{
+    float: left;
+    width: 65px;
+}
+.esriCTLogo img
+{
+    width: 65px;
+}
 .esriCTLeftHead
 {
-    font-size: 20px;
-    padding: 20px 0;
-    margin-bottom: 20px;
+    font-size: 18px;
+    padding: 0px 0 5px 10px;
+    margin-left: 65px;
 }
 
 .esriCTLeftText div p
@@ -218,43 +245,45 @@ input
 .esriCTLeftText
 {
     line-height: normal;
+    clear: both;
+    padding-top: 15px;
 }
 
 .esriCTCategoriesHead
 {
-    font-size: 20px;
-    padding: 10px 0;
+    font-size: 16px;
+    padding: 25px 0px 15px 0px;
     float: left;
     width: 100%;
 }
 
 .esriCTCategories
 {
-    text-align: justify;
     line-height: normal;
 }
 /*//left panel*/
 
 .esriCTRightPanel
 {
-    float: left;
-    width: 70%;
+    margin-left: 350px;
 }
 
 .esriCTInnerRightPanel
 {
     padding: 20px 0px;
+    float: left;
+    background: #FFF;
 }
 
 .esriCTApplicationBox
 {
     float: left;
-    padding: 0 10% 0 0;
+    margin: 0 10% 0 0;
+    width: 182px;
 }
 
 .esriCTImageContainer
 {
-    /*margin: 0 auto;*/
     width: 182px;
     margin-bottom: 10px;
 }
@@ -263,17 +292,9 @@ input
 {
     height: 116px;
     width: 180px;
-    background-size: 100% !important;
+    background-size: 100% 100% !important;
     background-position: top !important;
-}
-
-.esriCTImageTopPanel
-{
-    float: left;
-    line-height: 25px;
-    width: 180px;
-    left: 1px;
-    opacity: 0.9;
+    cursor: pointer;
 }
 
 .esriCTAppIcon
@@ -308,6 +329,7 @@ input
     letter-spacing: 1px;
     text-indent: 0px;
     font-size: 8px;
+    line-height: 25px;
 }
 
 .esriCTTag
@@ -351,18 +373,7 @@ input
     padding-left: 5px;
 }
 
-.esriCTApplicationType
-{
-    bottom: 0;
-    float: right;
-    font-size: 8px;
-    margin-top: -18px;
-    padding: 4px;
-    position: relative;
-    text-transform: uppercase;
-    text-align: center;
-    letter-spacing: 1px;
-}
+
 
 /*list view CSS*/
 .esriCTApplicationListBox
@@ -375,7 +386,7 @@ input
     margin: 0 auto;
     float: left;
     width: 182px;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
 }
 
 .esriCTAppListTitle
@@ -423,11 +434,13 @@ input
 .esriCTAppListTitleRight
 {
     float: left;
+    width: 100%;
 }
 
 .esriCTListMdfDate
 {
     clear: both;
+    padding-top: 5px;
 }
 
 .esriCTListAppTitle
@@ -437,10 +450,41 @@ input
     margin-right: 5px;
 }
 
+.gridTitleHeight
+{
+    height: 35px;
+    overflow: hidden;
+    width: 182px;
+    word-break: break-all;
+}
+
+.esriCTApplicationType
+{
+    bottom: 0;
+    float: right;
+    font-size: 8px;
+    margin-top: -18px;
+    line-height: 18px;
+    padding: 0 5px;
+    position: relative;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
 .esriCTAppHeadline
 {
-    min-height: 106px;
+    min-height: 105px;
     color: #6E6E6E;
+    text-align: justify;
+    padding-right: 10px;
+}
+.esriCTAppHeadlineInner
+{
+    min-height: 90px;
+    color: #6E6E6E;
+    text-align: justify;
+    padding-right: 10px;
 }
 /*///list view CSS*/
 
@@ -471,13 +515,13 @@ input
 .esriCTDetailsLeftPanel
 {
     float: left;
-    width: 30%;
+    width: 182px;
 }
 
 .esriCTDetailsRightPanel
 {
-    float: left;
-    width: 70%;
+    margin-left: 200px;
+    background: #fff;
 }
 
 .esriCTDetailsInnerRightPanel
@@ -487,7 +531,7 @@ input
 
 .esriCTDetailsMap
 {
-    padding: 25px 25px 0;
+    padding: 25px 0px 0 0;
 }
 
 .esriCTDetailsApplicationListBox
@@ -505,7 +549,7 @@ input
 
 .esriCTDetailLeftInfo
 {
-    padding: 25px 25px 0;
+    padding: 25px 25px 0 0;
 }
 
 .esriCTDetailsleftLbl
@@ -517,7 +561,11 @@ input
 {
     padding: 5px 0 20px 0;
 }
-
+.esriCTDetailsMapImage
+{
+    width: 180px;
+    height: 122px;
+}
 .esriCTDetailsMapImage img
 {
     width: 100%;
@@ -527,16 +575,19 @@ input
 {
     bottom: 0;
     float: right;
-    margin-top: -26px;
-    padding: 5px;
+    font-size: 8px;
+    margin-top: -18px;
+    line-height: 18px;
+    padding: 0 5px;
     position: relative;
-    width: 29%;
+    text-transform: uppercase;
     text-align: center;
+    letter-spacing: 1px;
 }
 
 .esriCTTryitnow
 {
-    margin-top: 25px;
+    margin: 5px 0;
 }
 
 .esriCTbtn
@@ -556,7 +607,7 @@ input
 .esriCTComments
 {
     clear: both;
-    white-space: nowrap;
+    width: 100%;
     margin-top: 3px;
     float: left;
 }
@@ -569,19 +620,22 @@ input
 
 .esriCTReviewContainer
 {
-    padding: 25px 15px;
+    padding: 0 0 15px 0px;
 }
 
 .esriCTReviewhead
 {
     float: left;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .esriCTReview
 {
     margin: 25px 0;
     clear: both;
+    background: #f4f4f4;
+    padding: 10px;
 }
 
 .esriCTReviewbold
@@ -595,16 +649,20 @@ input
     padding-top: 5px;
 }
 
-.map img
+.map
 {
-    width: 100%;
+    width: 100% !important;
     height: 100%;
 }
 
 .esriCTRightPanelmap
 {
-    float: left;
-    width: 70%;
+    margin-left: 341px;
+    z-index: 1000;
+    position: absolute;
+    background: #fff;
+    width: 75%;
+    height: 100%;
 }
 
 .esriCTMapViews
@@ -713,7 +771,6 @@ input
 {
     float: right;
     font-size: 11px;
-    text-decoration: underline;
     cursor: pointer;
     padding-top: 5px;
 }
@@ -741,21 +798,23 @@ input
 
 .esriCTExpand
 {
-    float: right;
-    text-decoration: underline;
     cursor: pointer;
-    padding: 10px;
+    padding: 2px 0px;
+    margin-top: 5px;
+    float: left;
 }
 
 .esriCTApplicationIcon, .esriCTMenuTabLeft
 {
-    height: 46px;
+    height: 44px;
+    overflow: hidden;
 }
 
 .esriCTText
 {
-    height: 0px;
     overflow: hidden;
+    clear: both;
+    background: #FFF;
 }
 
 .pagination
@@ -780,6 +839,11 @@ input
     padding-right: 5px;
 }
 
+.esriCTDisablePagination
+{
+    background-color: Gray !important;
+    cursor: default;
+}
 .esriCTautosuggest
 {
     position: absolute;
@@ -817,9 +881,9 @@ input
 .readmoreGrid
 {
     float: right;
-    color: #007ac2;
     cursor: pointer;
     margin-bottom: 15px;
+    margin-right: 5px;
 }
 
 .esriCTSortText
@@ -827,9 +891,249 @@ input
     width: 100px;
     text-align: CENTER;
 }
+
+
+/*///redTheme tab theme for map */
+/*fontello*/
+.icon-header
+{
+    font-size: 19px;
+}
+/* '' */
+
+.eye
+{
+    float: left;
+    font-size: 12px;
+}
+/* '' */
+
+.icon-arrowLeft
+{
+    padding: 4px 4px 6px 6px;
+    font-size: 21px;
+    cursor: pointer;
+    float: left;
+    margin-right: 5px;
+}
+.icon-arrowRight
+{
+    padding: 4px 4px 6px 6px;
+    font-size: 21px;
+    cursor: pointer;
+    float: right;
+}
+
+/* '' */
+
+/*esri sign in diolog */
+.esriSignInDialog
+{
+    border: 1px solid #759dc0;
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+}
+
+.dijitDialogTitleBar
+{
+    border-top: none;
+    color: #fff;
+    padding: 8px 7px;
+    text-align: left;
+}
+
+.dijitDialogTitle
+{
+    padding: 0 1px;
+    font-size: 1.091em;
+    text-align: left;
+}
+
+.dijitDialogCloseIcon
+{
+    position: absolute;
+    right: 5px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.dijitDialogPaneContent
+{
+    background: #ffffff repeat-x top left;
+    border-top: 1px solid #759dc0;
+    padding: 10px 8px;
+    width: 248px !important;
+    text-align: left;
+}
+
+.dijitDialogPaneContentArea
+{
+    margin: -10px -8px;
+    padding: 10px 8px;
+}
+
+.dijitValidationContainer
+{
+    display: None;
+}
+
+.dijitDialogUnderlayWrapper
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 998;
+    display: none;
+    background: transparent !important;
+}
+
+.dijitDialogUnderlay
+{
+    background: #ffffff;
+    opacity: 0.2;
+}
+
+.dijitSelectError, .dijitSelectError .dijitButtonContents, .dijitTextBoxError, .dijitTextBoxError .dijitButtonNode
+{
+    border-color: #d46464;
+}
+
+.dijitButton
+{
+    padding: 4px;
+    cursor: pointer;
+    width: 76px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 1px;
+}
+
+table td label
+{
+    text-align: left;
+}
+
+.dijitDialogPaneActionBar
+{
+    background-color: #efefef;
+    padding: 8px 5px 8px 7px;
+    text-align: right;
+    border-top: 1px solid #d3d3d3;
+    margin: 10px -8px -10px;
+}
+
+.dijitOffScreen
+{
+    position: absolute !important;
+    left: -10000px !important;
+    top: -10000px !important;
+}
+
+input[type="button"], input[type="submit"], input[type="reset"], input[type="file"]::-webkit-file-upload-button, button
+{
+    padding: 1px 6px;
+}
+
+dijitToggleButton, .dijitButton, .dijitDropDownButton, .dijitComboButton
+{
+    margin: 0.2em;
+    vertical-align: middle;
+}
+
+.dijitButtonText
+{
+    padding: 0 0.3em;
+    text-align: center;
+}
+
+.dijitToggleButtonIconChar
+{
+    display: none !important;
+}
+
+.dijitTooltip
+{
+    position: absolute;
+    z-index: 2000;
+    display: block;
+    left: 0;
+    top: -10000px;
+    overflow: visible;
+}
+
+.dijitBackgroundIframe
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.dijitTooltipRight
+{
+    padding-left: 10px;
+}
+
+.dijitTooltipContainer
+{
+    background-color: #ffffff;
+    background-image: -moz-linear-gradient(bottom, rgba(207, 229, 250, 0.1) 0px, #ffffff 10px);
+    background-image: -webkit-linear-gradient(bottom, rgba(207, 229, 250, 0.1) 0px, #ffffff 10px);
+    background-image: -o-linear-gradient(bottom, rgba(207, 229, 250, 0.1) 0px, #ffffff 10px);
+    background-image: linear-gradient(bottom, rgba(207, 229, 250, 0.1) 0px, #ffffff 10px);
+    background-position: bottom;
+    border: 1px solid #759dc0;
+    padding: 6px 8px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    font-size: 1em;
+    color: #000000;
+}
+
+#dijit_Dialog_0
+{
+    width: 264px !important;
+}
+.closeText
+{
+    display: none;
+}
+
+.slidePanelLeft
+{
+    transition: left 0.5s ease-in;
+}
+.slidePanelRight
+{
+    transition: right 0.5s ease-in;
+}
+
+.esriCTCursorPointer
+{
+    cursor: pointer;
+}
+
+.clearInput
+{
+    color: #AAAAAA !important;
+    cursor: pointer;
+    float: right !important;
+    font-size: 16px;
+    height: 15px !important;
+    margin-right: 15px;
+    margin-top: -36px;
+}
+
 /* blue   Themes  */
-
-
 
 /* top menu CSS */
 .blueTheme .esriCTSepRight
@@ -845,7 +1149,7 @@ input
 
 .blueTheme input
 {
-    border: 1px solid #DFDFDF;
+    border: 1px solid #007AC2;
 }
 
 .blueTheme .esriCTSortIcon
@@ -855,9 +1159,11 @@ input
     display: none;
 }
 
-
+.esriCTExtentSpan
+{
+    padding:5px;
+}
 /*//////--- top menu CSS -////////*/
-
 
 /*left panel*/
 .blueTheme
@@ -868,7 +1174,6 @@ input
 .blueTheme .esriCTLeftHead
 {
     color: #7453a4;
-    border-bottom: 1px Solid #e4e6eb;
 }
 
 .blueTheme .esriCTLeftText div span
@@ -876,7 +1181,12 @@ input
     color: #6e6e6e;
 }
 
-.esriCTCategoriesHead, .esriCTReviewhead, .esriCTAppTitle, .esriCTListAppTitle, .esriCTtabTitle
+.esriCTReviewhead, .esriCTAppTitle, .esriCTtabTitle
+{
+    color: #007ac2;
+}
+
+.blueTheme .esriCTListAppTitle
 {
     color: #007ac2;
 }
@@ -891,9 +1201,9 @@ input
     border: 1px solid #007ac2;
 }
 
-.esriCTImageTopPanel
+.blueTheme .esriCTImageTopPanel
 {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid #007ac2;
 }
 
@@ -905,14 +1215,20 @@ input
 .blueTheme .esriCTMenuTab
 {
     background: none repeat scroll 0 0 #007AC2;
+    border-bottom: 1px solid #007AC2;
 }
 
-.esriCTListAppcontent span.readmore
+.blueTheme .esriCTListAppcontent span.readmore
 {
     color: #007ac2;
 }
 
 .esriCTAppcontent span.readmore
+{
+    color: #007ac2;
+}
+
+.blueTheme .tagCloudHighlight
 {
     color: #007ac2;
 }
@@ -925,9 +1241,14 @@ input
 
 .esriCTListAppcontent
 {
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid #e4e4e4;
 }
 
+.bottomBorder
+{
+    border-bottom: 1px solid #e4e4e4;
+    margin-bottom: 15px;
+}
 .esriCTApplicationType
 {
     background: #f56a16;
@@ -958,9 +1279,12 @@ input
     border-radius: 2px 2px 2px 2px;
 }
 /*tab theme for map */
-.blueTheme .esriCTtabGroup > input[type="radio"] + label
+.esriCTtabGroup
 {
     background-color: #f0f0f0;
+}
+.blueTheme .esriCTtabGroup > input[type="radio"] + label
+{
 }
 
 .blueTheme .esriCTtabGroup > input[type="radio"]:checked + label
@@ -979,9 +1303,9 @@ input
     color: #6E6E6E;
 }
 
-.esriCTResetfilter
+.blueTheme .esriCTResetfilter
 {
-    color: #6e6e6e;
+    color: #007ac2;
 }
 
 .blueTheme .esriCTGalleryName
@@ -1025,7 +1349,44 @@ input
 {
     background-color: #007AC2;
 }
+.esriCTCategoriesHead
+{
+    color: #7453a4 !important;
+}
+.blueTheme .esriCTExpand
+{
+    color: #007ac2;
+}
+.blueTheme .icon-arrowLeft
+{
+    background: #007ac2;
+    color: white;
+}
+.blueTheme .icon-arrowRight
+{
+    background: #007ac2;
+    color: white;
+}
+.blueTheme .eye
+{
+    color: #007ac2;
+}
+.blueTheme .esriCTLeftText div span a
+{
+    color: #007ac2;
+}
+.blueTheme .readmoreGrid
+{
+    color: #007ac2;
+}
 
+.blueTheme .dijitButton
+{
+    border: 1px solid #007ac2;
+    color: #fff;
+    background-color: #007ac2;
+}
+/*blue theme media query */
 @media screen and (min-width: 321px) and (max-width: 640px)
 {
     .blueTheme .esriCTMenuTabRight div span.esriCTMenulbl
@@ -1205,8 +1566,6 @@ input
 
 /*///End Blue tab theme for map */
 
-
-
 /*greenTheme panel*/
 
 
@@ -1217,20 +1576,23 @@ input
 
 .greenTheme input
 {
-    border: 1px solid #DFDFDF;
+    border: 1px solid green;
 }
 
 .greenTheme .esriCTLeftHead
 {
     color: green;
-    border-bottom: 1px Solid green;
 }
 
 .greenTheme .esriCTMenuTab
 {
     background: none repeat scroll 0 0 green;
+    border-bottom: 1px solid green;
 }
-
+.greenTheme .esriCTListAppcontent span.readmore
+{
+    color: green;
+}
 .greenTheme .esriCTSepRight
 {
     border-right: 1px solid #fff;
@@ -1240,6 +1602,11 @@ input
 {
     color: #fff;
     cursor: pointer;
+}
+
+.greenTheme .tagCloudHighlight
+{
+    color: green;
 }
 
 .greenTheme .esriCTLeftText div p
@@ -1252,9 +1619,9 @@ input
     border: 1px solid green;
 }
 
-.esriCTImageTopPanel
+.greenTheme .esriCTImageTopPanel
 {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid #green;
 }
 
@@ -1308,11 +1675,6 @@ input
     background-color: green;
 }
 
-.esriCTResetfilter
-{
-    color: #6e6e6e;
-}
-
 .greenTheme .esriCTGalleryName
 {
     color: #FFFFFF;
@@ -1357,21 +1719,66 @@ input
     color: #b6b6b6;
 }
 
-.greenTheme .esriCTCategoriesHead
-{
-    color: green;
-}
-
 .greenTheme .dijitDialogTitleBar
 {
     background-color: green;
 }
 
+.greenTheme .esriCTExpand
+{
+    color: green;
+}
+
+.greenTheme .esriCTResetfilter
+{
+    color: green;
+}
+
+.greenTheme .icon-arrowLeft
+{
+    background: green;
+    color: white;
+}
+
+.greenTheme .icon-arrowRight
+{
+    background: green;
+    color: white;
+}
+
+.greenTheme .eye
+{
+    color: green;
+}
+
+.greenTheme .esriCTLeftText div span a
+{
+    color: green;
+}
+
+.greenTheme .esriCTListAppTitle
+{
+    color: green;
+}
+
+.greenTheme .readmoreGrid
+{
+    color: green;
+}
+
+.greenTheme .dijitButton
+{
+    border: 1px solid green;
+    color: #fff;
+    background-color: green;
+}
+
+/*green theme media query */
 @media screen and (min-width: 321px) and (max-width: 640px)
 {
     .greenTheme .esriCTMenuTabRight div span.esriCTMenulbl
     {
-        color: #007ac2;
+        color: green;
     }
 
     .greenTheme .esriCTMenuTabLeft
@@ -1389,7 +1796,7 @@ input
         color: #007ac2;
     }
 
-    .greenTheme .esriCTGalleryNameCategories, .blueTheme .esriCTGalleryNameSample
+    .greenTheme .esriCTGalleryNameCategories, .greenTheme .esriCTGalleryNameSample
     {
         color: #749b13;
     }
@@ -1457,7 +1864,7 @@ input
 {
     .greenTheme .esriCTMenuTabRight div span.esriCTMenulbl
     {
-        color: #007ac2;
+        color: green;
     }
 
     .greenTheme .esriCTMenuTabLeft
@@ -1475,7 +1882,7 @@ input
         color: #007ac2;
     }
 
-    .greenTheme .esriCTGalleryNameCategories, .blueTheme .esriCTGalleryNameSample
+    .greenTheme .esriCTGalleryNameCategories, .greenTheme .esriCTGalleryNameSample
     {
         color: #749b13;
     }
@@ -1544,7 +1951,6 @@ input
 
 /*redTheme panel*/
 
-
 .redTheme
 {
     display: block;
@@ -1552,20 +1958,26 @@ input
 
 .redTheme input
 {
-    border: 1px solid #DFDFDF;
+    border: 1px solid maroon;
 }
 
 .redTheme .esriCTLeftHead
 {
     color: maroon;
-    border-bottom: 1px Solid maroon;
 }
-
+.redTheme .tagCloudHighlight
+{
+    color: maroon;
+}
 .redTheme .esriCTMenuTab
 {
     background: none repeat scroll 0 0 maroon;
+    border-bottom: 1px solid maroon;
 }
-
+.redTheme .esriCTListAppcontent span.readmore
+{
+    color: maroon;
+}
 .redTheme .esriCTSepRight
 {
     border-right: 1px solid #fff;
@@ -1587,9 +1999,9 @@ input
     border: 1px solid maroon;
 }
 
-.esriCTImageTopPanel
+.redTheme .esriCTImageTopPanel
 {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid maroon;
 }
 
@@ -1643,11 +2055,6 @@ input
     background-color: maroon;
 }
 
-.esriCTResetfilter
-{
-    color: #6e6e6e;
-}
-
 .redTheme .esriCTGalleryName
 {
     color: #FFFFFF;
@@ -1692,21 +2099,66 @@ input
     color: #b6b6b6;
 }
 
-.redTheme .esriCTCategoriesHead
-{
-    color: maroon;
-}
-
 .redTheme .dijitDialogTitleBar
 {
     background-color: maroon;
 }
 
+.redTheme .esriCTExpand
+{
+    color: maroon;
+}
+
+.redTheme .esriCTResetfilter
+{
+    color: maroon;
+}
+
+.redTheme .icon-arrowLeft
+{
+    background: maroon;
+    color: white;
+}
+
+.redTheme .icon-arrowRight
+{
+    background: maroon;
+    color: white;
+}
+
+.redTheme .eye
+{
+    color: maroon;
+}
+
+.redTheme .esriCTLeftText div span a
+{
+    color: maroon;
+}
+
+.redTheme .esriCTListAppTitle
+{
+    color: maroon;
+}
+
+.redTheme .readmoreGrid
+{
+    color: maroon;
+}
+
+.redTheme .dijitButton
+{
+    border: 1px solid maroon;
+    color: #fff;
+    background-color: maroon;
+}
+/*red theme media query */
+
 @media screen and (min-width: 321px) and (max-width: 640px)
 {
     .redTheme .esriCTMenuTabRight div span.esriCTMenulbl
     {
-        color: #007ac2;
+        color: maroon;
     }
 
     .redTheme .esriCTMenuTabLeft
@@ -1716,7 +2168,7 @@ input
 
     .redTheme .esriCTGalleryName
     {
-        color: #749b13;
+        color: maroon;
     }
 
     .redTheme .esriCTMenulbl
@@ -1724,7 +2176,7 @@ input
         color: #007ac2;
     }
 
-    .redTheme .esriCTGalleryNameCategories, .blueTheme .esriCTGalleryNameSample
+    .redTheme .esriCTGalleryNameCategories, .redTheme .esriCTGalleryNameSample
     {
         color: #749b13;
     }
@@ -1793,11 +2245,12 @@ input
     }
 }
 
+
 @media screen and (max-width: 320px)
 {
     .redTheme .esriCTMenuTabRight div span.esriCTMenulbl
     {
-        color: #007ac2;
+        color: maroon;
     }
 
     .redTheme .esriCTMenuTabLeft
@@ -1807,7 +2260,7 @@ input
 
     .redTheme .esriCTGalleryName
     {
-        color: #749b13;
+        color: maroon;
     }
 
     .redTheme .esriCTMenulbl
@@ -1815,7 +2268,7 @@ input
         color: #007ac2;
     }
 
-    .redTheme .esriCTGalleryNameCategories, .blueTheme .esriCTGalleryNameSample
+    .redTheme .esriCTGalleryNameCategories, .redTheme .esriCTGalleryNameSample
     {
         color: #749b13;
     }
@@ -1884,245 +2337,116 @@ input
     }
 }
 
-/*///redTheme tab theme for map */
-/*fontello*/
-.icon-header
+.esriCTShiftRightPanel
 {
-    font-size: 19px;
+    -webkit-transition: 0.3s ease-in-out;
+    -moz-transition: 0.3s ease-in-out;
+    -o-transition: 0.3s ease-in-out;
+    -ms-transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
 }
-/* '' */
-
-.eye
+.slidePanelLeft
 {
-    float: left;
-    font-size: 12px;
-    color: green;
+    -webkit-transition: 0.3s ease-in-out;
+    -moz-transition: 0.3s ease-in-out;
+    -o-transition: 0.3s ease-in-out;
+    -ms-transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
 }
-/* '' */
-
-.icon-arrow
+.slidePanelRight
 {
-    background: #007ac2;
-    color: white;
-    padding: 4px;
-    font-size: 21px;
-    cursor: pointer;
+    -webkit-transition: 0.3s ease-in-out;
+    -moz-transition: 0.3s ease-in-out;
+    -o-transition: 0.3s ease-in-out;
+    -ms-transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
 }
-/* '' */
-
-/*esri sign in diolog */
-.esriSignInDialog
+.divLoadingIndicator
 {
-    border: 1px solid #759dc0;
-    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
-    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
-}
-
-.dijitDialogTitleBar
-{
-    border-top: none;
-    color: #fff;
-    padding: 8px 7px;
-    text-align: left;
-}
-
-.dijitDialogTitle
-{
-    padding: 0 1px;
-    font-size: 1.091em;
-    text-align: left;
-}
-
-.dijitDialogCloseIcon
-{
-    position: absolute;
-    right: 5px;
-    height: 15px;
-    cursor: pointer;
-}
-
-.dijitDialogPaneContent
-{
-    background: #ffffff repeat-x top left;
-    border-top: 1px solid #759dc0;
-    padding: 10px 8px;
-    width: 248px !important;
-    text-align: left;
-}
-
-.dijitDialogPaneContentArea
-{
-    margin: -10px -8px;
-    padding: 10px 8px;
-}
-
-.dijitValidationContainer
-{
-    display: None;
-}
-
-.dijitDialogUnderlayWrapper
-{
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 998;
-    display: none;
-    background: transparent !important;
-}
-
-.dijitDialogUnderlay
-{
-    background: #ffffff;
-    opacity: 0.2;
-}
-
-.dijitSelectError, .dijitSelectError .dijitButtonContents, .dijitTextBoxError, .dijitTextBoxError .dijitButtonNode
-{
-    border-color: #d46464;
-}
-
-.dijitInputContainer input
-{
-    width: 90%;
-}
-
-.dijitButton .dijitButtonNode, .dijitDropDownButton .dijitButtonNode, .dijitComboButton .dijitButtonNode, .dijitToggleButton .dijitButtonNode
-{
-    border: 1px solid #759dc0;
-    padding: 2px 4px 4px 4px;
-    color: #000000;
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-    background-color: #bcd8f4;
-    background-repeat: repeat-x;
-    background-image: -moz-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
-    background-image: -webkit-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
-    background-image: -o-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
-    background-image: linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
-    _background-image: none;
-    cursor: pointer;
-    width: 76px;
-    display: inline-block;
-    text-align: center;
-    margin-right: 1px;
-}
-
-table td label
-{
-    text-align: left;
-}
-
-.dijitDialogPaneActionBar
-{
-    background-color: #efefef;
-    padding: 8px 5px 8px 7px;
-    text-align: right;
-    border-top: 1px solid #d3d3d3;
-    margin: 10px -8px -10px;
-}
-
-.dijitOffScreen
-{
-    position: absolute !important;
-    left: -10000px !important;
-    top: -10000px !important;
-}
-
-input[type="button"], input[type="submit"], input[type="reset"], input[type="file"]::-webkit-file-upload-button, button
-{
-    padding: 1px 6px;
-}
-
-dijitToggleButton, .dijitButton, .dijitDropDownButton, .dijitComboButton
-{
-    margin: 0.2em;
-    vertical-align: middle;
-}
-
-.dijitButtonText
-{
-    padding: 0 0.3em;
-    text-align: center;
-}
-
-.dijitToggleButtonIconChar
-{
-    display: none !important;
-}
-
-.dijitTooltip
-{
-    position: absolute;
+    height: 100%;
+    width: 100%;
     z-index: 2000;
-    display: block;
+    position: absolute;
+    bottom: 0;
+    opacity: 0.550000011920928955078125;
+    top: 0;
     left: 0;
-    top: -10000px;
-    overflow: visible;
+    background: #4169e1;
 }
 
-.dijitBackgroundIframe
+.divfullContainer
 {
-    position: absolute;
-    left: 0;
-    top: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
-    border: 0;
-    padding: 0;
-    margin: 0;
 }
 
-.dijitTooltipRight
+.mainLoader
 {
-    padding-left: 10px;
+    background-position: center center;
+    background-image: url('../images/blue-loader.gif');
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 40px;
+    width: 40px;
 }
 
-.dijitTooltipContainer
+.esriRightControlPanel
 {
-    background-color: #ffffff;
-    background-image: -moz-linear-gradient(bottom, rgba(207, 229, 250, 0.1) 0px, #ffffff 10px);
-    background-image: -webkit-linear-gradient(bottom, rgba(207, 229, 250, 0.1) 0px, #ffffff 10px);
-    background-image: -o-linear-gradient(bottom, rgba(207, 229, 250, 0.1) 0px, #ffffff 10px);
-    background-image: linear-gradient(bottom, rgba(207, 229, 250, 0.1) 0px, #ffffff 10px);
-    background-position: bottom;
-    border: 1px solid #759dc0;
-    padding: 6px 8px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-    font-size: 1em;
-    color: #000000;
+    position: absolute;
+    top: 0px;
+    right: 50px;
+}
+.esriMapInput
+{
+    float: left;
+}
+.esriCTSearchIconMap
+{
+    float: right !important;
+    margin-top: -25px;
+    color: #aaa !important;
+    font-size: 15px;
+    padding: 4px 0px !important;
+}
+.esriMapGeoLocation
+{
+    float: left;
+    margin-top: 8px;
+    background: url("../images/gps.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    width: 34px;
+    height: 34px;
+    margin-right: 15px;
 }
 
-#dijit_Dialog_0
+.esriMapZoomMap
 {
-    width: 264px !important;
+    float: left;
+    margin-top: 8px;
+    background: url("../images/max.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    width: 34px;
+    height: 34px;
 }
 
-@media screen and (max-width: 480px)
+.esriCTPropertiesContent
 {
-    #dijit_Dialog_0
-    {
-        width: 196px !important;
-    }
-    .dijitDialogTitleBar:
-    {
-        width: 100% !important;
-    }
+    float: left;
+    width: 80px;
+}
 
-    .dijitDialogPaneContent
-    {
-        width: 180px !important;
-    }
+.esriCTPropertiesValue
+{
+    margin-left: 80px;
+}
 
-    #widget_dijit_form_ValidationTextBox_0
-    {
-        width: 99% !important;
-    }
+.propertiesTblcontent
+{
+    overflow: hidden;
+    clear: both;
+    padding-bottom: 10px;
 }

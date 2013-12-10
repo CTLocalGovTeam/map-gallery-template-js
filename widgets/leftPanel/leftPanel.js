@@ -33,13 +33,15 @@ define([
         "dojo/query",
         "dojo/dom-class",
         "dojo/dom-style",
+        "dojo/on",
+        "dojo/_base/lang",
         "dojo/NodeList-manipulate"
     ],
-    function (declare, domConstruct, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, topic, Deferred, Gallery, query, domClass, domStyle) {
+    function (declare, domConstruct, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, topic, Deferred, Gallery, query, domClass, domStyle, on, lang) {
         declare("collectUniqueTags", null, {
             setNodeValue: function (node, text) {
                 if (text) {
-                    node.innerHTML = text;
+                    domAttr.set(node, "innerHTML", text);
                 }
             },
 
@@ -173,6 +175,8 @@ define([
                 this._setGroupContent();
                 this._expandGroupdescEvent(this.expandGroupDescription, this);
                 this._queryGroupItems();
+                domAttr.set(this.leftPanelHeader, "innerHTML", dojo.configData.ApplicationName);
+                topic.subscribe("clearFilter", this._clearFilter);
             },
 
             _queryGroupItems: function (nextQuery) {
@@ -248,41 +252,58 @@ define([
                     defObj.then(function (data) {
                         dojo.nextQuery = data.nextQueryParams;
                         dojo.prevQuery = null;
-                        var gallery = new Gallery();
+                        var gallery = new itemGallery();
                         gallery.createItemPods(data.results);
                     }, function (err) {
                         alert(err.message);
                     });
                 } else {
                     this._appendLeftPanel();
-                    var gallery = new Gallery();
+                    var gallery = new itemGallery();
                 }
             },
 
             _resetFilter: function (node) {
+                var _self = this;
                 node.onclick = function () {
-                    var numberOfItems;
-                    if (dojo.configData.gridView) {
-                        numberOfItems = 9;
-                    } else {
-                        numberOfItems = 4;
-                    }
-                    var defObj = new Deferred();
-                    dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
-                    topic.publish("queryGroupItem", dojo.queryString, numberOfItems, dojo.sortBy, "desc", defObj);
-                    defObj.then(function (data) {
-                        dojo.nextQuery = data.nextQueryParams;
-                        dojo.prevQuery = null;
-                        topic.publish("createPods", data.results);
-                        if (data.total <= numberOfItems) {
-                            domClass.replace(query(".pagination")[0], "displayNoneAll", "displayBlockAll");
-                        } else {
-                            domClass.replace(query(".pagination")[0], "displayBlockAll", "displayNoneAll");
-                        }
-                    }, function (err) {
-                        alert(err.message);
-                    });
+                    _self._clearFilter();
                 }
+            },
+
+            _clearFilter: function () {
+                topic.publish("showProgressIndicator");
+                if (query(".tagCloudHighlight")[0]) {
+                    domClass.remove(query(".tagCloudHighlight")[0], "tagCloudHighlight");
+                }
+                var numberOfItems;
+                if (dojo.configData.gridView) {
+                    numberOfItems = 9;
+                } else {
+                    numberOfItems = 4;
+                }
+                if (query(".esriCTDetailsLeftPanel")[0]) {
+                    domClass.add(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
+                    domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
+                    domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
+                    domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");
+                    domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
+                }
+                var defObj = new Deferred();
+                dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
+                topic.publish("queryGroupItem", dojo.queryString, numberOfItems, dojo.sortBy, "desc", defObj);
+                defObj.then(function (data) {
+                    dojo.nextQuery = data.nextQueryParams;
+                    dojo.prevQuery = null;
+                    topic.publish("createPods", data.results);
+                    if (data.total <= numberOfItems) {
+                        domClass.replace(query(".pagination")[0], "displayNoneAll", "displayBlockAll");
+                    } else {
+                        domClass.replace(query(".pagination")[0], "displayBlockAll", "displayNoneAll");
+                    }
+                }, function (err) {
+                    alert(err.message);
+                    topic.publish("hideProgressIndicator");
+                });
             },
 
             //This function creates the required HTML for generating the tag cloud
@@ -291,14 +312,26 @@ define([
                 for (var i = 0; i < displayTags.length; i++) {
                     var span = domConstruct.place(domConstruct.create('h3'), node);
                     domClass.add(span, "tagCloud");
-                    span.style.fontSize = displayTags[i].fontSize + dojo.configData.ApplicationSettings.tagCloudFontRange.units;
+                    domStyle.set(span, "fontSize", displayTags[i].fontSize + dojo.configData.ApplicationSettings.tagCloudFontRange.units);
                     if (i != (displayTags.length - 1)) {
-                        span.innerHTML = displayTags[i].key + ", ";
+                        domAttr.set(span, "innerHTML", displayTags[i].key + ", ");
                     } else {
-                        span.innerHTML = displayTags[i].key + ".";
+                        domAttr.set(span, "innerHTML", displayTags[i].key + ".");
                     }
                     span.onclick = function () {
+                        topic.publish("showProgressIndicator");
                         _self._queryRelatedTags(this.innerHTML);
+                        if (query(".tagCloudHighlight")[0]) {
+                            domClass.remove(query(".tagCloudHighlight")[0], "tagCloudHighlight");
+                        }
+                        domClass.add(this, "tagCloudHighlight");
+                        if (query(".esriCTDetailsLeftPanel")[0]) {
+                            domClass.add(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
+                            domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
+                            domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
+                            domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");
+                            domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
+                        }
                     }
                 }
             },
@@ -324,6 +357,7 @@ define([
                     }
                 }, function (err) {
                     alert(err.message);
+                    topic.publish("hideProgressIndicator");
                 });
             },
 
@@ -331,9 +365,9 @@ define([
             _expandGroupdescEvent: function (node, _self) {
                 node.onclick = function () {
                     if (this.innerHTML == nls.expandGroupDescText) {
-                        this.innerHTML = nls.shrinkGroupDescText;
+                        domAttr.set(this, "innerHTML", nls.shrinkGroupDescText);
                     } else {
-                        this.innerHTML = nls.expandGroupDescText;
+                        domAttr.set(this, "innerHTML", nls.expandGroupDescText);
                     }
                     domClass.toggle(_self.groupDesc, "esriCTLeftTextReadLess");
                 };
@@ -359,14 +393,14 @@ define([
                 }
                 if (dojo.configData.ApplicationName) {
                     _self.setNodeText(_self.groupDescPanelHeader, dojo.configData.ApplicationName);
-                    _self.setNodeText(_self.leftPanelHeader, dojo.configData.ApplicationName);
+                    topic.publish("setGrpContent");
                 }
             },
 
             //This function is used to set the innerHTML
             setNodeText: function (node, htmlString) {
                 if (node) {
-                    node.innerHTML = htmlString;
+                    domAttr.set(node, "innerHTML", htmlString);
                 }
             },
 

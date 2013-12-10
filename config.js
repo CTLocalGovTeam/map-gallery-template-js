@@ -61,15 +61,27 @@ define([], function () {
             showCategoriesTagCloud: true,
             showGeographiesTagCloud: true,
             geographiesTagText: "C",
-            enableAutoComplete:true,
+            enableAutoComplete: true,
             tagCloudFontRange: {
                 minValue: 15,
                 maxValue: 20,
                 units: "px"
             },
             showMaxTopTags: 10,
-            portalURL: "http://www.arcgis.com"
+            displaySharingAttribute: false,
+            useItemPage: false,
+            portalURL: "http://www.arcgis.com",
+            geometryService: "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
         },
+
+        AGOLItemSettings: {
+            showRatings: true,
+            showNumberOfViews: true,
+            showAccessAndConstraints: true,
+            showAttribution: true,
+            showReviews: true
+        },
+
         //------------------------------------------------------------------------------------------------------------------------
         // Header Widget Settings
         //------------------------------------------------------------------------------------------------------------------------

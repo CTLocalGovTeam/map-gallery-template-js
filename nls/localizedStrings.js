@@ -17,7 +17,6 @@
 */
 define({
     root: {
-
         okButtonText: "OK",
         splashScreenContent: "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.",
         addressDisplayText: "Address",
@@ -32,6 +31,7 @@ define({
         signInText: "Sign in",
         showNullValue: "N/A",
         readMoreDisplayText: "Read more",
+        detailsDisplayText: "Details",
         sortByViewText: "Sort by Views",
         sortByDateText: "Sort by Date",
         gridViewTitle: "Grid view",
@@ -45,6 +45,28 @@ define({
         sortByTextMobile: "Sort by",
         viewTextMobile: "Views",
         dateTextMobile: "Dates",
+        appCategoryText: "Category",
+        appTypeText: "Type",
+        appOwnerText: "Submitted by",
+        tryItButtonText: "Try it now",
+        downloadButtonText: "Download",
+        appDesText: "Description",
+        reviewText: "Reviews",
+        itemDetailsTab1: "LEGEND",
+        itemDetailsTab2: "LAYER",
+        itemDetailsTab3: "INFO",
+        propertiesText: "Properties",
+        tagsText: "Tags",
+        extentText: "Extent",
+        sizeText: "Size",
+        accessConstraintsText: "Access and Use Constraints",
+        numberOfCommentsText: "Comments",
+        numberOfRatingsText: "Ratings",
+        numberOfViewsText: "Views",
+        extentLeftText: "Left",
+        extentRightText: "Right",
+        extentTopText: "Top",
+        extentBottomText:"Bottom",
         errorMessages: {
             emptyGroup: "The configured group is not having any data for the query",
             invalidSearch: "No results found",
@@ -54,7 +76,9 @@ define({
             widgetNotLoaded: "Fail to load widgets.",
             shareLoadingFailed: "Unable to load share options.",
             shareFailed: "Unable to share.",
-            minfontSizeGreater: "Min font size value in config file is greater than max value."
+            minfontSizeGreater: "Min font size value in config file is greater than max value.",
+            layerNotFound: "Layer not found.",
+            unableToOpenItem:"Unable to open item."
         }
     },
 
