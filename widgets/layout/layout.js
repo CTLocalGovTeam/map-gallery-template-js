@@ -32,47 +32,32 @@ define([
         "dojo/query",
         "dojo/dom-attr",
         "dojo/dom-geometry",
-        "dojo/on"
+        "dojo/on",
+        "dojo/dom-construct"
     ],
-    function (declare, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, lang, Deferred, domClass, domStyle, topic, query, domAttr, domGeom, on) {
+    function (declare, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, lang, Deferred, domClass, domStyle, topic, query, domAttr, domGeom, on, domConstruct) {
 
         //========================================================================================================================//
 
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
             nls: nls,
+
             postCreate: function () {
                 domAttr.set(this.layoutLabel, "innerHTML", nls.layoutText);
                 this.own(on(this.toggleLayout, "click", lang.hitch(this, function () {
                     topic.publish("showProgressIndicator");
-                    var numberOfItems;
                     if (!dojo.configData.gridView) {
                         dojo.configData.gridView = true;
-                        numberOfItems = 9;
                         domAttr.set(this.layoutTitle, "title", nls.listViewTitle);
                         domClass.replace(this.layoutTitle, "icon-list", "icon-grid");
                     } else {
                         dojo.configData.gridView = false;
-                        numberOfItems = 4;
                         domAttr.set(this.layoutTitle, "title", nls.gridViewTitle);
                         domClass.replace(this.layoutTitle, "icon-grid", "icon-list");
                     }
-                    var defObj = new Deferred();
-                    topic.publish("queryGroupItem", dojo.queryString, numberOfItems, dojo.sortBy, "desc", defObj);
-                    defObj.then(function (data) {
-                        dojo.nextQuery = data.nextQueryParams;
-                        dojo.prevQuery = null;
-                        topic.publish("createPods", data.results);
-                        if (data.total <= numberOfItems) {
-                            domClass.replace(query(".pagination")[0], "displayNoneAll", "displayBlockAll");
-                        } else {
-                            domClass.replace(query(".pagination")[0], "displayBlockAll", "displayNoneAll");
-                        }
-                        topic.publish("hideProgressIndicator");
-                    }, function (err) {
-                        alert(err.message);
-                        topic.publish("hideProgressIndicator");
-                    });
+                    topic.publish("createPods", dojo.results, true);
+                    topic.publish("hideProgressIndicator");
                 })));
             }
         });

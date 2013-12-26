@@ -31,10 +31,10 @@ define([
         "dojo/query",
         "dojo/topic",
         "dojo/on",
-        "dojo/dom-class"
-
+        "dojo/dom-class",
+        "dojo/dom-attr"
     ],
-    function (declare, lang, dom, _WidgetBase, nls, portal, connect, Deferred, esriRequest, leftPanelContent, query, topic, on, domClass) {
+    function (declare, lang, dom, _WidgetBase, nls, portal, connect, Deferred, esriRequest, leftPanelContent, query, topic, on, domClass, domAttr) {
 
         //========================================================================================================================//
 
@@ -111,7 +111,7 @@ define([
                 }
                 // set footer image
                 if (!dojo.configData.groupIcon) {
-                    dojo.configData.groupIcon = groupInfo.thumbnailUrl || "";
+                    dojo.configData.groupIcon = groupInfo.thumbnailUrl || dojoConfig.baseURL + "/themes/images/group-no-image.png";
                 }
             },
             /*------------------------------------*/
@@ -135,7 +135,7 @@ define([
                     if (query(".dijitDialogPaneContentArea")[0]) {
                         query(".dijitDialogPaneContentArea")[0].childNodes[0].innerHTML = nls.signInDialogText;
                     }
-                }, 800);
+                }, 1000);
                 topic.publish("hideProgressIndicator");
                 // first, request the group to see if it's public or private
                 esriRequest({
@@ -185,12 +185,12 @@ define([
                 return def;
             },
 
-            queryGroupForItems: function (queryString, number, sortfields, sortorder, deferedObj, NextQuery) {
+            queryGroupForItems: function (queryString, sortfields, sortorder, deferedObj, NextQuery) {
                 var params;
                 if (!NextQuery) {
                     params = {
                         q: queryString,
-                        num: number, //should be in number format ex: 100
+                        num: 100, //should be in number format ex: 100
                         sortField: sortfields, //should be in string format with comma separated values ex: "created"
                         sortOrder: sortorder //should be in string format ex: desc
                     }
@@ -208,37 +208,54 @@ define([
                 esriRequest({
                     url: itemURL,
                     callbackParamName: "callback",
+                    timeout:20000,
                     load: function (data) {
                         defObj.resolve(data);
                     },
                     error: function (e) {
                         defObj.resolve();
+                        topic.publish("hideProgressIndicator");
                     }
                 });
                 return defObj;
             },
+
             portalSignIn: function (def) {
                 var _self = this;
                 if (!def) {
                     def = new Deferred();
                 }
-                _self._portal.signIn().then(function (loggedInUser) {
-                    if (loggedInUser) {
-                        if (!dojo.configData.ApplicationSettings.token) {
-                            dojo.configData.ApplicationSettings.token = loggedInUser.credential.token;
+                if (query(".signin")[0].innerHTML == nls.signInText) {
+                    _self._portal.signIn().then(function (loggedInUser) {
+                        if (loggedInUser) {
+                            if (!dojo.configData.ApplicationSettings.token) {
+                                dojo.configData.ApplicationSettings.token = loggedInUser.credential.token;
+                            }
+                            domAttr.set(query(".signin")[0], "innerHTML", nls.signOutText);
+                            domClass.replace(query(".esriCTSignInIcon")[0], "icon-logout", "icon-login");
+                            _self.globalUser = loggedInUser;
+                            def.resolve();
                         }
-                        if (query(".esriCTSignIn")[0]) {
-                            domClass.add(query(".esriCTSignIn")[0], "displayNoneAll");
+                    });
+                }
+                else {
+                    _self._portal.signOut().then(function (loggedInUser) {
+                        if (dojo.configData.ApplicationSettings.token) {
+                            dojo.configData.ApplicationSettings.token = null;
                         }
-                        _self.globalUser = loggedInUser;
+                        domAttr.set(query(".signin")[0], "innerHTML", nls.signInText);
+                        domClass.replace(query(".esriCTSignInIcon")[0], "icon-login", "icon-logout");
+                        _self.globalUser = null;
+                        var queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (access: ("' + "public" + '"))';
+                        topic.publish("queryGroupItems", null, queryString);
                         def.resolve();
-                    }
-                });
+                    });
+                }
                 setTimeout(function () {
                     if (query(".dijitDialogPaneContentArea")[0]) {
                         query(".dijitDialogPaneContentArea")[0].childNodes[0].innerHTML = nls.signInDialogText;
                     }
-                }, 500);
+                }, 1000);
                 return def;
             }
         });

@@ -43,55 +43,46 @@ define([
         declare("itemGallery", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
             nls: nls,
+
             postCreate: function () {
                 var applicationHeaderDiv = dom.byId("esriCTParentDivContainer");
                 domConstruct.place(this.galleryView, query(".esriCTContentdiv")[0]);
                 this.own(topic.subscribe("createPods", lang.hitch(this, this.createItemPods)));
-                this.own(on(this.galleryPrevious, "click", lang.hitch(this, function () {
-                    var defObj = new Deferred();
-                    if (!dojo.prevQuery) {
-                        return;
-                    }
-                    var _self = this;
-                    topic.publish("queryGroupItem", null, null, null, null, defObj, dojo.prevQuery);
-                    defObj.then(function (data) {
-                        dojo.nextQuery = data.nextQueryParams;
-                        _self._prevItem(data);
-                        _self.createItemPods(data.results);
-                    }, function (err) {
-                        alert(err.message);
-                    });
-                })));
 
                 this.own(on(this.galleryNext, "click", lang.hitch(this, function () {
                     var defObj = new Deferred();
                     var _self = this;
-                    if (dojo.nextQuery.start == -1) {
-                        return;
-                    }
-                    topic.publish("queryGroupItem", null, null, null, null, defObj, dojo.nextQuery);
+                    topic.publish("queryGroupItem", null, null, null, defObj, dojo.nextQuery);
                     defObj.then(function (data) {
                         dojo.nextQuery = data.nextQueryParams;
-                        _self._prevItem(data);
+                        for (var i = 0; i < data.results.length; i++) {
+                            dojo.results.push(data.results[i]);
+                        }
                         _self.createItemPods(data.results);
                     }, function (err) {
                         alert(err.message);
                     });
                 })));
+
+                this.own(on(query(".esriCTBackBtn")[0], "click", lang.hitch(this, function () {
+                    domClass.add(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
+                    domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
+                    domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
+                    domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");
+                    domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
+                })));
             },
 
-            _prevItem: function (data) {
-                dojo.prevQuery = {
-                    num: data.queryParams.num,
-                    q: data.queryParams.q,
-                    sortField: data.queryParams.sortField,
-                    sortOrder: data.queryParams.sortOrder,
-                    start: data.queryParams.start - data.queryParams.num
+            createItemPods: function (itemResults, clearContainerFlag, totalResults) {
+                if (clearContainerFlag) {
+                    domConstruct.empty(this.itemPodsList);
                 }
-            },
+                if (itemResults.length != 100) {
+                    domClass.replace(query(".pagination")[0], "displayNoneAll", "displayBlockAll");
+                } else {
+                    domClass.replace(query(".pagination")[0], "displayBlockAll", "displayNoneAll");
+                }
 
-            createItemPods: function (itemResults) {
-                domConstruct.empty(this.itemPodsList);
                 for (var i = 0; i < itemResults.length; i++) {
                     if (!dojo.configData.gridView) {
                         var divPodParent = domConstruct.create('div', { "class": "esriCTApplicationListBox" }, this.itemPodsList);
@@ -110,18 +101,16 @@ define([
                 var divItemTitleRight = domConstruct.create('div', { "class": "divclear" }, divPodParent);
                 var divItemTitleText = domConstruct.create('div', { "class": "esriCTListAppTitle gridTitleHeight esriCTCursorPointer" }, divItemTitleRight);
                 domAttr.set(divItemTitleText, "innerHTML", (itemResult.title) ? (itemResult.title) : (nls.showNullValue));
-                var divItemWatchEye = domConstruct.create('div', { "class": "esriCTEyewatch" }, divPodParent);
+                domAttr.set(divItemTitleText, "title", (itemResult.title) ? (itemResult.title) : (nls.showNullValue));
+                var divItemType = domConstruct.create('div', { "class": "esriCTListMdfDateGrid" }, divItemTitleRight);
+                var spanItemType = domConstruct.create('div', { "class": "esriCTItemTypeGrid" }, divItemType);
+                domAttr.set(spanItemType, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.shoNullValue));
+                domAttr.set(spanItemType, "title", (itemResult.type) ? (itemResult.type) : (nls.shoNullValue));
+                var divItemWatchEye = domConstruct.create('div', { "class": "esriCTEyewatch esriCTEyewatchGrid" }, divItemType);
                 var spanItemWatchEye = domConstruct.create('span', { "class": "eye icon-eye" }, divItemWatchEye);
                 var spanItemWatchEye = domConstruct.create('span', { "class": "view" }, divItemWatchEye);
                 domAttr.set(spanItemWatchEye, "innerHTML", (itemResult.numViews) ? (number.format(parseInt(itemResult.numViews, 10))) : (nls.showNullValue));
-                var divItemReadMore = domConstruct.create('span', { "class": "readmore readmoreGrid" }, divPodParent);
-                domAttr.set(divItemReadMore, "innerHTML", nls.detailsDisplayText);
-                domAttr.set(divItemReadMore, "itemId", itemResult.itemUrl);
                 this.own(on(divItemTitleText, "click", lang.hitch(this, function () {
-                    topic.publish("showProgressIndicator");
-                    this.showInfoPage(this, itemResult);
-                })));
-                this.own(on(divItemReadMore, "click", lang.hitch(this, function () {
                     topic.publish("showProgressIndicator");
                     this.showInfoPage(this, itemResult);
                 })));
@@ -138,10 +127,8 @@ define([
                 if (itemResult.thumbnailUrl) {
                     domStyle.set(divThumbnailImage, "background", 'url(' + itemResult.thumbnailUrl + ') no-repeat center center');
                 } else {
-                    domStyle.set(divThumbnailImage, "background", "url(./themes/images/NotAvailable.png) no-repeat center center");
+                    domClass.add(divThumbnailImage, "esriCTNoThumbnailImage");
                 }
-                var divItemType = domConstruct.create('div', { "class": "esriCTApplicationType" }, divThumbnail);
-                domAttr.set(divItemType, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.shoNullValue));
                 var divThumbnailTopPanel = domConstruct.create('div', { "class": "esriCTImageTopPanel" }, divThumbnailImage);
 
                 var divTagContainer = domConstruct.create('div', { "class": "esriCTTagbg" }, divThumbnailTopPanel);
@@ -174,17 +161,18 @@ define([
                 } else {
                     tokenString = '';
                 }
-                var itemURL1 = dojo.configData.ApplicationSettings.portalURL + "/sharing/content/items/" + itemId + "?f=json" + tokenString;
+                var itemURL = dojo.configData.ApplicationSettings.portalURL + "/sharing/content/items/" + itemId + "?f=json" + tokenString;
                 var defObj = new Deferred();
                 defObj.then(function (data) {
                     if (data) {
                         data.thumbnailUrl = thumbnailURL;
-                        if ((data.type == "Map Service") || (data.type == "Web Map") || (data.type == "Feature Service") || (data.type == "KML") || (data.type == "WMS")) {
+                        var dataType = data.type.toLowerCase();
+                        if ((dataType == ("Map Service").toLowerCase()) || (dataType == ("Web Map").toLowerCase()) || (dataType == ("Feature Service").toLowerCase()) || (dataType == ("KML").toLowerCase()) || (dataType == ("WMS").toLowerCase())) {
                             var item = new ItemDetails({ data: data });
                         } else {
                             if (data.url) {
                                 window.open(data.url);
-                            } else if (data.itemType == "file") {
+                            } else if ((data.itemType).toLowerCase() == ("file").toLowerCase()) {
                                 var tokenString;
                                 if (dojo.configData.ApplicationSettings.token) {
                                     tokenString = "?token=" + dojo.configData.ApplicationSettings.token;
@@ -199,7 +187,7 @@ define([
                         }
                     }
                 });
-                topic.publish("queryItemInfo", itemURL1, defObj);
+                topic.publish("queryItemInfo", itemURL, defObj);
             },
 
             _accessLogoType: function (itemResult, divTagContent) {
@@ -225,28 +213,36 @@ define([
                 var divItemTitleRight = domConstruct.create('div', { "class": "divclear" }, divItemTitle);
                 var divItemTitleText = domConstruct.create('div', { "class": "esriCTListAppTitle esriCTCursorPointer" }, divItemTitleRight);
                 domAttr.set(divItemTitleText, "innerHTML", (itemResult.title) ? (itemResult.title) : (nls.showNullValue));
-                var divItemWatchEye = domConstruct.create('div', { "class": "esriCTEyewatch" }, divItemTitleRight);
-                var spanItemWatchEye = domConstruct.create('span', { "class": "eye icon-eye" }, divItemWatchEye);
+
+                var divItemInfo = domConstruct.create('div', {}, divItemTitle);
+
+                var divItemType = domConstruct.create('div', { "class": "esriCTListMdfDate" }, divItemInfo);
+                domAttr.set(divItemType, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.showNullValue));
+
+                var divRatings = domConstruct.create('div', { "style": "float:left" }, divItemInfo);
+                var numberStars = Math.round(itemResult.avgRating);
+                for (var i = 0; i < 5; i++) {
+                    var imgRating = document.createElement("span");
+                    imgRating.value = (i + 1);
+                    domClass.add(imgRating, "icon-star-empty icon-star-header iconStarColor");
+                    divRatings.appendChild(imgRating);
+                    if (i < numberStars) {
+                        domClass.add(imgRating, "icon-star icon-star-header iconStarColor");
+                    }
+                }
+
+                var divItemWatchEye = domConstruct.create('div', { "class": "esriCTEyewatch", "style": "padding-top:2px" }, divItemInfo);
+                var spanItemWatchEye = domConstruct.create('span', { "class": "eye icon-eye", "style": "padding-left:5px" }, divItemWatchEye);
                 var spanItemWatchEye = domConstruct.create('span', { "class": "view" }, divItemWatchEye);
                 domAttr.set(spanItemWatchEye, "innerHTML", (itemResult.numViews) ? (number.format(parseInt(itemResult.numViews, 10))) : (nls.showNullValue));
-                var divModifiedDate = domConstruct.create('div', { "class": "esriCTListMdfDate" }, divItemTitle);
-                divModifiedDate.innerHTML = ((itemResult.type) ? (itemResult.type) : (nls.showNullValue)) +
-                    " by " + ((itemResult.owner) ? (itemResult.owner) : (nls.showNullValue)) +
-                    " Last modified " + ((itemResult.modified) ? ((new Date(itemResult.modified)).toLocaleDateString()) : (nls.showNullValue)) + ".";
 
                 var divItemContent = domConstruct.create('div', { "class": "esriCTListAppcontent" }, divContent);
                 var divItemSnippet = domConstruct.create('div', { "class": "esriCTAppHeadline" }, divItemContent);
-
-                var spanItemReadMore = domConstruct.create('span', {}, divItemSnippet);
-                domAttr.set(spanItemReadMore, "innerHTML", (itemResult.snippet) ? (itemResult.snippet) : (nls.showNullValue));
-                var divItemReadMore = domConstruct.create('span', { "class": "readmore" }, divItemSnippet);
-                domAttr.set(divItemReadMore, "innerHTML", nls.readMoreDisplayText);
-                domAttr.set(divItemReadMore, "itemId", itemResult.itemUrl);
+                if (itemResult.snippet) {
+                    var spanItemReadMore = domConstruct.create('span', {}, divItemSnippet);
+                    domAttr.set(spanItemReadMore, "innerHTML", itemResult.snippet);
+                }
                 this.own(on(divItemTitleText, "click", lang.hitch(this, function () {
-                    topic.publish("showProgressIndicator");
-                    this.showInfoPage(this, itemResult);
-                })));
-                this.own(on(divItemReadMore, "click", lang.hitch(this, function () {
                     topic.publish("showProgressIndicator");
                     this.showInfoPage(this, itemResult);
                 })));
@@ -261,7 +257,7 @@ define([
         declare("itemInfoPage", null, {
             displayPanel: function (itemResult, _self, itemId, thumbnailURL) {
                 domClass.replace(query(".esriCTMenuTabRight")[0], "displayNoneAll", "displayBlockAll");
-                domClass.add(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
+                domClass.replace(query(".esriCTInnerRightPanel")[0], "displayNoneAll", "displayBlockAll");
                 domClass.remove(_self.detailsLeftPanel, "displayNoneAll");
                 domClass.remove(_self.detailsRightPanel, "displayNoneAll");
                 domConstruct.empty(_self.detailsContent);
@@ -271,8 +267,6 @@ define([
                 } else {
                     domAttr.set(_self.appThumbnail, "src", "./themes/images/NotAvailable.png");
                 }
-
-                domAttr.set(_self.appTypeTag, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.showNullValue));
                 domAttr.set(_self.applicationType, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.showNullValue));
                 domAttr.set(_self.appTitle, "innerHTML", (itemResult.title) ? (itemResult.title) : (nls.showNullValue));
                 if (dojo.configData.AGOLItemSettings.showNumberOfViews) {
@@ -282,7 +276,7 @@ define([
                     var itemReviewDetails = "(" + numberOfComments + " " + nls.numberOfCommentsText + ", " + numberOfRatings + " " + nls.numberOfRatingsText + ", " + numberOfViews + " " + nls.numberOfViewsText + ")";
                     domAttr.set(_self.numOfCommentsViews, "innerHTML", itemReviewDetails);
                 }
-                domAttr.set(_self.itemSnippet, "innerHTML", (itemResult.snippet) ? (itemResult.snippet) : (nls.showNullValue));
+                domAttr.set(_self.itemSnippet, "innerHTML", (itemResult.snippet) ? (itemResult.snippet) : "");
                 var descHeader = domConstruct.create('div', { "class": "esriCTReviewhead", "innerHTML": nls.appDesText }, _self.detailsContent);
                 var itemDescription = domConstruct.create('div', { "class": "esriCTText esriCTReviewContainer bottomBorder" }, _self.detailsContent);
                 if (dojo.configData.AGOLItemSettings.showAccessAndConstraints) {
@@ -291,7 +285,7 @@ define([
                     var accessInfo = domConstruct.create('div', { "class": "esriCTText" }, accessContainer);
                     domAttr.set(accessInfo, "innerHTML", (itemResult.licenseInfo) ? (itemResult.licenseInfo) : (nls.showNullValue));
                 }
-                domAttr.set(_self.btnTryItNow, "innerHTML", " ");
+                domAttr.set(_self.btnTryItNow, "innerHTML", "");
                 var defObj = new Deferred();
                 defObj.then(function (data) {
                     domAttr.set(itemDescription, "innerHTML", (itemResult.description) ? (itemResult.description) : (nls.showNullValue));
@@ -309,8 +303,10 @@ define([
                         if (data) {
                             if (data.itemType == "file") {
                                 domAttr.set(_self.btnTryItNow, "innerHTML", nls.downloadButtonText);
+                                domClass.add(_self.btnTryItNow, "esriCTDownloadButton");
                             } else {
                                 domAttr.set(_self.btnTryItNow, "innerHTML", nls.tryItButtonText);
+                                domClass.remove(_self.btnTryItNow, "esriCTDownloadButton");
                             }
                         }
                         topic.publish("hideProgressIndicator");
@@ -341,17 +337,21 @@ define([
                                 var divReviewText = domConstruct.create('div', { "class": "breakWord" }, divReview);
                                 domAttr.set(divReviewText, "innerHTML", nls.showNullValue);
                             }
+                        }, function (err) {
+                            var divReview = domConstruct.create('div', { "class": "divclear" }, reviewContainer);
+                            var divReviewText = domConstruct.create('div', { "class": "breakWord" }, divReview);
+                            domAttr.set(divReviewText, "innerHTML", err.message);
                         });
                     }
                     if (dojo.configData.AGOLItemSettings.showRatings) {
                         var numberStars = Math.round(itemResult.avgRating);
                         for (var i = 0; i < 5; i++) {
-                            var imgRating = document.createElement("img");
+                            var imgRating = document.createElement("span");
                             imgRating.value = (i + 1);
-                            domAttr.set(imgRating, "src", "themes/images/rating_empty.png");
+                            domClass.add(imgRating, "icon-star-empty icon-star-header iconStarColor");
                             _self.ratingsContainer.appendChild(imgRating);
                             if (i < numberStars) {
-                                domAttr.set(imgRating, "src", "themes/images/rating_full.png");
+                                domClass.add(imgRating, "icon-star icon-star-header iconStarColor");
                             }
                         }
                     }
@@ -385,12 +385,12 @@ define([
                     var tagsKey = domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.tagsText }, tagsContent);
                     for (var i = 0; i < itemInfo.item.tags.length; i++) {
                         if (i == 0) {
-                            var tags1 = itemInfo.item.tags[i];
+                            var itemTags = itemInfo.item.tags[i];
                         } else {
-                            var tags1 = tags1 + ", " + itemInfo.item.tags[i];
+                            var itemTags = itemTags + ", " + itemInfo.item.tags[i];
                         }
                     }
-                    var tagsValue = domConstruct.create('div', { "class": "esriCTPropertiesValue", "innerHTML": tags1 }, tagsContent);
+                    var tagsValue = domConstruct.create('div', { "class": "esriCTPropertiesValue", "innerHTML": itemTags }, tagsContent);
                     var sizeContent = domConstruct.create('div', { "class": "propertiesTblcontent" }, propertiesContainer);
                     var sizeKey = domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.sizeText }, sizeContent);
                     var sizeValue = domConstruct.create('div', { "class": "esriCTPropertiesValue", "innerHTML": itemInfo.item.size }, sizeContent);
@@ -398,16 +398,21 @@ define([
                     var extentKey = domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.extentText }, tagsContent);
                     var extentValue = domConstruct.create('div', { "class": "esriCTPropertiesValue" }, tagsContent);
                     if (itemInfo.item.extent.length > 0) {
-                        var extentUpper = domConstruct.create('div', {}, extentValue);
-                        domConstruct.create('span', { "innerHTML": nls.extentLeftText, "class": "esriCTExtentSpan" }, extentUpper);
-                        domConstruct.create('span', { "innerHTML": itemInfo.item.extent[0][0], "class": "esriCTExtentSpan" }, extentUpper);
-                        domConstruct.create('span', { "innerHTML": nls.extentRightText, "class": "esriCTExtentSpan" }, extentUpper);
-                        domConstruct.create('span', { "innerHTML": itemInfo.item.extent[1][0], "class": "esriCTExtentSpan" }, extentUpper);
-                        var extentLower = domConstruct.create('div', {}, extentValue);
-                        domConstruct.create('span', { "innerHTML": nls.extentTopText, "class": "esriCTExtentSpan" }, extentLower);
-                        domConstruct.create('span', { "innerHTML": itemInfo.item.extent[0][1], "class": "esriCTExtentSpan" }, extentLower);
-                        domConstruct.create('span', { "innerHTML": nls.extentBottomText, "class": "esriCTExtentSpan" }, extentLower);
-                        domConstruct.create('span', { "innerHTML": itemInfo.item.extent[1][1], "class": "esriCTExtentSpan" }, extentLower);
+                        var extentUpper = domConstruct.create('div', { "class": "esriCTExtent" }, extentValue);
+                        var extentInnerDivLeft = domConstruct.create('div', { "class": "esriCTExtentLeft" }, extentUpper);
+                        domConstruct.create('span', { "innerHTML": nls.extentLeftText, "class": "esriCTExtentspan" }, extentInnerDivLeft);
+                        domConstruct.create('span', { "innerHTML": itemInfo.item.extent[0][0] }, extentInnerDivLeft);
+                        var extentInnerDivRight = domConstruct.create('div', { "class": "esriCTExtentLeft" }, extentUpper);
+                        domConstruct.create('span', { "innerHTML": nls.extentRightText, "class": "esriCTExtentspan" }, extentInnerDivRight);
+                        domConstruct.create('span', { "innerHTML": itemInfo.item.extent[1][0] }, extentInnerDivRight);
+
+                        var extentLower = domConstruct.create('div', { "class": "esriCTExtent" }, extentValue);
+                        var extentInnerDivLowerLeft = domConstruct.create('div', { "class": "esriCTExtentLeft" }, extentLower);
+                        domConstruct.create('span', { "innerHTML": nls.extentTopText, "class": "esriCTExtentspan" }, extentInnerDivLowerLeft);
+                        domConstruct.create('span', { "innerHTML": itemInfo.item.extent[0][1] }, extentInnerDivLowerLeft);
+                        var extentInnerDivLowerRight = domConstruct.create('div', { "class": "esriCTExtentLeft" }, extentLower);
+                        domConstruct.create('span', { "innerHTML": nls.extentBottomText, "class": "esriCTExtentspan" }, extentInnerDivLowerRight);
+                        domConstruct.create('span', { "innerHTML": itemInfo.item.extent[1][1] }, extentInnerDivLowerRight);
                     }
                     domClass.add(propertiesContainer, "bottomBorder");
                     defObj.resolve();

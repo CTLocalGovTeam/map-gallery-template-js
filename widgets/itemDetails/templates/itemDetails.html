@@ -2,17 +2,14 @@
     <div data-dojo-attach-point="innerPanel" class="esriCTLeftPanel">
         <div class="esriCTInnerLeftPanelTopMap">
             <div class="esriCTPadding">
-                <div class="esriCTGalleryNameSample">
-                    Gallery Name</div>
                 <div class="esriCTLogo">
                     <img data-dojo-attach-point="itemIcon" alt="logo" title="logo" /></div>
                 <div class="esriCTLeftHead">
-                    <span data-dojo-attach-point="itemTitle"></span><span data-dojo-attach-point="numberOfViews"
-                        class="esriCTMapViews"></span>
+                    <span data-dojo-attach-point="itemTitle"></span>
                 </div>
             </div>
         </div>
-        <div class="esriCTlegendLayer">
+        <div class="esriCTlegendLayer esriCTlegendLayerMargin">
             <div class="esriCTtabGroup">
                 <input type="radio" name="tabGroup1" id="rad1" checked="checked" />
                 <label for="rad1">
@@ -25,14 +22,14 @@
                     ${nls.itemDetailsTab3}</label>
                 <br />
                 <div class="esriCTtab1">
-                    <div class="esriCTtabContainer">
+                    <div>
                         <div data-dojo-attach-point="legendDiv" class="esriCTlegend">
                         </div>
                     </div>
                 </div>
                 <div data-dojo-attach-point="layerDetails" class="esriCTtab2">
                 </div>
-                <div data-dojo-attach-point="layerInfo" class="esriCTtab3">
+                <div data-dojo-attach-point="layerDescription" class="esriCTtab3">
                 </div>
             </div>
         </div>
@@ -40,24 +37,29 @@
     <div class="esriCTRightPanelmap">
         <div data-dojo-attach-point="itemMap" class="map">
         </div>
-        <div class="esriRightControlPanel">
-            <div class="esriMapInput">
-                <div data-dojo-attach-point="divAddressContainer" class="esriCTSearchInput">
-                    <div class="esriCTSearch">
-                        <div>
-                            <input data-dojo-attach-point="txtItemSearch" class="esriCTSearchItemInput" type="text">
-                            <span data-dojo-attach-point="itemSearchIcon" class="esriCTSearchIconMap icon-search">
-                            </span>
-                        </div>
-                        <div class="esriCTautosuggest displayNoneAll" data-dojo-attach-point="autoResults">
-                        </div>
-                    </div>
+    </div>
+    <div class="esriRightControlPanel esriRightControlPanelMap">
+        <div data-dojo-attach-point="divBackToMapContainer" class="esriCTBackToMapBtnLegend">
+            <div data-dojo-attach-point="divBackToMap" class=" esriCTBackToMapPosition displayNoneAll">
+                <span class="icon-left-open-big esriCTBackBtnIcon"></span><span class="esriCTBackBtnText">
+                    ${nls.backToMapButtonText}</span></div>
+        </div>
+        <div class="esriMapInput">
+            <div data-dojo-attach-point="divAddressContainer" class="esriCTSearch">
+                <div>
+                    <input data-dojo-attach-point="txtAddressSearch" class="esriCTSearchItemInput" type="text">
+                    <span data-dojo-attach-point="addressSearchIcon" class="esriCTSearchIconMap icon-search esriCTCursorPointer">
+                    </span>
+                </div>
+                <div class="esriCTautosuggest displayNoneAll" data-dojo-attach-point="autocompleteResults">
                 </div>
             </div>
-            <div class="esriMapGeoLocation">
-            </div>
-            <div class="esriMapZoomMap">
-            </div>
+        </div>
+        <div data-dojo-attach-point="divLegendLayer" class="esriCTMapInfoIcon esriMapGeoInfo icon-info-circled-alt">
+        </div>
+        <div class="esriMapGeoLocation">
+        </div>
+        <div class="esriCTFullScreen">
         </div>
     </div>
 </div>

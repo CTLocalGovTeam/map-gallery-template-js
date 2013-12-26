@@ -3,20 +3,18 @@
         <div data-dojo-attach-point="itemPodsList" class="esriCTListView">
         </div>
         <div class="pagination">
-            <div data-dojo-attach-point="galleryPrevious" class="icon-left-open-big icon-arrowLeft">
-                <a></a>
-            </div>
-            <div data-dojo-attach-point="galleryNext" class="icon-right-open-big icon-arrowRight">
-                <a></a>
+            <div data-dojo-attach-point="galleryNext" class="icon-arrowRight">
+                <a>${nls.showMoreResultsGalleryText}</a>
             </div>
         </div>
     </div>
     <div data-dojo-attach-point="detailsLeftPanel" class="esriCTDetailsLeftPanel displayNoneAll">
+        <div class="esriCTBackBtn esriCTBackBtnPosition">
+            <span class="icon-left-open-big esriCTBackBtnIcon"></span><span class="esriCTBackBtnText">
+                ${nls.backToGalleryText}</span></div>
         <div class="esriCTDetailsMap">
             <div class="esriCTDetailsMapImage">
                 <img data-dojo-attach-point="appThumbnail" />
-            </div>
-            <div data-dojo-attach-point="appTypeTag" class="esriCTDetailsApplicationType">
             </div>
         </div>
         <div class="esriCTDetailLeftInfo">

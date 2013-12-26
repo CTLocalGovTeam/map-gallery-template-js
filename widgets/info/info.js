@@ -31,6 +31,7 @@ define([
     function (declare, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, domClass) {
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
+
             postCreate: function () {
                 this.own(on(this.infoIcon, "click", lang.hitch(this, function () {
                     this._slideRightPanel();

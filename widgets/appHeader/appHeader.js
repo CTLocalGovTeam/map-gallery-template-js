@@ -118,7 +118,7 @@ define([
                         domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");
                     }
                     if (query(".esriCTDetailsLeftPanel")[0]) {
-                        domClass.add(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
+                        domClass.replace(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
                         domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
                         domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
                         domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");

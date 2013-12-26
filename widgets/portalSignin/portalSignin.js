@@ -40,6 +40,7 @@ define([
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
             nls: nls,
+
             postCreate: function () {
                 domAttr.set(this.signInLabel, "innerHTML", nls.signInText);
                 this.own(on(this.signInContainer, "click", lang.hitch(this, function () {

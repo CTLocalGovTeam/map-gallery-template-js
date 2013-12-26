@@ -29,6 +29,11 @@
         font-family: 'Lato' ,sans-serif !important;
         font-size: 14px !important;
     }
+
+    .esriRightControlPanel
+    {
+        width: 240px !important;
+    }
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1280px)
@@ -58,12 +63,6 @@
     {
         width: 100% !important;
     }
-
-    .esriCTResetfilter
-    {
-        font-size: 14px;
-    }
-
 
     .esriCTListAppcontent
     {
@@ -104,11 +103,6 @@
         width: 100% !important;
     }
 
-    .esriCTResetfilter
-    {
-        font-size: 14px;
-    }
-
     .esriCTSearch
     {
         width: 180px;
@@ -132,6 +126,16 @@
     .esriCTApplicationBox
     {
         margin: 0 4% 0 0;
+    }
+
+    .esriCTListContent, .esriCTDetailsListContent
+    {
+        word-break: break-word;
+    }
+
+    .esriCTFullScreen
+    {
+        display: none;
     }
 }
 
@@ -163,11 +167,6 @@
         width: 100% !important;
     }
 
-    .esriCTResetfilter
-    {
-        font-size: 14px;
-    }
-
     .esriCTSearch
     {
         width: 150px;
@@ -192,9 +191,25 @@
     {
         padding: 0 12% 0 0;
     }
+
     .esriCTGalleryName
     {
         display: none;
+    }
+
+    .esriCTListContent, .esriCTDetailsListContent
+    {
+        word-break: break-all;
+    }
+
+    .esriCTFullScreen
+    {
+        display: none;
+    }
+
+    .esriRightControlPanel
+    {
+        width: 240px !important;
     }
 }
 
@@ -253,6 +268,12 @@
         height: 48px;
     }
 
+    .esriCTMenuTabRightMap
+    {
+        width: 100%;
+        height: 48px;
+    }
+
     .esriCTMenuIcon
     {
         background-position: right center;
@@ -274,7 +295,8 @@
 
     .esriCTLeftPanel
     {
-        max-width: 100% !important;
+        width: 100% !important;
+        float: none;
     }
 
     .esriCTPadding
@@ -353,14 +375,9 @@
         margin-left: 32%;
     }
 
-    .esriCTListMdfDate
-    {
-        display: none;
-    }
-
     .esriCTEyewatch
     {
-        clear: both;
+        float: left;
         padding-left: 5px;
     }
 
@@ -382,7 +399,6 @@
 
     .esriCTLogo
     {
-        /* float: left;*/
         padding: 15px 0 0 15px;
     }
 
@@ -409,10 +425,12 @@
     {
         float: left;
         width: 78%;
-        overflow: hidden;
         margin: 0px;
     }
-
+    .esriCTSearchInputInner
+    {
+        width: 100%;
+    }
     .esriCTSearch
     {
         width: 100% !important;
@@ -444,12 +462,19 @@
 
     .esriCTRightPanelmap
     {
-        display: none;
+        display: block;
+        margin-left: 0;
+        margin-top: 98px;
+        width: 100%;
     }
 
     .esriCTlegendLayer
     {
-        margin-top: 1px;
+        display: none;
+    }
+    .esriCTlegendLayerMargin
+    {
+        margin-top: 98px;
     }
 
     .esriCTCategoriesHead
@@ -495,6 +520,7 @@
         -o-transition: 0.3s ease-in-out;
         -ms-transition: 0.3s ease-in-out;
         transition: 0.3s ease-in-out;
+        border-left: 1px solid #7453a4;
     }
 
     .esriCTShiftLeft
@@ -502,6 +528,7 @@
         position: absolute;
         right: 90%;
         overflow: hidden;
+        border-left: 1px solid #7453a4;
     }
 
     .esriCTInnerLeftPanelBottomShift
@@ -513,7 +540,48 @@
         transition: 0.3s ease-in-out;
         width: 90%;
     }
+    .esriCTLegendPanelShift
+    {
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
+        width: 100%;
+        position: absolute;
+        right: 0px;
+    }
 
+    .esriCTMapPanelShift
+    {
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
+        width: 0px;
+        position: absolute;
+        right: 100%;
+    }
+
+    .esriCTlegendLayer
+    {
+        position: absolute;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
+    }
+    .esriCTRightPanelmap
+    {
+        position: absolute;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
+    }
     .esriCTShiftLeftPanel
     {
         position: absolute;
@@ -542,7 +610,6 @@
     {
         position: absolute;
         height: 100%;
-        z-index: 10;
     }
 
     .esriCTInnerLeftPanelBottom
@@ -561,13 +628,6 @@
         position: absolute;
         z-index: 8;
         left: -1px;
-    }
-
-    .esriCTResetfilter
-    {
-        font-size: 14px;
-        padding-right: 15px;
-        padding-top: 0px;
     }
 
     .esriCTLeftHead
@@ -643,6 +703,74 @@
     {
         margin-top: -21px;
         right: -2px;
+    }
+    .pagination
+    {
+        padding-left: 10px;
+    }
+    .esriCTDownloadButton
+    {
+        display: none;
+    }
+    .esriCTInnerRightPanel
+    {
+        padding-top: 68px;
+    }
+    .esriCTFullScreen
+    {
+        display: none;
+    }
+    .esriCTDivLayerContainer
+    {
+        display: none;
+    }
+    .esriCTMenuTab
+    {
+        z-index: 10002;
+    }
+    .esriCTBackBtn
+    {
+        color: #007AC2;
+        z-index: 10017;
+    }
+    .esriMapGeoLocation
+    {
+        margin-top: 70px;
+        position: absolute;
+        right: 0;
+    }
+    .esriCTMenuTabRightMap
+    {
+        display: block;
+    }
+    .esriRightControlPanel
+    {
+        right: 0;
+        background: none repeat scroll 0 0 #007AC2;
+        border-bottom: 1px solid #007AC2;
+        width: 100%;
+        height: 48px;
+    }
+    .esriRightControlPanelMap
+    {
+        top: 48px;
+    }
+    .esriRightControlPanelLegend
+    {
+        top: 0px;
+    }
+    .esriMapInput
+    {
+        width: 78%;
+        margin: 0px;
+    }
+    .esriMapGeoInfo
+    {
+        display: block;
+    }
+    .esriCTBackToMapBtn, .esriCTBackToMapBtnLegend
+    {
+        display: block;
     }
 }
 @media screen and (max-width: 320px)
@@ -721,7 +849,8 @@
 
     .esriCTLeftPanel
     {
-        max-width: 100% !important;
+        width: 100% !important;
+        float: none;
     }
 
     .esriCTPadding
@@ -800,14 +929,9 @@
         margin-left: 33%;
     }
 
-    .esriCTListMdfDate
-    {
-        display: none;
-    }
-
     .esriCTEyewatch
     {
-        clear: both;
+        float: left;
         padding-left: 5px;
     }
 
@@ -858,14 +982,12 @@
         overflow: hidden;
         margin: 0px;
     }
-
-    .esriCTSearch
+    .esriCTSearchInputInner
     {
-        width: 100% !important;
+        width: 100%;
     }
 
-
-    /*//input display*/
+    /*input display*/
     .esriCTDetailsLeftPanel
     {
         float: left;
@@ -891,12 +1013,19 @@
 
     .esriCTRightPanelmap
     {
-        display: none;
+        display: block;
+        margin-left: 0;
+        margin-top: 98px;
+        width: 100%;
     }
 
     .esriCTlegendLayer
     {
-        margin-top: 1px;
+        display: none;
+    }
+    .esriCTlegendLayerMargin
+    {
+        margin-top: 98px;
     }
 
     .blueTheme .esriCTCategoriesHead
@@ -941,6 +1070,7 @@
         -o-transition: 0.3s ease-in-out;
         -ms-transition: 0.3s ease-in-out;
         transition: 0.3s ease-in-out;
+        border-left: 1px solid #7453a4;
     }
 
     .esriCTShiftLeft
@@ -959,7 +1089,49 @@
         transition: 0.3s ease-in-out;
         width: 86%;
     }
+    .esriCTLegendPanelShift
+    {
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
+        position: absolute;
+        right: 0px;
+        width: 100%;
+    }
 
+    .esriCTMapPanelShift
+    {
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
+        position: absolute;
+        right: 100%;
+        width: 0px;
+    }
+
+    .esriCTlegendLayer
+    {
+        position: absolute;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
+    }
+
+    .esriCTRightPanelmap
+    {
+        position: absolute;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
+    }
     .esriCTShiftLeftPanel
     {
         position: absolute;
@@ -1002,13 +1174,6 @@
         position: absolute;
         z-index: 8;
         left: -1px;
-    }
-
-    .esriCTResetfilter
-    {
-        font-size: 14px;
-        padding-right: 15px;
-        padding-top: 0px;
     }
 
     .esriCTLeftHead
@@ -1107,7 +1272,70 @@
         margin-top: -21px;
         right: -2px;
     }
+    .pagination
+    {
+        padding-left: 10px;
+    }
+    .esriCTDownloadButton
+    {
+        display: none;
+    }
+    .esriCTInnerRightPanel
+    {
+        padding-top: 68px;
+    }
+    .esriRightControlPanel
+    {
+        right: 0;
+        background: none repeat scroll 0 0 #007AC2;
+        border-bottom: 1px solid #007AC2;
+        width: 100%;
+        height: 48px;
+    }
+    .esriRightControlPanelMap
+    {
+        top: 48px;
+    }
+    .esriRightControlPanelLegend
+    {
+        top: 0px;
+    }
+    .esriCTFullScreen
+    {
+        display: none;
+    }
+    .esriCTDivLayerContainer
+    {
+        display: none;
+    }
+    .esriCTMenuTab
+    {
+        z-index: 10002;
+    }
 
+    .esriCTBackBtn
+    {
+        color: #007AC2;
+        z-index: 10017;
+    }
+    .esriMapGeoLocation
+    {
+        margin-top: 70px;
+        position: absolute;
+        right: 0;
+    }
+    .esriCTMenuTabRightMap
+    {
+        display: block;
+    }
+    .esriMapGeoInfo
+    {
+        display: block;
+    }
+    .esriCTBackToMapBtn, .esriCTBackToMapBtnLegend
+    {
+        display: block;
+    }
 }
 
 @media screen and (max-width: 240px)
@@ -1130,13 +1358,11 @@
     {
         float: left;
         width: 78%;
-        overflow: hidden;
         margin: 0px;
     }
-
-    .esriCTSearch
+    .esriCTSearchInputInner
     {
-        width: 100% !important;
+        width: 100%;
     }
 
     .esriCTInfoIcon
@@ -1210,6 +1436,42 @@
         margin-top: -21px;
         right: -2px;
     }
+    .pagination
+    {
+        padding-left: 10px;
+    }
+    .esriCTDownloadButton
+    {
+        display: none;
+    }
+    .esriCTInnerRightPanel
+    {
+        padding-top: 68px;
+    }
+    .esriRightControlPanel
+    {
+        right: 0;
+        background: none repeat scroll 0 0 #007AC2;
+        border-bottom: 1px solid #007AC2;
+        width: 100%;
+        height: 48px;
+    }
+    .esriRightControlPanelMap
+    {
+        top: 48px;
+    }
+    .esriRightControlPanelLegend
+    {
+        top: 0px;
+    }
+    .esriMapGeoInfo
+    {
+        display: block;
+    }
+    .esriCTBackToMapBtn, .esriCTBackToMapBtnLegend
+    {
+        display: block;
+    }
 }
 @media screen and (max-width: 480px)
 {
@@ -1231,5 +1493,17 @@
     #widget_dijit_form_ValidationTextBox_0
     {
         width: 99% !important;
+    }
+    .esriCTDownloadButton
+    {
+        display: none;
+    }
+    .esriMapGeoInfo
+    {
+        display: block;
+    }
+    .esriCTBackToMapBtn, .esriCTBackToMapBtnLegend
+    {
+        display: block;
     }
 }

@@ -37,6 +37,7 @@ define([
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
             nls: nls,
+
             postCreate: function () {
                 var flagSortByDate = true;
                 domAttr.set(this.sortByLabel, "innerHTML", nls.sortByDateText);
@@ -75,19 +76,12 @@ define([
             },
 
             _sortPodOrder: function (sortOrder, sortByLabel, text) {
-                var numberOfItems;
-                if (dojo.configData.gridView) {
-                    numberOfItems = 9;
-                } else {
-                    numberOfItems = 4;
-                }
                 var defObj = new Deferred();
-                topic.publish("queryGroupItem", dojo.queryString, numberOfItems, sortOrder, "desc", defObj);
+                topic.publish("queryGroupItem", dojo.queryString, sortOrder, "desc", defObj);
                 defObj.then(function (data) {
                     domAttr.set(sortByLabel, "innerHTML", text);
                     dojo.nextQuery = data.nextQueryParams;
-                    dojo.prevQuery = null;
-                    topic.publish("createPods", data.results);
+                    topic.publish("createPods", data.results, true, data.total);
                 });
             }
         });

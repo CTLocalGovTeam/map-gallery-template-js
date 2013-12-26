@@ -62,6 +62,8 @@ define([
                     */
                     topic.publish("toggleWidget", "locator");
                 })));
+                topic.subscribe("clearDefaultText", this._clearDefaultText);
+                topic.subscribe("replaceDefaultText", this._replaceDefaultText);
                 domStyle.set(this.divAddressContainer, "display", "block");
                 this._setDefaultTextboxValue();
                 this.txtItemSearch.value = domAttr.get(this.txtItemSearch, "defaultItem");
@@ -75,8 +77,14 @@ define([
                 * @private
                 * @memberOf widgets/locator/locator
                 */
+
                 this.own(on(this.itemSearchIcon, "click", lang.hitch(this, function (evt) {
-                    this._locateItems(this.autoResults);
+                    if (this.txtItemSearch.value != '') {
+                        if (this.txtItemSearch.value != dojo.configData.LocatorSettings.itemsLocator[0].LocatorPlaceholder) {
+                            topic.publish("clearFilter", false);
+                            this._locateItems(this.autoResults, true);
+                        }
+                    }
                 })));
                 this.own(on(this.txtItemSearch, "keyup", lang.hitch(this, function (evt) {
                     this._submitSearchedItem(evt);
@@ -100,8 +108,10 @@ define([
                 if (evt) {
                     if (evt.keyCode == dojo.keys.ENTER) {
                         if (this.txtItemSearch.value != '') {
-                            domClass.replace(this.autoResults, "displayBlockAll", "displayNoneAll");
-                            this._locateItems(this.autoResults);
+                            if (this.txtItemSearch.value != dojo.configData.LocatorSettings.itemsLocator[0].LocatorPlaceholder) {
+                                topic.publish("clearFilter", false);
+                                this._locateItems(this.autoResults, true);
+                            }
                         }
                     }
                     if (dojo.configData.ApplicationSettings.enableAutoComplete) {
@@ -133,7 +143,7 @@ define([
                                     * before the timeout
                                     */
                                     this.stagedSearch = setTimeout(function () {
-                                        _self._locateItems(_self.autoResults);
+                                        _self._locateItems(_self.autoResults, false);
                                     }, 500);
                                 }
                             }
@@ -147,18 +157,19 @@ define([
             },
 
             _hideText: function () {
-                this.txtItemSearch.value = dojo.configData.LocatorSettings.itemsLocator[0].LocatorDefaultAddress;
+                this.txtItemSearch.value = dojo.configData.LocatorSettings.itemsLocator[0].LocatorPlaceholder;
                 this.lastSearchString = lang.trim(this.txtItemSearch.value);
                 if (domGeom.position(this.autoResults).h > 0) {
                     domClass.replace(this.autoResults, "displayNoneAll", "displayBlockAll");
                 }
-                topic.publish("clearFilter");
+                topic.publish("clearFilter", true);
             },
 
-            _locateItems: function (node) {
+            _locateItems: function (node, flag) {
                 var _self = this;
                 var defObj = new Deferred();
-                topic.publish("queryGroupItem", "%" + this.txtItemSearch.value + "%" + ' AND group:("' + dojo.configData.ApplicationSettings.group + '")', 100, "numViews", "desc", defObj);
+                dojo.queryString = "%" + this.txtItemSearch.value + "%" + ' AND group:("' + dojo.configData.ApplicationSettings.group + '")'
+                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
                 defObj.then(function (data) {
                     domConstruct.empty(_self.autoResults);
                     if (data.results.length > 0) {
@@ -168,17 +179,12 @@ define([
                             domAttr.set(this.spanResults, "searchedItem", data.results[i].id);
                             _self.own(on(this.spanResults, "click", function () {
                                 var itemId = domAttr.get(this, "searchedItem");
-                                var numberOfItems;
-                                if (dojo.configData.gridView) {
-                                    numberOfItems = 9;
-                                } else {
-                                    numberOfItems = 4;
-                                }
                                 var defObj = new Deferred();
                                 dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (id: ("' + itemId + '"))';
-                                topic.publish("queryGroupItem", dojo.queryString, numberOfItems, dojo.sortBy, "desc", defObj);
+                                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
                                 defObj.then(function (data) {
-                                    topic.publish("createPods", data.results);
+                                    dojo.results = data.results;
+                                    topic.publish("createPods", data.results, true, data.total);
                                     domClass.replace(query(".pagination")[0], "displayNoneAll", "displayBlockAll");
                                 });
                                 domAttr.set(_self.txtItemSearch, "value", this.innerHTML);
@@ -186,6 +192,12 @@ define([
                                 domConstruct.empty(_self.autoResults);
                                 domClass.replace(_self.autoResults, "displayNoneAll", "displayBlockAll");
                             }));
+                        }
+                        if (flag) {
+                            dojo.nextQuery = data.nextQueryParams;
+                            dojo.results = data.results;
+                            domClass.replace(_self.autoResults, "displayNoneAll", "displayBlockAll");
+                            topic.publish("createPods", data.results, true, data.total);
                         }
                     } else {
                         domClass.replace(_self.autoResults, "displayNoneAll", "displayBlockAll");
@@ -212,6 +224,7 @@ define([
             * @memberOf widgets/locator/locator
             */
             _replaceDefaultText: function (evt) {
+                var _self = this;
                 var target = window.event ? window.event.srcElement : evt ? evt.target : null;
                 if (!target) return;
                 this._resetTargetValue(target, "defaultItem", "gray");
@@ -234,7 +247,6 @@ define([
                     domClass.remove(target, "esriCTColorChange");
                 }
                 domClass.add(target, "esriCTBlurColorChange");
-                this.lastSearchString = lang.trim(this.txtItemSearch.value);
             },
             /**
             * set default value of locator textbox as specified in configuration file
@@ -249,7 +261,7 @@ define([
                 * @private
                 * @memberOf widgets/locator/locator
                 */
-                domAttr.set(this.txtItemSearch, "defaultItem", itemLocatorSettings[0].LocatorDefaultAddress);
+                domAttr.set(this.txtItemSearch, "defaultItem", itemLocatorSettings[0].LocatorPlaceholder);
             }
         });
     });
