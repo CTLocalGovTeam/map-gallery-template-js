@@ -36,11 +36,11 @@ define([
         "dojo/on",
         "dojo/_base/lang",
         "dojo/dom-geometry",
+        "dojo/_base/array",
         "dojo/NodeList-manipulate"
     ],
-    function (declare, domConstruct, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, topic, Deferred, Gallery, query, domClass, domStyle, on, lang, domGeom) {
+    function (declare, domConstruct, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, topic, Deferred, Gallery, query, domClass, domStyle, on, lang, domGeom, array) {
         declare("collectUniqueTags", null, {
-            geotagarray: null,
 
             setNodeValue: function (node, text) {
                 if (text) {
@@ -89,18 +89,17 @@ define([
                     "geoTagCollection": geoTagCollection,
                     "groupItemsTagsdata": groupItemsTagsdata
                 };
-
                 return tagsObj;
             },
 
             //This function sorts the the tag cloud array in order
-            _sortArray: function (array) {
+            _sortArray: function (tagArray) {
                 var sortedArray = [];
-                for (var i in array) {
-                    if (array.hasOwnProperty(i)) {
+                for (var i in tagArray) {
+                    if (tagArray.hasOwnProperty(i)) {
                         sortedArray.push({
                             key: i,
-                            value: array[i]
+                            value: tagArray[i]
                         });
                     }
                 }
@@ -116,7 +115,7 @@ define([
             },
 
             //This function search for the tags with the geo tag configured
-            _searchGeoTag: function (tag, geoTag, prefixTag) {
+            _searchGeoTag: function (tag, geoTag) {
                 var geoTagValue = tag.toLowerCase().indexOf(geoTag.toLowerCase());
                 return geoTagValue;
             }
@@ -150,7 +149,7 @@ define([
                 var fontSizeArray = [];
                 fontSizeArray.push(min);
                 for (var i = 1; i < count; i++) {
-                    nextValue = fontSizeArray[i - 1] + diff;
+                    var nextValue = fontSizeArray[i - 1] + diff;
                     fontSizeArray.push(nextValue);
                 }
                 return fontSizeArray.sort(function (a, b) {
@@ -193,34 +192,40 @@ define([
                 topic.subscribe("queryGroupItems", this._queryGroupItems);
             },
 
-            _queryGroupItems: function (nextQuery, query) {
+            _queryGroupItems: function (nextQuery, queryString) {
                 var _self = this;
                 var defObj = new Deferred();
-                if ((!nextQuery) && (!query)) {
+                if ((!nextQuery) && (!queryString)) {
                     dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
                     dojo.sortBy = "numViews";
                     topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
-                } else if (!query) {
+                } else if (!queryString) {
                     topic.publish("queryGroupItem", null, null, null, defObj, nextQuery);
                 }
-                if (query) {
-                    dojo.queryString = query;
+                if (queryString) {
+                    dojo.queryString = queryString;
                     dojo.sortBy = "numViews";
                     topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
                 }
 
                 defObj.then(function (data) {
-                    if (data.nextQueryParams.start != -1) {
-                        for (var i = 0; i < data.results.length; i++) {
-                            _self.groupItems.push(data.results[i]);
+                    if (data.results.length > 0) {
+                        if (data.nextQueryParams.start != -1) {
+                            for (var i = 0; i < data.results.length; i++) {
+                                _self.groupItems.push(data.results[i]);
+                            }
+                            _self._queryGroupItems(data.nextQueryParams);
+                        } else {
+                            for (var i = 0; i < data.results.length; i++) {
+                                _self.groupItems.push(data.results[i]);
+                            }
+                            dojo.groupItems = _self.groupItems;
+                            _self._setLeftPanelContent(_self.groupItems);
                         }
-                        _self._queryGroupItems(data.nextQueryParams);
                     } else {
-                        for (var i = 0; i < data.results.length; i++) {
-                            _self.groupItems.push(data.results[i]);
+                        if (queryString) {
+                            alert(nls.errorMessages.noPublicItems);
                         }
-                        dojo.groupItems = _self.groupItems;
-                        _self._setLeftPanelContent(_self.groupItems);
                     }
                 }, function (err) {
                     alert(err.message);
@@ -277,14 +282,14 @@ define([
 
             _clearFilter: function (flag) {
                 topic.publish("showProgressIndicator");
-                if (query(".tagCloudHighlight")[0]) {
-                    domClass.remove(query(".tagCloudHighlight")[0], "tagCloudHighlight");
+                if (query(".esriCTTagCloudHighlight")[0]) {
+                    domClass.remove(query(".esriCTTagCloudHighlight")[0], "esriCTTagCloudHighlight");
                 }
                 if (query(".esriCTDetailsLeftPanel")[0]) {
                     domClass.replace(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
                     domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
                     domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
-                    domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");
+                    domClass.remove(query(".esriCTGalleryContent")[0], "displayNoneAll");
                     domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
                 }
                 if (query(".esriCTNoResults")[0]) {
@@ -310,11 +315,11 @@ define([
             //This function creates the required HTML for generating the tag cloud
             displayTagCloud: function (displayTags, node, text, tagCloudArray) {
                 var _self = this;
-                dojo.selectedTags = "";
+                var selectedTags = "";
 
                 for (var i = 0; i < displayTags.length; i++) {
                     var span = domConstruct.place(domConstruct.create('h3'), node);
-                    domClass.add(span, "tagCloud");
+                    domClass.add(span, "esriCTTagCloud");
                     domStyle.set(span, "fontSize", displayTags[i].fontSize + dojo.configData.ApplicationSettings.tagCloudFontRange.units);
                     if (i != (displayTags.length - 1)) {
                         domAttr.set(span, "innerHTML", displayTags[i].key + ", ");
@@ -334,33 +339,33 @@ define([
                                 val = dojo.geoTagArray[j].key;
                             }
                         }
-                        if (domClass.contains(this, "tagCloudHighlight")) {
-                            domClass.remove(this, "tagCloudHighlight");
-                            var index = tagCloudArray.indexOf(val);
+                        if (domClass.contains(this, "esriCTTagCloudHighlight")) {
+                            domClass.remove(this, "esriCTTagCloudHighlight");
+                            var index = array.indexOf(tagCloudArray, val);
                             if (index > -1) {
                                 tagCloudArray.splice(index, 1);
                             }
                         } else {
-                            domClass.add(this, "tagCloudHighlight");
+                            domClass.add(this, "esriCTTagCloudHighlight");
                             tagCloudArray.push(val);
                         }
 
-                        if (domGeom.position(query(".esriCTautosuggest")[0]).h > 0) {
-                            domClass.replace(query(".esriCTautosuggest")[0], "displayNoneAll", "displayBlockAll");
+                        if (domGeom.position(query(".esriCTAutoSuggest")[0]).h > 0) {
+                            domClass.replace(query(".esriCTAutoSuggest")[0], "displayNoneAll", "displayBlockAll");
                         }
 
-                        if (dojo.selectedTags != "") {
-                            dojo.selectedTags = tagCloudArray.join('"' + " AND " + '"')
+                        if (selectedTags != "") {
+                            selectedTags = tagCloudArray.join('"' + " AND " + '"');
                         } else {
-                            dojo.selectedTags = val;
+                            selectedTags = val;
                         }
-                        _self._queryRelatedTags(dojo.selectedTags);
+                        _self._queryRelatedTags(selectedTags);
 
                         if (query(".esriCTDetailsLeftPanel")[0]) {
                             domClass.replace(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
                             domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
                             domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
-                            domClass.remove(query(".esriCTContentdiv")[0], "displayNoneAll");
+                            domClass.remove(query(".esriCTGalleryContent")[0], "displayNoneAll");
                             domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
                         }
                     }
@@ -379,7 +384,7 @@ define([
                         if (query(".esriCTNoResults")[0]) {
                             domConstruct.destroy(query(".esriCTNoResults")[0]);
                         }
-                        var divItemTitleRight = domConstruct.create('div', { "class": "divclear esriCTNoResults", "innerHTML": nls.noResultsText }, query(".esriCTRightPanel")[0]);
+                        var divItemTitleRight = domConstruct.create('div', { "class": "esriCTDivClear esriCTNoResults", "innerHTML": nls.noResultsText }, query(".esriCTRightPanel")[0]);
                         topic.publish("hideProgressIndicator");
                     } else {
                         if (query(".esriCTNoResults")[0]) {
@@ -388,7 +393,7 @@ define([
                         domClass.replace(query(".esriCTInnerRightPanel")[0], "displayBlockAll", "displayNoneAll");
                         dojo.nextQuery = data.nextQueryParams;
                         dojo.results = data.results;
-                        topic.publish("createPods", data.results, true, data.total);
+                        topic.publish("createPods", data.results, true);
                     }
                 }, function (err) {
                     alert(err.message);
@@ -441,9 +446,8 @@ define([
 
             //This function append the left panel to parent container
             _appendLeftPanel: function () {
-                var _self = this;
                 var applicationHeaderDiv = dom.byId("esriCTParentDivContainer");
-                domConstruct.place(_self.galleryandPannels, applicationHeaderDiv);
+                domConstruct.place(this.galleryandPannels, applicationHeaderDiv);
             }
         });
     });

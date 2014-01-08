@@ -44,20 +44,21 @@ define([], function () {
         // Header Widget Settings
         //------------------------------------------------------------------------------------------------------------------------
         // group: Set the Group id for the application
-        // theme: Set the application theme. If blank, default blue theme will be loaded
+        // theme: Set the application theme. If blank, default blue theme will be loaded. Supported theme keys are blueTheme, greenTheme and redTheme.
         // showCategoriesTagCloud: Set this variable to enable or disable categories tag cloud
         // showGeographiesTagCloud: Set this variable to enable or disable geographies tag cloud
         // geographiesTagText: Set this variable to search text for search in tags in geographies tag cloud. If set to blank,
         //                     geographies tag cloud will not be displayed irrespective of the value for showGeographiesTagCloud
-        //  geographiesPrefixText: Set this variable to trim text from geographies tag cloud. If set to blank,
-        //                         geographies tag cloud will  be displayed as is
+        // geographiesPrefixText: Set this variable to trim text from geographies tag cloud. If set to blank,
+        //                        geographies tag cloud will  be displayed as is. Case sensitive.
+        // enableAutoComplete: Set this variable to enable or disable autocomplete on item search
         // tagCloudFontRange:
         //                minValue: Set min value of the tag cloud font,
         //                maxValue: set the max value of the tag cloud font,
         //                units: Set the units for the text in tag cloud. UI will be distorted if font sizes have inappropriate values
         // showMaxTopTags: Set this variable to the maximum number of results to be displayed in geographies and categories tag clouds
-        // displaySharingAttribute: If set to true, display sharing attributes (“ALL”, “GRP” or “ORG”).
-        //                          If set to false, sharing attributes (“ALL”, “GRP” or “ORG”) should not be displayed in item thumbnail
+        // displaySharingAttribute: If set to true, display sharing attributes ("ALL", "GRP" or "ORG").
+        //                          If set to false, sharing attributes ("ALL", "GRP" or "ORG") should not be displayed in item thumbnail
         // useItemPage: If set to true then display Item Info Page
         //              If set to false and item is of type webmap then load the Item
         //              If set to false and item is of type other than webmap then download the Item
@@ -117,9 +118,6 @@ define([], function () {
         }, {
             Title: "Sign In",
             WidgetPath: "widgets/portalSignin/portalSignin"
-        }, {
-            Title: "",
-            WidgetPath: "widgets/SearchAGOLGroupItems/SearchAGOLGroupItems"
         }],
 
         // ------------------------------------------------------------------------------------------------------------------------
@@ -192,6 +190,5 @@ define([], function () {
                 }
             }]
         }
-
     }
 });

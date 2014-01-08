@@ -47,12 +47,12 @@ define([
                 domAttr.set(this.layoutLabel, "innerHTML", nls.layoutText);
                 this.own(on(this.toggleLayout, "click", lang.hitch(this, function () {
                     topic.publish("showProgressIndicator");
-                    if (!dojo.configData.gridView) {
-                        dojo.configData.gridView = true;
+                    if (!dojo.gridView) {
+                        dojo.gridView = true;
                         domAttr.set(this.layoutTitle, "title", nls.listViewTitle);
                         domClass.replace(this.layoutTitle, "icon-list", "icon-grid");
                     } else {
-                        dojo.configData.gridView = false;
+                        dojo.gridView = false;
                         domAttr.set(this.layoutTitle, "title", nls.gridViewTitle);
                         domClass.replace(this.layoutTitle, "icon-grid", "icon-list");
                     }

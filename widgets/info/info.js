@@ -43,7 +43,7 @@ define([
                 if (query(".esriCTMenuTab")[0]) {
                     domClass.toggle(query(".esriCTMenuTab")[0], "esriCTShiftLeft");
                 }
-                if (query(".esriCTContentdiv")[0]) {
+                if (query(".esriCTGalleryContent")[0]) {
                     domClass.toggle(query(".esriCTRightPanel")[0], "esriCTShiftLeft");
                 }
                 if (query(".esriCTLeftPanel")[0]) {

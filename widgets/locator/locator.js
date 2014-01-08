@@ -71,13 +71,6 @@ define([
             },
 
             _attachItemSearchEvents: function () {
-                /**
-                * tdSearchActivity Tab for Activity search
-                * @member {span} tdSearchActivity
-                * @private
-                * @memberOf widgets/locator/locator
-                */
-
                 this.own(on(this.itemSearchIcon, "click", lang.hitch(this, function (evt) {
                     if (this.txtItemSearch.value != '') {
                         if (this.txtItemSearch.value != dojo.configData.LocatorSettings.itemsLocator[0].LocatorPlaceholder) {
@@ -122,7 +115,6 @@ define([
                         * backspace is pressed
                         */
                         if ((!((evt.keyCode >= 46 && evt.keyCode < 58) || (evt.keyCode > 64 && evt.keyCode < 91) || (evt.keyCode > 95 && evt.keyCode < 106) || evt.keyCode == 8 || evt.keyCode == 110 || evt.keyCode == 188)) || (evt.keyCode == 86 && evt.ctrlKey) || (evt.keyCode == 88 && evt.ctrlKey)) {
-                            evt = (evt) ? evt : event;
                             evt.cancelBubble = true;
                             evt.stopPropagation && evt.stopPropagation();
                             return;
@@ -168,7 +160,7 @@ define([
             _locateItems: function (node, flag) {
                 var _self = this;
                 var defObj = new Deferred();
-                dojo.queryString = "%" + this.txtItemSearch.value + "%" + ' AND group:("' + dojo.configData.ApplicationSettings.group + '")'
+                dojo.queryString = this.txtItemSearch.value + ' AND group:("' + dojo.configData.ApplicationSettings.group + '")';
                 topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
                 defObj.then(function (data) {
                     domConstruct.empty(_self.autoResults);
@@ -184,8 +176,8 @@ define([
                                 topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
                                 defObj.then(function (data) {
                                     dojo.results = data.results;
-                                    topic.publish("createPods", data.results, true, data.total);
-                                    domClass.replace(query(".pagination")[0], "displayNoneAll", "displayBlockAll");
+                                    topic.publish("createPods", data.results, true);
+                                    domClass.replace(query(".esriCTShowMoreResults")[0], "displayNoneAll", "displayBlockAll");
                                 });
                                 domAttr.set(_self.txtItemSearch, "value", this.innerHTML);
                                 domAttr.set(_self.txtItemSearch, "defaultItem", this.innerHTML);
@@ -197,7 +189,7 @@ define([
                             dojo.nextQuery = data.nextQueryParams;
                             dojo.results = data.results;
                             domClass.replace(_self.autoResults, "displayNoneAll", "displayBlockAll");
-                            topic.publish("createPods", data.results, true, data.total);
+                            topic.publish("createPods", data.results, true);
                         }
                     } else {
                         domClass.replace(_self.autoResults, "displayNoneAll", "displayBlockAll");
@@ -224,10 +216,9 @@ define([
             * @memberOf widgets/locator/locator
             */
             _replaceDefaultText: function (evt) {
-                var _self = this;
                 var target = window.event ? window.event.srcElement : evt ? evt.target : null;
                 if (!target) return;
-                this._resetTargetValue(target, "defaultItem", "gray");
+                this._resetTargetValue(target, "defaultItem");
             },
             /**
             * set default value to search textbox
@@ -236,7 +227,7 @@ define([
             * @param {string} color Background color of search textbox
             * @memberOf widgets/locator/locator
             */
-            _resetTargetValue: function (target, title, color) {
+            _resetTargetValue: function (target, title) {
                 if (target.value == '' && domAttr.get(target, title)) {
                     domAttr.set(target, "value", domAttr.get(target, title));
                     if (target.title == "") {

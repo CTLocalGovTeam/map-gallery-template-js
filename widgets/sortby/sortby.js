@@ -61,8 +61,8 @@ define([
                 dojo.sortBy = "modified";
                 this._sortPodOrder(dojo.sortBy, sortByLabel, nls.sortByViewText);
                 flagSortByDate = false;
-                domClass.remove(query(".tickmark")[0], "tickmark");
-                domClass.add(query(".sortByDateMbl")[0], "tickmark");
+                domClass.remove(query(".esriCTListSelected")[0], "esriCTListSelected");
+                domClass.add(query(".sortByDateMbl")[0], "esriCTListSelected");
                 return flagSortByDate;
             },
 
@@ -70,8 +70,8 @@ define([
                 dojo.sortBy = "numViews";
                 this._sortPodOrder(dojo.sortBy, sortByLabel, nls.sortByDateText);
                 flagSortByDate = true;
-                domClass.remove(query(".tickmark")[0], "tickmark");
-                domClass.add(query(".sortByViewMbl")[0], "tickmark");
+                domClass.remove(query(".esriCTListSelected")[0], "esriCTListSelected");
+                domClass.add(query(".sortByViewMbl")[0], "esriCTListSelected");
                 return flagSortByDate;
             },
 
@@ -81,7 +81,11 @@ define([
                 defObj.then(function (data) {
                     domAttr.set(sortByLabel, "innerHTML", text);
                     dojo.nextQuery = data.nextQueryParams;
-                    topic.publish("createPods", data.results, true, data.total);
+                    topic.publish("createPods", data.results, true);
+                }, function (err) {
+                    alert(err.message);
+                    defObj.resolve();
+                    topic.publish("hideProgressIndicator");
                 });
             }
         });

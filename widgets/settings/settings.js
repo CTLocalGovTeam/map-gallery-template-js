@@ -37,8 +37,8 @@ define([
             templateString: template,
             postCreate: function () {
                 this.own(on(this.settingsIcon, "click", lang.hitch(this, function () {
-                    if ((query(".esriCTSortByContainer")[0].children.length <= 0) && (query(".esriCTsortby")[0])) {
-                        domConstruct.place(query(".esriCTsortby")[0], query(".esriCTSortByContainer")[0]);
+                    if ((query(".esriCTSortByContainer")[0].children.length <= 0) && (query(".esriCTSortByTitle")[0])) {
+                        domConstruct.place(query(".esriCTSortByTitle")[0], query(".esriCTSortByContainer")[0]);
                     }
                     this._slideLeftPanel();
                 })));
@@ -71,9 +71,11 @@ define([
                     if (domClass.contains(query(".esriCTMenuTabLeft")[0], "displayBlock")) {
                         domClass.replace(query(".esriCTMenuTabLeft")[0], "displayNone", "displayBlock");
                         domClass.replace(query(".esriCTSignIn")[0], "displayNone", "displayBlock");
+                        domClass.add(query(".esriCTInnerRightPanel")[0], "displayNone");
                     } else {
                         domClass.replace(query(".esriCTMenuTabLeft")[0], "displayBlock", "displayNone");
                         domClass.replace(query(".esriCTSignIn")[0], "displayBlock", "displayNone");
+                        domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNone");
                     }
                 }
             }

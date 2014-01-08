@@ -59,7 +59,7 @@ function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domCla
                     baseMapURLCount++;
                 }
             }
-            var basemapContainer = domConstruct.create("div", {}, query(".esriCTRightPanelmap")[0]);
+            var basemapContainer = domConstruct.create("div", {}, query(".esriCTRightPanelMap")[0]);
             basemapContainer.appendChild(this.esriCTDivLayerContainer);
             this.layerList.appendChild(this._createBaseMapElement(baseMapURL, baseMapURLCount));
 
@@ -79,7 +79,7 @@ function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domCla
         _createBaseMapElement: function (baseMapURL, baseMapURLCount) {
             var presentThumbNail;
             var divContainer = domConstruct.create("div", { "class": "esriCTbaseMapContainerNode" });
-            var imgThumbnail = domConstruct.create("img", { "class": "basemapThumbnail", "src": dojo.configData.BaseMapLayers[baseMapURL + 1].ThumbnailSource }, null);
+            var imgThumbnail = domConstruct.create("img", { "class": "esriCTBasemapThumbnail", "src": dojo.configData.BaseMapLayers[baseMapURL + 1].ThumbnailSource }, null);
             var presentBaseMap = baseMapURL + 1;
             presentThumbNail = baseMapURL + 2;
             on(imgThumbnail, "click", lang.hitch(this, function () {

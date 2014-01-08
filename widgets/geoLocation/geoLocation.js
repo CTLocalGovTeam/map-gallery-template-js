@@ -51,8 +51,9 @@ function (declare, lang, domConstruct, on, topic, _WidgetBase, GeometryService, 
             * if browser is not supported, geolocation widget is not created
             */
             if (Modernizr.geolocation) {
-                this.domNode = query(".esriMapGeoLocation")[0];
-
+                this.domNode = domConstruct.create("div", { "class": "esriCTMapGeoLocation", "title": nls.geolocationBtnTitle }, null);
+                var innerSpan = domConstruct.create("span", { "class": "icon-gps esriCTGeolocationIcon" }, this.domNode);
+                domConstruct.place(this.domNode, query(".esriMapGeoInfo")[0], "after");
                 this.own(on(this.domNode, "click", lang.hitch(this, function () {
 
                     /**
