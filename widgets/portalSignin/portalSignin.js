@@ -47,21 +47,20 @@ define([
 
             postCreate: function () {
                 domAttr.set(this.signInLabel, "innerHTML", nls.signInText);
-                var _self = this;
                 this.createPortal().then(lang.hitch(this, function () {
                     this.queryGroup().then(lang.hitch(this, function () {
                         topic.subscribe("queryGroupItem", dojo.hitch(this._portal, this.queryGroupForItems));
                         topic.subscribe("queryItemInfo", dojo.hitch(this._portal, this.queryItemInfo));
-                        topic.subscribe("signIn", lang.hitch(this, this.portalSignIn));
                         var leftPanelObj = new leftPanelCollection();
                     }));
                 }));
-
                 this.own(on(this.signInContainer, "click", lang.hitch(this, function () {
                     var defObj = new Deferred();
-                    topic.publish("signIn", defObj);
-                    defObj.then(function (data) {
-                        domConstruct.destroy(query(".esriCTGalleryContent")[0]);
+                    this.portalSignIn(defObj);
+                    defObj.then(function () {
+                        if (query(".esriCTGalleryContent")[0]) {
+                            domConstruct.destroy(query(".esriCTGalleryContent")[0]);
+                        }
                         var leftPanelObj = new leftPanelCollection();
                     }, function (err) {
                         alert(err.message);
@@ -88,13 +87,15 @@ define([
                     // Settings
                     id_group: dojo.configData.ApplicationSettings.group
                 }).then(function (data) {
-                    if (data.results.length > 0) {
-                        // set group content
-                        _self.setGroupContent(data.results[0]);
-                        def.resolve();
-                    } else {
-                        alert(nls.errorMessages.emptyGroup);
-                        def.resolve();
+                    if (data) {
+                        if (data.results.length > 0) {
+                            // set group content
+                            _self.setGroupContent(data.results[0]);
+                            def.resolve();
+                        } else {
+                            alert(nls.errorMessages.emptyGroup);
+                            def.resolve();
+                        }
                     }
                 });
                 return def;
@@ -105,25 +106,13 @@ define([
                 if (!dojo.configData.group) {
                     dojo.configData.group = groupInfo.id;
                 }
-                // Set owner
-                if (!dojo.configData.groupOwner) {
-                    dojo.configData.groupOwner = groupInfo.owner || "";
-                }
-                // Set group title
-                if (!dojo.configData.groupName) {
-                    dojo.configData.groupName = groupInfo.title || "";
-                }
                 // Set group title
                 if (!dojo.configData.groupTitle) {
                     dojo.configData.groupTitle = groupInfo.title || "";
                 }
-                // Set home snippet
-                if (!dojo.configData.homeSnippet) {
-                    dojo.configData.homeSnippet = groupInfo.snippet || "";
-                }
-                // Set home side content
-                if (!dojo.configData.homeSideContent) {
-                    dojo.configData.homeSideContent = groupInfo.description || "";
+                // Set group description
+                if (!dojo.configData.AGOLItemSettings.groupDescription) {
+                    dojo.configData.AGOLItemSettings.groupDescription = groupInfo.description || "";
                 }
                 // set footer image
                 if (!dojo.configData.groupIcon) {
@@ -161,7 +150,6 @@ define([
                         })));
                     }
                 }, 1000);
-                topic.publish("hideProgressIndicator");
                 // first, request the group to see if it's public or private
                 esriRequest({
                     // group rest URL
@@ -201,25 +189,24 @@ define([
                         }
                     },
                     error: function (response) {
-                        alert(response.message);
+                        topic.publish("hideProgressIndicator");
                         def.resolve();
                     }
                 });
                 return def;
             },
 
-            queryGroupForItems: function (queryString, sortfields, sortorder, deferedObj, NextQuery) {
+            queryGroupForItems: function (queryString, sortfields, sortorder, deferedObj, nextQuery) {
                 var params;
-                if (!NextQuery) {
+                if (!nextQuery) {
                     params = {
                         q: queryString,
                         num: 100, //should be in number format ex: 100
                         sortField: sortfields, //should be in string format with comma separated values ex: "created"
                         sortOrder: sortorder //should be in string format ex: desc
                     };
-                }
-                else {
-                    params = NextQuery;
+                } else {
+                    params = nextQuery;
                 }
                 this.queryItems(params).then(function (data) {
                     deferedObj.resolve(data);
@@ -227,9 +214,9 @@ define([
                 return deferedObj;
             },
 
-            queryItemInfo: function (itemURL, defObj) {
+            queryItemInfo: function (itemUrl, defObj) {
                 esriRequest({
-                    url: itemURL,
+                    url: itemUrl,
                     callbackParamName: "callback",
                     timeout: 20000,
                     load: function (data) {

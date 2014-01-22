@@ -178,7 +178,7 @@ define([
                         * for every result returned by locator service verify if match score is greater than minimum match score specified in configuration file
                         */
                         if (candidates[i].attributes[locatorSettings[0].AddressMatchScore.Field] > locatorSettings[0].AddressMatchScore.Value) {
-                            for (j in searchFields) {
+                            for (var j in searchFields) {
                                 /**
                                 * verify if FilterFieldName of results match with FilterFieldValues of locator settings specified in configuration file
                                 */
@@ -206,12 +206,24 @@ define([
                         }
                     }
                     if (!hasValidRecords) {
-                        domClass.replace(this.autocompleteResults, "displayNoneAll", "displayBlockAll");
+                        this._locatorErrBack();
                     }
                 } else {
                     this.mapPoint = null;
-                    domClass.replace(this.autocompleteResults, "displayNoneAll", "displayBlockAll");
+                    this._locatorErrBack();
                 }
+            },
+
+            /**
+            * display error message if locator service fails or does not return any results
+            */
+            _locatorErrBack: function () {
+                if (domClass.contains(this.autocompleteResults, "displayBlockAll") && (lang.trim(this.txtAddressSearch.value) == this.lastSearchString)) {
+                    domClass.replace(this.autocompleteResults, "displayNoneAll", "displayBlockAll");
+                } else {
+                    domClass.replace(this.autocompleteResults, "displayBlockAll", "displayNoneAll");
+                }
+                this.spanErrResults = domConstruct.create('div', { "class": "esriCTCursorDefault", "innerHTML": nls.errorMessages.invalidSearch }, this.autocompleteResults);
             },
 
             _displayValidLocations: function (candidate) {

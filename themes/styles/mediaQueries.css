@@ -77,7 +77,20 @@
 
     .esriCTApplicationBox
     {
-        margin: 0 5% 0 0;
+        margin-right: 5% !important;
+    }
+
+    .esriControlsBR
+    {
+        position: fixed !important;
+    }
+}
+
+@media screen and (min-width: 1281px) and (max-width: 1366px)
+{
+    .esriCTApplicationBox
+    {
+        margin-right: 6% !important;
     }
 }
 
@@ -143,6 +156,11 @@
     {
         display: none;
     }
+
+    .esriControlsBR
+    {
+        position: fixed !important;
+    }
 }
 
 @media screen and (min-width: 641px) and (max-width:767px)
@@ -190,7 +208,7 @@
 
     .esriCTItemSearch
     {
-        width: 148px;
+        width: 150px;
     }
 
     .esriCTApplicationBox
@@ -216,6 +234,11 @@
     .esriCTRightControlPanel
     {
         width: 240px !important;
+    }
+
+    .esriControlsBR
+    {
+        position: fixed !important;
     }
 }
 
@@ -252,6 +275,11 @@
     .esriCTMenuTabLeft
     {
         width: 100%;
+    }
+
+    .esriCTIETest
+    {
+        top: 50px;
     }
 
     .esriCTSignIn
@@ -301,7 +329,7 @@
 
     .esriCTLeftPanel
     {
-        width: 100% !important;
+        width: 100%;
         float: none;
     }
 
@@ -409,21 +437,22 @@
     {
         display: block;
         float: left;
-        width: 10%;
+        width: 30px;
     }
 
     .esriCTSettingInfo
     {
         display: block;
-        float: left;
-        width: 12%;
+        float: right;
+        width: 30px;
     }
 
     .esriCTSearchInput
     {
         float: left;
         width: 78%;
-        margin: 0px;
+        margin: 0 0 0 10%;
+        position: absolute;
     }
 
     .esriCTSearch
@@ -459,18 +488,22 @@
     {
         display: block;
         margin-left: 0;
-        margin-top: 30px;
+        margin-top: 48px;
         width: 100%;
+        position: absolute;
+        left: 0px;
     }
 
     .esriSimpleSlider
     {
-        top: 86px !important;
+        top: 116px !important;
+          position: fixed !important;
     }
 
     .esriControlsBR
     {
-        bottom: 36px !important;
+     position: fixed !important;
+        bottom: 5px !important;
     }
 
     .esriCTLegendTab
@@ -517,10 +550,8 @@
 
     .esriCTShiftRight
     {
-        left: 90%;
-        position: absolute;
+        right: 0 !important;
         width: 10%;
-        overflow: hidden;
         -webkit-transition: 0.3s ease-in-out;
         -moz-transition: 0.3s ease-in-out;
         -o-transition: 0.3s ease-in-out;
@@ -534,6 +565,11 @@
         position: absolute;
         right: 90%;
         overflow: hidden;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
         border-left: 1px solid #7453a4;
     }
 
@@ -635,17 +671,31 @@
     {
         position: absolute;
         z-index: 9;
+        overflow: auto;
         -webkit-transition: 0.3s ease-in-out;
         -moz-transition: 0.3s ease-in-out;
         -o-transition: 0.3s ease-in-out;
         -ms-transition: 0.3s ease-in-out;
         transition: 0.3s ease-in-out;
     }
-
+    
+    .esriCTNoResults
+    {
+        top: 100px;
+    }
+    
+    .esriCTGalleryName
+    {
+        width: 50%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: inline-block;
+        white-space: nowrap;
+    }
+    
     .esriCTInnerLeftPanelTop
     {
         position: absolute;
-        z-index: 8;
         left: -1px;
     }
 
@@ -668,7 +718,7 @@
 
     .esriCTItemSearch
     {
-        width: 77.8% !important;
+        width: 100% !important;
     }
 
     .esriCTAddressSearch
@@ -679,7 +729,6 @@
     .esriCTAutoSuggest
     {
         position: absolute;
-        top: 86px;
         background: #fff;
         height: 100px;
         overflow: auto;
@@ -769,7 +818,7 @@
         right: 0;
         background: none repeat scroll 0 0 #007AC2;
         border-bottom: 1px solid #007AC2;
-        width: 100%;
+        width: 100% !important;
         height: 48px;
     }
 
@@ -808,10 +857,12 @@
     {
         width: 100% !important;
     }
+    
     .esriCTLegendContainer
     {
         width: 100%;
     }
+    
     /* Blue theme styles */
 
     .blueTheme .esriCTMenuTabRight div span.esriCTMenulbl
@@ -1073,6 +1124,11 @@
         font-size: 14px !important;
     }
 
+    .esriCTIETest
+    {
+        top: 50px;
+    }
+
     .esriCTGalleryContent
     {
         width: 100% !important;
@@ -1124,7 +1180,7 @@
 
     .esriCTLeftPanel
     {
-        width: 100% !important;
+        width: 100%;
         float: none;
     }
 
@@ -1138,6 +1194,7 @@
     {
         float: left;
         padding: 0;
+        overflow: auto;
         -webkit-transition: 0.3s ease-in-out;
         -moz-transition: 0.3s ease-in-out;
         -o-transition: 0.3s ease-in-out;
@@ -1232,22 +1289,22 @@
     {
         display: block;
         float: left;
-        width: 10%;
+        width: 30px;
     }
 
     .esriCTSettingInfo
     {
         display: block;
-        float: left;
-        width: 12%;
+        float: right;
+        width: 30px;
     }
 
     .esriCTSearchInput
     {
         float: left;
         width: 78%;
-        overflow: hidden;
-        margin: 0px;
+        margin: 0 0 0 10%;
+        position: absolute;
     }
 
     /* End of input container styles */
@@ -1279,21 +1336,25 @@
     {
         display: block;
         margin-left: 0;
-        margin-top: 30px;
         width: 100%;
+        margin-top: 48px;
     }
+
     .esriSimpleSlider
     {
-        top: 86px !important;
+        top: 68px !important;
     }
+
     .esriControlsBR
     {
-        bottom: 36px !important;
+        bottom: 54px !important;
     }
+
     .esriCTLegendTab
     {
         display: none;
     }
+
     .esriCTLegendTabMargin
     {
         margin-top: 98px;
@@ -1333,7 +1394,7 @@
     .esriCTShiftRight
     {
         position: absolute;
-        left: 86%;
+        right: 0% !important;
         width: 14%;
         overflow: hidden;
         -webkit-transition: 0.3s ease-in-out;
@@ -1349,6 +1410,11 @@
         position: absolute;
         right: 86%;
         overflow: hidden;
+        -webkit-transition: 0.3s ease-in-out;
+        -moz-transition: 0.3s ease-in-out;
+        -o-transition: 0.3s ease-in-out;
+        -ms-transition: 0.3s ease-in-out;
+        transition: 0.3s ease-in-out;
     }
 
     .esriCTInnerLeftPanelBottomShift
@@ -1371,6 +1437,20 @@
         position: absolute;
         right: 0px;
         width: 100%;
+    }
+    
+    .esriCTNoResults
+    {
+        top: 100px;
+    }
+
+    .esriCTGalleryName
+    {
+        width: 50%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: inline-block;
+        white-space: nowrap;
     }
 
     .esriCTMapPanelShift
@@ -1413,6 +1493,7 @@
         -ms-transition: 0.3s ease-in-out;
         transition: 0.3s ease-in-out;
     }
+
     .esriCTShiftLeftPanel
     {
         position: absolute;
@@ -1442,7 +1523,6 @@
     {
         position: absolute;
         height: 100%;
-        z-index: 10;
     }
 
     .esriCTInnerLeftPanelBottom
@@ -1454,7 +1534,6 @@
     .esriCTInnerLeftPanelTop
     {
         position: absolute;
-        z-index: 8;
         left: -1px;
     }
 
@@ -1488,7 +1567,7 @@
 
     .esriCTItemSearch
     {
-        width: 76% !important;
+        width: 98% !important;
     }
 
     .esriCTAddressSearch
@@ -1498,8 +1577,7 @@
 
     .esriCTAutoSuggest
     {
-        position: absolute;
-        top: 86px;
+        position: absolute;      
         background: #fff;
         height: 100px;
         overflow: auto;
@@ -1886,21 +1964,27 @@
     {
         display: block;
         float: left;
-        width: 10%;
+        width: 30px;
     }
 
     .esriCTSettingInfo
     {
         display: block;
-        float: left;
-        width: 12%;
+        float: right;
+       width: 30px;
+    }
+
+    .esriCTIETest
+    {
+        top: 50px;
     }
 
     .esriCTSearchInput
     {
         float: left;
         width: 78%;
-        margin: 0px;
+        margin: 0 0 0 10%;
+        position: absolute;
     }
 
     .esriCTInfoIcon
@@ -1912,10 +1996,15 @@
     {
         font-size: 16px;
     }
-
+    
+    .esriCTNoResults
+    {
+        top: 100px;
+    }
+    
     .esriCTItemSearch
     {
-        width: 76% !important;
+        width: 98% !important;
     }
 
     .esriCTAddressSearch
@@ -1925,8 +2014,7 @@
 
     .esriCTAutoSuggest
     {
-        position: absolute;
-        top: 86px;
+        position: absolute;   
         background: #fff;
         height: 100px;
         overflow: auto;
@@ -1939,6 +2027,15 @@
     .esriCTGalleryName
     {
         font-size: 18px;
+    }
+
+    .esriCTGalleryName
+    {
+        width: 50%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: inline-block;
+        white-space: nowrap;
     }
 
     .esriCTDetailsRightPanel
@@ -2055,5 +2152,24 @@
     .esriCTBackToMapBtn, .esriCTBackToMapBtnLegend
     {
         display: block;
+    }
+    
+    .esriCTNoResults
+    {
+        top: 100px;
+    }
+
+    .esriCTIETest
+    {
+        top: 50px;
+    }
+
+    .esriCTGalleryName
+    {
+        width: 50%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: inline-block;
+        white-space: nowrap;
     }
 }

@@ -47,7 +47,16 @@ define([
             postCreate: function () {
                 domConstruct.place(this.galleryView, query(".esriCTGalleryContent")[0]);
                 this.own(topic.subscribe("createPods", lang.hitch(this, this.createItemPods)));
-
+                if (dojo.configData.AGOLItemSettings.defaultLayout.toLowerCase() == "list") {
+                    dojo.gridView = false;
+                } else {
+                    dojo.gridView = true;
+                }
+                if (query(".esriCTSignInIcon")[0]) {
+                    if (domStyle.get(query(".esriCTSignInIcon")[0], "display") == "none") {
+                        dojo.gridView = false;
+                    }
+                }
                 this.own(on(this.galleryNext, "click", lang.hitch(this, function () {
                     var defObj = new Deferred();
                     var _self = this;
@@ -64,7 +73,7 @@ define([
                 })));
 
                 this.own(on(query(".esriCTBackBtn")[0], "click", lang.hitch(this, function () {
-                    domClass.add(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
+                    domClass.add(query(".esriCTMenuTabRight")[0], "displayBlockAll");
                     domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
                     domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
                     domClass.remove(query(".esriCTGalleryContent")[0], "displayNoneAll");
@@ -77,17 +86,19 @@ define([
                 if (clearContainerFlag) {
                     domConstruct.empty(this.itemPodsList);
                 }
-                if (itemResults.length != 100) {
-                    domClass.replace(query(".esriCTShowMoreResults")[0], "displayNoneAll", "displayBlockAll");
-                } else {
-                    domClass.replace(query(".esriCTShowMoreResults")[0], "displayBlockAll", "displayNoneAll");
+                if (query(".esriCTShowMoreResults")[0]) {
+                    if (itemResults.length != 100) {
+                        domClass.replace(query(".esriCTShowMoreResults")[0], "displayNoneAll", "displayBlockAll");
+                    } else {
+                        domClass.replace(query(".esriCTShowMoreResults")[0], "displayBlockAll", "displayNoneAll");
+                    }
                 }
 
                 for (var i = 0; i < itemResults.length; i++) {
                     if (!dojo.gridView) {
-                        var divPodParent = domConstruct.create('div', { "class": "esriCTApplicationListBox" }, this.itemPodsList);
-                        this._createThumbnails(itemResults[i], divPodParent);
-                        this._createItemOverviewPanel(itemResults[i], divPodParent);
+                        var divPodParentList = domConstruct.create('div', { "class": "esriCTApplicationListBox" }, this.itemPodsList);
+                        this._createThumbnails(itemResults[i], divPodParentList);
+                        this._createItemOverviewPanel(itemResults[i], divPodParentList);
                     } else {
                         var divPodParent = domConstruct.create('div', { "class": "esriCTApplicationBox" }, this.itemPodsList);
                         this._createThumbnails(itemResults[i], divPodParent);
@@ -107,7 +118,7 @@ define([
                 domAttr.set(spanItemType, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.shoNullValue));
                 domAttr.set(spanItemType, "title", (itemResult.type) ? (itemResult.type) : (nls.shoNullValue));
                 var divItemWatchEye = domConstruct.create('div', { "class": "esriCTEyeNumViews esriCTEyeNumViewsGrid" }, divItemType);
-                var spanItemWatchEye = domConstruct.create('span', { "class": "esriCTEyeIcon icon-eye" }, divItemWatchEye);
+                domConstruct.create('span', { "class": "esriCTEyeIcon icon-eye" }, divItemWatchEye);
                 var spanItemWatchEyeText = domConstruct.create('span', { "class": "view" }, divItemWatchEye);
                 domAttr.set(spanItemWatchEyeText, "innerHTML", (itemResult.numViews) ? (number.format(parseInt(itemResult.numViews, 10))) : (nls.showNullValue));
                 this.own(on(divItemTitleText, "click", lang.hitch(this, function () {
@@ -140,37 +151,51 @@ define([
                 domAttr.set(divThumbnailImage, "selectedThumbnail", itemResult.thumbnailUrl);
                 this.own(on(divThumbnailImage, "click", lang.hitch(this, function () {
                     var itemId = domAttr.get(divThumbnailImage, "selectedItem");
-                    var thumbnailURL = domAttr.get(divThumbnailImage, "selectedThumbnail");
-                    if (dojo.configData.ApplicationSettings.useItemPage) {
-                        var thumbnailInfoPage = new itemInfoPage();
-                        thumbnailInfoPage.displayPanel(itemResult, this);
-                    } else {
-                        this._showItemOverview(itemId, thumbnailURL);
-                    }
+                    var thumbnailUrl = domAttr.get(divThumbnailImage, "selectedThumbnail");
+                    this._showItemOverview(itemId, thumbnailUrl, itemResult, true);
                 })));
             },
 
-            _showItemOverview: function (itemId, thumbnailURL) {
+            _showItemOverview: function (itemId, thumbnailUrl, itemResult, flag) {
                 var tokenString;
+                var _self = this;
                 if (dojo.configData.ApplicationSettings.token) {
                     tokenString = "&token=" + dojo.configData.ApplicationSettings.token;
                 } else {
                     tokenString = '';
                 }
-                var itemURL = dojo.configData.ApplicationSettings.portalURL + "/sharing/content/items/" + itemId + "?f=json" + tokenString;
+                var itemUrl = dojo.configData.ApplicationSettings.portalURL + "/sharing/content/items/" + itemId + "?f=json" + tokenString;
                 var defObj = new Deferred();
                 defObj.then(function (data) {
                     if (data) {
-                        data.thumbnailUrl = thumbnailURL;
+                        data.thumbnailUrl = thumbnailUrl;
                         var dataType = data.type.toLowerCase();
                         if ((dataType == "map service") || (dataType == "web map") || (dataType == "feature service") || (dataType == "kml") || (dataType == "wms")) {
-                            var item = new ItemDetails({ data: data });
+                            if (dojo.configData.ApplicationSettings.useItemPage && flag) {
+                                _self.showInfoPage(_self, itemResult);
+                            } else {
+                                if ((dataType == "web map") && dojo.configData.AGOLItemSettings.mapViewer.toLowerCase() == "arcgis") {
+                                    window.open(dojo.configData.ApplicationSettings.portalURL + '/home/item.html?id=' + itemId, "_self");
+                                } else {
+                                    var item = new ItemDetails({ data: data });
+                                }
+                            }
                         } else {
                             if (data.url) {
                                 window.open(data.url);
                             } else if (data.itemType.toLowerCase() == "file") {
-                                downloadPath = dojo.configData.ApplicationSettings.portalURL + "/sharing/content/items/" + itemId + "/data" + tokenString;
-                                window.open(downloadPath);
+                                var tokenString;
+                                if (dojo.configData.ApplicationSettings.token) {
+                                    tokenString = "?token=" + dojo.configData.ApplicationSettings.token;
+                                } else {
+                                    tokenString = '';
+                                }
+                                if (dojo.configData.ApplicationSettings.useItemPage && flag) {
+                                    _self.showInfoPage(_self, itemResult);
+                                } else {
+                                    var downloadPath = dojo.configData.ApplicationSettings.portalURL + "/sharing/content/items/" + itemId + "/data" + tokenString;
+                                    window.open(downloadPath);
+                                }
                             } else {
                                 alert(nls.errorMessages.unableToOpenItem);
                             }
@@ -180,7 +205,7 @@ define([
                     alert(err.message);
                     topic.publish("hideProgressIndicator");
                 });
-                topic.publish("queryItemInfo", itemURL, defObj);
+                topic.publish("queryItemInfo", itemUrl, defObj);
             },
 
             _accessLogoType: function (itemResult, divTagContent) {
@@ -225,7 +250,7 @@ define([
                 }
 
                 var divItemWatchEye = domConstruct.create('div', { "class": "esriCTEyeNumViews", "style": "padding-top:2px" }, divItemInfo);
-                var spanItemWatchEye = domConstruct.create('span', { "class": "esriCTEyeIcon icon-eye", "style": "padding-left:5px" }, divItemWatchEye);
+                domConstruct.create('span', { "class": "esriCTEyeIcon icon-eye", "style": "padding-left:5px" }, divItemWatchEye);
                 var spanItemWatchEyeText = domConstruct.create('span', { "class": "view" }, divItemWatchEye);
                 domAttr.set(spanItemWatchEyeText, "innerHTML", (itemResult.numViews) ? (number.format(parseInt(itemResult.numViews, 10))) : (nls.showNullValue));
 
@@ -262,113 +287,41 @@ define([
                 } else {
                     domClass.add(_self.appThumbnail, "esriCTNoThumbnailImage");
                 }
+
                 domAttr.set(_self.applicationType, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.showNullValue));
-                domAttr.set(_self.appTitle, "innerHTML", (itemResult.title) ? (itemResult.title) : (nls.showNullValue));
-                if (dojo.configData.AGOLItemSettings.showNumberOfViews) {
+                domAttr.set(_self.appTitle, "innerHTML", dojo.configData.AGOLItemSettings.mapTitle ? dojo.configData.AGOLItemSettings.mapTitle : itemResult.title ? itemResult.title : "");
+                if (dojo.configData.AGOLItemSettings.showViews) {
                     var numberOfComments = (itemResult.numComments) ? (itemResult.numComments) : "0";
                     var numberOfRatings = (itemResult.numRatings) ? (itemResult.numRatings) : "0";
                     var numberOfViews = (itemResult.numViews) ? (number.format(parseInt(itemResult.numViews, 10))) : "0";
                     var itemReviewDetails = "(" + numberOfComments + " " + nls.numberOfCommentsText + ", " + numberOfRatings + " " + nls.numberOfRatingsText + ", " + numberOfViews + " " + nls.numberOfViewsText + ")";
                     domAttr.set(_self.numOfCommentsViews, "innerHTML", itemReviewDetails);
                 }
-                domAttr.set(_self.itemSnippet, "innerHTML", (itemResult.snippet) ? (itemResult.snippet) : "");
+                domAttr.set(_self.itemSnippet, "innerHTML", dojo.configData.AGOLItemSettings.mapSnippet ? dojo.configData.AGOLItemSettings.mapSnippet : itemResult.snippet ? itemResult.snippet : "");
                 var descHeader = domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.appDesText }, _self.detailsContent);
                 var itemDescription = domConstruct.create('div', { "class": "esriCTText esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
-                if (dojo.configData.AGOLItemSettings.showAccessAndConstraints) {
+                if (dojo.configData.AGOLItemSettings.showLicenseInfo) {
                     var accessContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
                     var accessHeader = domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.accessConstraintsText }, accessContainer);
                     var accessInfo = domConstruct.create('div', { "class": "esriCTText" }, accessContainer);
-                    domAttr.set(accessInfo, "innerHTML", (itemResult.licenseInfo) ? (itemResult.licenseInfo) : (nls.showNullValue));
+                    domAttr.set(accessInfo, "innerHTML", dojo.configData.AGOLItemSettings.mapLicenseInfo ? dojo.configData.AGOLItemSettings.mapLicenseInfo : itemResult.licenseInfo ? itemResult.licenseInfo : "");
                 }
                 domAttr.set(_self.btnTryItNow, "innerHTML", "");
                 var defObj = new Deferred();
-                defObj.then(function (itemData) {
-                    domAttr.set(itemDescription, "innerHTML", (itemResult.description) ? (itemResult.description) : (nls.showNullValue));
-                    domAttr.set(_self.itemCategory, "innerHTML", (itemResult.title) ? (itemResult.title) : (nls.showNullValue));
-                    domAttr.set(_self.itemSubmittedBy, "innerHTML", (itemResult.owner) ? (itemResult.owner) : (nls.showNullValue));
-                    var tokenString;
-                    if (dojo.configData.ApplicationSettings.token) {
-                        tokenString = "&token=" + dojo.configData.ApplicationSettings.token;
-                    } else {
-                        tokenString = '';
-                    }
-                    var itemURL = dojo.configData.ApplicationSettings.portalURL + "/sharing/content/items/" + itemResult.id + "?f=json" + tokenString;
-                    var defObject = new Deferred();
-                    defObject.then(function (data) {
-                        if (data) {
-                            if (data.itemType == "file" && data.type.toLowerCase() != "kml") {
-                                domAttr.set(_self.btnTryItNow, "innerHTML", nls.downloadButtonText);
-                                domClass.add(_self.btnTryItNow, "esriCTDownloadButton");
-                            } else {
-                                domAttr.set(_self.btnTryItNow, "innerHTML", nls.tryItButtonText);
-                                domClass.remove(_self.btnTryItNow, "esriCTDownloadButton");
-                            }
-                        }
-                        topic.publish("hideProgressIndicator");
-                    }, function (err) {
-                        alert(err.message);
-                        topic.publish("hideProgressIndicator");
-                    });
-                    topic.publish("queryItemInfo", itemURL, defObject);
-                    if (dojo.configData.AGOLItemSettings.showReviews) {
-                        var reviewContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
-                        domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.reviewText }, reviewContainer);
-                        itemResult.getComments().then(function (result) {
-                            if (result.length > 0) {
-                                for (var i = 0; i < result.length; i++) {
-                                    var divReview = domConstruct.create('div', { "class": "esriCTReview" }, reviewContainer);
-                                    var divReviewHeader = domConstruct.create('div', { "class": "esriCTReviewBold" }, divReview);
-                                    var divReviewText = domConstruct.create('div', { "class": "esriCTReviewText esriCTBreakWord" }, divReview);
-                                    domAttr.set(divReviewHeader, "innerHTML", (result[i].created) ? (result[i].created.toLocaleDateString()) : (nls.showNullValue));
-                                    try {
-                                        var comment = decodeURIComponent(result[i].comment);
-                                    } catch (e) {
-                                        var comment = unescape(result[i].comment);
-                                    }
-                                    domAttr.set(divReviewText, "innerHTML", (result[i].comment) ? (comment) : (nls.showNullValue));
-                                }
-                            } else {
-                                var divReview = domConstruct.create('div', { "class": "esriCTDivClear" }, reviewContainer);
-                                var divReviewText = domConstruct.create('div', { "class": "esriCTBreakWord" }, divReview);
-                                domAttr.set(divReviewText, "innerHTML", nls.showNullValue);
-                            }
-                        }, function (err) {
-                            var divReview = domConstruct.create('div', { "class": "esriCTDivClear" }, reviewContainer);
-                            var divReviewText = domConstruct.create('div', { "class": "esriCTBreakWord" }, divReview);
-                            domAttr.set(divReviewText, "innerHTML", err.message);
-                        });
-                    }
-                    if (dojo.configData.AGOLItemSettings.showRatings) {
-                        var numberStars = Math.round(itemResult.avgRating);
-                        for (var i = 0; i < 5; i++) {
-                            var imgRating = document.createElement("span");
-                            imgRating.value = (i + 1);
-                            _self.ratingsContainer.appendChild(imgRating);
-                            if (i < numberStars) {
-                                domClass.add(imgRating, "icon-star esriCTRatingStarIcon esriCTRatingStarIconColor");
-                            } else {
-                                domClass.add(imgRating, "icon-star-empty esriCTRatingStarIcon esriCTRatingStarIconColor");
-                            }
-                        }
-                    }
-                    domAttr.set(_self.btnTryItNow, "selectedItem", itemResult.id);
-                    domAttr.set(_self.btnTryItNow, "selectedThumbnail", itemResult.thumbnailUrl);
+                defObj.then(lang.hitch(this, function () {
+                    this._createItemDescription(itemResult, _self, itemDescription);
                 }, function (err) {
                     alert(err.message);
-                });
-                if (dojo.configData.AGOLItemSettings.showAttribution) {
-                    this._createPropertiesContent(itemResult, _self.detailsContent, defObj);
-                } else {
-                    defObj.resolve();
-                    topic.publish("hideProgressIndicator");
-                }
+                }));
+                this._createPropertiesContent(itemResult, _self.detailsContent, defObj);
+
                 if (_self._btnTryItNowHandle) {
                     _self._btnTryItNowHandle.remove();
                 }
                 _self._btnTryItNowHandle = on(_self.btnTryItNow, "click", lang.hitch(this, function () {
                     var itemId = domAttr.get(_self.btnTryItNow, "selectedItem");
-                    var thumbnailURL = domAttr.get(_self.btnTryItNow, "selectedThumbnail");
-                    _self._showItemOverview(itemId, thumbnailURL);
+                    var thumbnailUrl = domAttr.get(_self.btnTryItNow, "selectedThumbnail");
+                    _self._showItemOverview(itemId, thumbnailUrl, itemResult, false);
                 }));
             },
 
@@ -379,7 +332,7 @@ define([
                     var propertiesContainer = domConstruct.create('div', { "class": "esriCTReviewContainer" }, detailsContent);
                     domConstruct.create('div', { "innerHTML": nls.propertiesText, "class": "esriCTReviewHeader" }, propertiesContainer);
                     var tagsContent = domConstruct.create('div', { "class": "esriCTPropertiesContainer" }, propertiesContainer);
-                    var tagsKey = domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.tagsText }, tagsContent);
+                    domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.tagsText }, tagsContent);
                     for (var i = 0; i < itemInfo.item.tags.length; i++) {
                         if (i == 0) {
                             var itemTags = itemInfo.item.tags[i];
@@ -387,13 +340,13 @@ define([
                             var itemTags = itemTags + ", " + itemInfo.item.tags[i];
                         }
                     }
-                    var tagsValue = domConstruct.create('div', { "class": "esriCTPropertiesValue", "innerHTML": itemTags }, tagsContent);
+                    domConstruct.create('div', { "class": "esriCTPropertiesValue", "innerHTML": itemTags }, tagsContent);
                     var sizeContent = domConstruct.create('div', { "class": "esriCTPropertiesContainer" }, propertiesContainer);
-                    var sizeKey = domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.sizeText }, sizeContent);
-                    var sizeValue = domConstruct.create('div', { "class": "esriCTPropertiesValue", "innerHTML": itemInfo.item.size }, sizeContent);
-                    var tagsContent = domConstruct.create('div', { "class": "esriCTPropertiesContainer" }, propertiesContainer);
-                    var extentKey = domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.extentText }, tagsContent);
-                    var extentValue = domConstruct.create('div', { "class": "esriCTPropertiesValue" }, tagsContent);
+                    domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.sizeText }, sizeContent);
+                    domConstruct.create('div', { "class": "esriCTPropertiesValue", "innerHTML": itemInfo.item.size }, sizeContent);
+                    var extentContent = domConstruct.create('div', { "class": "esriCTPropertiesContainer" }, propertiesContainer);
+                    domConstruct.create('div', { "class": "esriCTPropertiesContent", "innerHTML": nls.extentText }, extentContent);
+                    var extentValue = domConstruct.create('div', { "class": "esriCTPropertiesValue" }, extentContent);
                     if (itemInfo.item.extent.length > 0) {
                         _self._createItemExtentContent(extentValue, nls.extentLeftText, nls.extentRightText, itemInfo.item.extent[0][0], itemInfo.item.extent[1][0]);
                         _self._createItemExtentContent(extentValue, nls.extentTopText, nls.extentBottomText, itemInfo.item.extent[0][1], itemInfo.item.extent[1][1]);
@@ -404,6 +357,95 @@ define([
                 itemDeferred.addErrback(function (error) {
                     defObj.resolve();
                     topic.publish("hideProgressIndicator");
+                });
+            },
+
+            _createItemDescription: function (itemResult, _self, itemDescription) {
+                domAttr.set(itemDescription, "innerHTML", dojo.configData.AGOLItemSettings.mapItemDescription ? dojo.configData.AGOLItemSettings.mapItemDescription : itemResult.description ? itemResult.description : "");
+                domAttr.set(_self.itemCategory, "innerHTML", dojo.configData.AGOLItemSettings.mapTitle ? dojo.configData.AGOLItemSettings.mapTitle : itemResult.title ? itemResult.title : "");
+                domAttr.set(_self.itemSubmittedBy, "innerHTML", (itemResult.owner) ? (itemResult.owner) : (nls.showNullValue));
+                var tokenString;
+                if (dojo.configData.ApplicationSettings.token) {
+                    tokenString = "&token=" + dojo.configData.ApplicationSettings.token;
+                } else {
+                    tokenString = '';
+                }
+                var itemUrl = dojo.configData.ApplicationSettings.portalURL + "/sharing/content/items/" + itemResult.id + "?f=json" + tokenString;
+                var defObject = new Deferred();
+                defObject.then(function (data) {
+                    if (data) {
+                        if (data.itemType == "file" && data.type.toLowerCase() != "kml") {
+                            domAttr.set(_self.btnTryItNow, "innerHTML", nls.downloadButtonText);
+                            domClass.add(_self.btnTryItNow, "esriCTDownloadButton");
+                        } else {
+                            domAttr.set(_self.btnTryItNow, "innerHTML", nls.tryItButtonText);
+                            domClass.remove(_self.btnTryItNow, "esriCTDownloadButton");
+                        }
+                    }
+                    topic.publish("hideProgressIndicator");
+                }, function (err) {
+                    alert(err.message);
+                    topic.publish("hideProgressIndicator");
+                });
+                topic.publish("queryItemInfo", itemUrl, defObject);
+
+                if (dojo.configData.AGOLItemSettings.showMoreInfo && itemResult.type.toLowerCase() == "web map") {
+                    var detailsContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
+                    domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": "Details" }, detailsContainer);
+                    var divDetailsContent = domConstruct.create('div', { "class": "esriCTMoreInfo esriCTDivClear", "innerHTML": "Item Details" }, detailsContainer);
+                    if (_self._moreInfoHandle) {
+                        _self._moreInfoHandle.remove();
+                    }
+                    _self._moreInfoHandle = on(divDetailsContent, "click", lang.hitch(this, function () {
+                        window.open(dojo.configData.ApplicationSettings.portalURL + '/home/item.html?id=' + itemResult.id);
+                    }));
+                }
+                if (dojo.configData.AGOLItemSettings.showComments) {
+                    this._createCommentsContainer(itemResult, _self.detailsContent);
+                }
+                if (dojo.configData.AGOLItemSettings.showRatings) {
+                    var numberStars = Math.round(itemResult.avgRating);
+                    for (var i = 0; i < 5; i++) {
+                        var imgRating = document.createElement("span");
+                        imgRating.value = (i + 1);
+                        _self.ratingsContainer.appendChild(imgRating);
+                        if (i < numberStars) {
+                            domClass.add(imgRating, "icon-star esriCTRatingStarIcon esriCTRatingStarIconColor");
+                        } else {
+                            domClass.add(imgRating, "icon-star-empty esriCTRatingStarIcon esriCTRatingStarIconColor");
+                        }
+                    }
+                }
+                domAttr.set(_self.btnTryItNow, "selectedItem", itemResult.id);
+                domAttr.set(_self.btnTryItNow, "selectedThumbnail", itemResult.thumbnailUrl);
+            },
+
+            _createCommentsContainer: function (itemResult, detailsContent) {
+                var reviewContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, detailsContent);
+                domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.reviewText }, reviewContainer);
+                itemResult.getComments().then(function (result) {
+                    if (result.length > 0) {
+                        for (var i = 0; i < result.length; i++) {
+                            var divReview = domConstruct.create('div', { "class": "esriCTReview" }, reviewContainer);
+                            var divReviewHeader = domConstruct.create('div', { "class": "esriCTReviewBold" }, divReview);
+                            var divReviewText = domConstruct.create('div', { "class": "esriCTReviewText esriCTBreakWord" }, divReview);
+                            domAttr.set(divReviewHeader, "innerHTML", (result[i].created) ? (result[i].created.toLocaleDateString()) : (nls.showNullValue));
+                            try {
+                                var comment = decodeURIComponent(result[i].comment);
+                            } catch (e) {
+                                var comment = unescape(result[i].comment);
+                            }
+                            domAttr.set(divReviewText, "innerHTML", (result[i].comment) ? (comment) : (nls.showNullValue));
+                        }
+                    } else {
+                        var divReview = domConstruct.create('div', { "class": "esriCTDivClear" }, reviewContainer);
+                        var divReviewText = domConstruct.create('div', { "class": "esriCTBreakWord" }, divReview);
+                        domAttr.set(divReviewText, "innerHTML", nls.showNullValue);
+                    }
+                }, function (err) {
+                    var divReview = domConstruct.create('div', { "class": "esriCTDivClear" }, reviewContainer);
+                    var divReviewText = domConstruct.create('div', { "class": "esriCTBreakWord" }, divReview);
+                    domAttr.set(divReviewText, "innerHTML", err.message);
                 });
             },
 

@@ -52,7 +52,7 @@ function (declare, lang, domConstruct, on, topic, _WidgetBase, GeometryService, 
             */
             if (Modernizr.geolocation) {
                 this.domNode = domConstruct.create("div", { "class": "esriCTMapGeoLocation", "title": nls.geolocationBtnTitle }, null);
-                var innerSpan = domConstruct.create("span", { "class": "icon-gps esriCTGeolocationIcon" }, this.domNode);
+                domConstruct.create("span", { "class": "icon-gps esriCTGeolocationIcon" }, this.domNode);
                 domConstruct.place(this.domNode, query(".esriMapGeoInfo")[0], "after");
                 this.own(on(this.domNode, "click", lang.hitch(this, function () {
 
@@ -73,8 +73,8 @@ function (declare, lang, domConstruct, on, topic, _WidgetBase, GeometryService, 
 
         _showCurrentLocation: function () {
             var mapPoint, self = this, currentBaseMap,
-            geometryServiceURL = dojo.configData.ApplicationSettings.geometryService,
-            geometryService = new GeometryService(geometryServiceURL);
+                geometryServiceUrl = dojo.configData.ApplicationSettings.geometryService,
+            geometryService = new GeometryService(geometryServiceUrl);
 
             /**
             * get device location using geolocation service

@@ -18,10 +18,10 @@ input
 
 input
 {
-    height: 22px;
+    height: 24px;
     line-height: 22px;
     margin-top: 5px;
-    padding: 4px 22% 0 2%;
+    padding: 2px 22% 0 2%;
     vertical-align: middle;
     width: 76%;
 }
@@ -159,16 +159,6 @@ font
     z-index: 1000;
 }
 
-.esriCTSortIcon
-{
-    float: left;
-    height: 14px;
-    width: 14px;
-    float: left;
-    cursor: pointer;
-    margin: 13px 10px 0px 0;
-}
-
 .esriCTLayout
 {
     float: left;
@@ -216,6 +206,7 @@ font
 {
     overflow: auto;
     max-height: 80px;
+    font-size:small;
 }
 
 .esriCTInnerLeftPanelTop
@@ -299,7 +290,7 @@ font
 .esriCTApplicationBox
 {
     float: left;
-    margin: 0 6% 0 0;
+    margin: 0 2.5% 0 0;
     width: 182px;
 }
 
@@ -441,7 +432,7 @@ font
 {
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 125px;
+    width: 50%;
     display: inline-block;
     white-space: nowrap;
 }
@@ -555,6 +546,14 @@ font
     float: left;
 }
 
+.esriCTMoreInfo
+{
+    cursor: pointer;
+    padding: 2px 0px;
+    margin-top: 5px;
+    text-decoration: underline;
+}
+
 .esriCTApplicationIcon
 {
     height: 44px;
@@ -649,6 +648,11 @@ font
 .esriCTCursorPointer
 {
     cursor: pointer;
+}
+
+.esriCTCursorDefault
+{
+    cursor: default !important;
 }
 
 .esriCTClearInput
@@ -885,11 +889,6 @@ font
     margin-top: 15px;
 }
 
-.esriCTLegendTabToggle
-{
-    margin-top: 50px;
-}
-
 .esriCTTabGroup
 {
     margin: 0 auto;
@@ -1004,12 +1003,12 @@ font
 
 .esriCTMapGeoLocation
 {
-    float: left;
+    float: right;
     margin-top: 9px;
     width: 28px;
     height: 28px;
     margin-right: 7px;
-    margin-left: 15px;
+    margin-left: 11px;
     background-color: #fff;
 }
 
@@ -1050,7 +1049,7 @@ font
 
 .esriCTFullScreen
 {
-    float: left;
+    float: right;
     margin-top: 9px;
     margin-left: 6px;
     width: 28px;
@@ -1387,13 +1386,6 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     border: 1px solid #007AC2;
 }
 
-.blueTheme .esriCTSortIcon
-{
-    background: url("../images/arrow.png") no-repeat;
-    background-position: center;
-    display: none;
-}
-
 .blueTheme .esriCTMapIcons, .blueTheme .esriCTGeolocationIcon
 {
     color: #007ac2;
@@ -1501,7 +1493,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     background-color: #007AC2;
 }
 
-.blueTheme .esriCTExpand
+.blueTheme .esriCTExpand, .blueTheme .esriCTMoreInfo
 {
     color: #007ac2;
 }
@@ -1533,6 +1525,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 {
     background: #007ac2;
     color: #fff;
+    cursor: default !important;
 }
 
 .blueTheme .HomeButton .home, .blueTheme .HomeButton .home:hover
@@ -1657,13 +1650,6 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     color: #FFFFFF;
 }
 
-.greenTheme .esriCTSortIcon
-{
-    background: url("../images/arrow.png") no-repeat;
-    background-position: center;
-    display: none;
-}
-
 .greenTheme .esriCTEyeNumViews span.view
 {
     color: #b6b6b6;
@@ -1674,7 +1660,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     background-color: #008000;
 }
 
-.greenTheme .esriCTExpand
+.greenTheme .esriCTExpand, .greenTheme .esriCTMoreInfo
 {
     color: #008000;
 }
@@ -1711,6 +1697,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 {
     background: #008000;
     color: #fff;
+    cursor: default !important;
 }
 
 .greenTheme .HomeButton .home, .greenTheme .HomeButton .home:hover
@@ -1832,13 +1819,6 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     color: #FFFFFF;
 }
 
-.redTheme .esriCTSortIcon
-{
-    background: url("../images/arrow.png") no-repeat;
-    background-position: center;
-    display: none;
-}
-
 .redTheme .esriCTEyeNumViews span.view
 {
     color: #b6b6b6;
@@ -1849,7 +1829,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     background-color: #800000;
 }
 
-.redTheme .esriCTExpand
+.redTheme .esriCTExpand, .redTheme .esriCTMoreInfo
 {
     color: #800000;
 }
@@ -1886,6 +1866,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 {
     background: #800000;
     color: #fff;
+    cursor: default !important;
 }
 
 .redTheme .HomeButton .home, .redTheme .HomeButton .home:hover
@@ -1936,7 +1917,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 
 .esriCTMainLoader
 {
-    background-position: center center;
+    background-position: 0 center;
     background-image: url('../images/blue-loader.gif');
     background-repeat: no-repeat;
     position: absolute;

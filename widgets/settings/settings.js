@@ -45,6 +45,7 @@ define([
             },
 
             _slideLeftPanel: function () {
+                query(".esriCTInnerLeftPanelBottom")[0].style.height = dojo.window.getBox().h + "px";
                 if (query(".esriCTMenuTab")[0]) {
                     domClass.toggle(query(".esriCTMenuTab")[0], "esriCTShiftRight");
                 }
@@ -72,10 +73,20 @@ define([
                         domClass.replace(query(".esriCTMenuTabLeft")[0], "displayNone", "displayBlock");
                         domClass.replace(query(".esriCTSignIn")[0], "displayNone", "displayBlock");
                         domClass.add(query(".esriCTInnerRightPanel")[0], "displayNone");
+                        if (query(".esriCTNoResults")[0]) {
+                            if (domClass.contains(query(".esriCTNoResults")[0], "displayBlockAll")) {
+                                domClass.replace(query(".esriCTNoResults")[0], "displayNoneAll", "displayBlockAll");
+                            }
+                        }
                     } else {
                         domClass.replace(query(".esriCTMenuTabLeft")[0], "displayBlock", "displayNone");
                         domClass.replace(query(".esriCTSignIn")[0], "displayBlock", "displayNone");
                         domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNone");
+                        if (query(".esriCTNoResults")[0]) {
+                            if (domClass.contains(query(".esriCTNoResults")[0], "displayNoneAll")) {
+                                domClass.replace(query(".esriCTNoResults")[0], "displayBlockAll", "displayNoneAll");
+                            }
+                        }
                     }
                 }
             }

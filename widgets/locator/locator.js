@@ -24,6 +24,7 @@ define([
         "dojo/_base/lang",
         "dojo/on",
         "dojo/text!./templates/locatorTemplate.html",
+        "dojo/i18n!nls/localizedStrings",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
         "dijit/_WidgetsInTemplateMixin",
@@ -34,12 +35,13 @@ define([
         "dojo/query",
         "dojo/dom-geometry"
     ],
-    function (declare, domStyle, domAttr, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Deferred, domConstruct, topic, domClass, query, domGeom) {
+    function (declare, domStyle, domAttr, lang, on, template, nls, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Deferred, domConstruct, topic, domClass, query, domGeom) {
 
         //========================================================================================================================//
 
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
+            nls: nls,
             lastSearchString: null,
             stagedSearch: null,
             mapPoint: null,
@@ -74,7 +76,7 @@ define([
                 this.own(on(this.itemSearchIcon, "click", lang.hitch(this, function (evt) {
                     if (this.txtItemSearch.value != '') {
                         if (this.txtItemSearch.value != dojo.configData.LocatorSettings.itemsLocator[0].LocatorPlaceholder) {
-                            topic.publish("clearFilter", false);
+                            this._clearFilter(false);
                             this._locateItems(this.autoResults, true);
                         }
                     }
@@ -92,6 +94,7 @@ define([
                     this._hideText();
                 })));
             },
+
             /**
             * search address on every key press
             * @param {object} evt Keyup event
@@ -102,7 +105,7 @@ define([
                     if (evt.keyCode == dojo.keys.ENTER) {
                         if (this.txtItemSearch.value != '') {
                             if (this.txtItemSearch.value != dojo.configData.LocatorSettings.itemsLocator[0].LocatorPlaceholder) {
-                                topic.publish("clearFilter", false);
+                                this._clearFilter(false);
                                 this._locateItems(this.autoResults, true);
                             }
                         }
@@ -154,14 +157,15 @@ define([
                 if (domGeom.position(this.autoResults).h > 0) {
                     domClass.replace(this.autoResults, "displayNoneAll", "displayBlockAll");
                 }
-                topic.publish("clearFilter", true);
+                this._clearFilter(true);
             },
 
             _locateItems: function (node, flag) {
                 var _self = this;
+                var queryString = dojo.queryString;
                 var defObj = new Deferred();
                 dojo.queryString = this.txtItemSearch.value + ' AND group:("' + dojo.configData.ApplicationSettings.group + '")';
-                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
+                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
                 defObj.then(function (data) {
                     domConstruct.empty(_self.autoResults);
                     if (data.results.length > 0) {
@@ -173,7 +177,7 @@ define([
                                 var itemId = domAttr.get(this, "searchedItem");
                                 var defObj = new Deferred();
                                 dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (id: ("' + itemId + '"))';
-                                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
+                                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
                                 defObj.then(function (data) {
                                     dojo.results = data.results;
                                     topic.publish("createPods", data.results, true);
@@ -192,13 +196,61 @@ define([
                             topic.publish("createPods", data.results, true);
                         }
                     } else {
-                        domClass.replace(_self.autoResults, "displayNoneAll", "displayBlockAll");
+                        dojo.queryString = queryString;
+                        _self._locatorErrBack();
                     }
                 }, function (err) {
                     alert(err.message);
                 });
             },
 
+            /**
+            * display error message if query does not return any results
+            * @memberOf widgets/locator/locator 
+            */
+            _locatorErrBack: function () {
+                if (domClass.contains(this.autoResults, "displayBlockAll") && (lang.trim(this.txtItemSearch.value) == this.lastSearchString)) {
+                    domClass.replace(this.autoResults, "displayNoneAll", "displayBlockAll");
+                } else {
+                    domClass.replace(this.autoResults, "displayBlockAll", "displayNoneAll");
+                }
+                this.spanErrResults = domConstruct.create('div', { "class": "esriCTCursorDefault", "innerHTML": nls.errorMessages.invalidSearch }, this.autoResults);
+            },
+
+            _clearFilter: function (flag) {
+                topic.publish("showProgressIndicator");
+                if (query(".esriCTTagCloudHighlight")[0]) {
+                    domClass.remove(query(".esriCTTagCloudHighlight")[0], "esriCTTagCloudHighlight");
+                }
+                if (query(".esriCTDetailsLeftPanel")[0]) {
+                    domClass.replace(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
+                    domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
+                    domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
+                    domClass.remove(query(".esriCTGalleryContent")[0], "displayNoneAll");
+                    domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
+                }
+                if (query(".esriCTNoResults")[0]) {
+                    domConstruct.destroy(query(".esriCTNoResults")[0]);
+                }
+                dojo.configData.AGOLItemSettings.searchString = '';
+                dojo.configData.AGOLItemSettings.searchType = '';
+
+                if (flag) {
+                    var defObj = new Deferred();
+                    dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
+                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                    defObj.then(function (data) {
+                        dojo.nextQuery = data.nextQueryParams;
+                        dojo.results = data.results;
+                        topic.publish("createPods", data.results, true);
+                    }, function (err) {
+                        alert(err.message);
+                        topic.publish("hideProgressIndicator");
+                    });
+                } else {
+                    topic.publish("hideProgressIndicator");
+                }
+            },
             /**
             * clear default value from search textbox
             * @param {object} evt Dblclick event
@@ -252,7 +304,11 @@ define([
                 * @private
                 * @memberOf widgets/locator/locator
                 */
-                domAttr.set(this.txtItemSearch, "defaultItem", itemLocatorSettings[0].LocatorPlaceholder);
+                if (dojo.configData.AGOLItemSettings.searchString) {
+                    domAttr.set(this.txtItemSearch, "defaultItem", dojo.configData.AGOLItemSettings.searchString);
+                } else {
+                    domAttr.set(this.txtItemSearch, "defaultItem", itemLocatorSettings[0].LocatorPlaceholder);
+                }
             }
         });
     });

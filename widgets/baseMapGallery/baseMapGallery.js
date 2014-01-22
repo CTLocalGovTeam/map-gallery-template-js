@@ -38,7 +38,7 @@ define([
     "dojo/query",
     "dojo/topic"
   ],
-function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domClass, domGeom, string, html, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls,query, topic) {
+function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domClass, domGeom, string, html, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, query, topic) {
 
     //========================================================================================================================//
 
@@ -47,24 +47,24 @@ function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domCla
         nls: nls,
 
         postCreate: function () {
-            var baseMapURL = 0;
-            var baseMapURLCount = 0;
+            var baseMapUrl = 0;
+            var baseMapUrlCount = 0;
             var baseMapLayers = dojo.configData.BaseMapLayers;
             for (var i = 0; i < baseMapLayers.length; i++) {
                 if (baseMapLayers[i].MapURL) {
                     this.map.addLayer(this._createBaseMapLayer(baseMapLayers[i].MapURL, baseMapLayers[i].Key, (i === 0) ? true : false));
-                    if (baseMapURLCount == 0) {
-                        baseMapURL = i;
+                    if (baseMapUrlCount == 0) {
+                        baseMapUrl = i;
                     }
-                    baseMapURLCount++;
+                    baseMapUrlCount++;
                 }
             }
             var basemapContainer = domConstruct.create("div", {}, query(".esriCTRightPanelMap")[0]);
             basemapContainer.appendChild(this.esriCTDivLayerContainer);
-            this.layerList.appendChild(this._createBaseMapElement(baseMapURL, baseMapURLCount));
+            this.layerList.appendChild(this._createBaseMapElement(baseMapUrl, baseMapUrlCount));
 
-            if (baseMapURLCount >= 1) {
-                var layer = this.map.getLayer(baseMapLayers[baseMapURL].Key);
+            if (baseMapUrlCount >= 1) {
+                var layer = this.map.getLayer(baseMapLayers[baseMapUrl].Key);
                 layer.show();
 
             }
@@ -76,23 +76,23 @@ function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domCla
 
         },
 
-        _createBaseMapElement: function (baseMapURL, baseMapURLCount) {
+        _createBaseMapElement: function (baseMapUrl, baseMapUrlCount) {
             var presentThumbNail;
             var divContainer = domConstruct.create("div", { "class": "esriCTbaseMapContainerNode" });
-            var imgThumbnail = domConstruct.create("img", { "class": "esriCTBasemapThumbnail", "src": dojo.configData.BaseMapLayers[baseMapURL + 1].ThumbnailSource }, null);
-            var presentBaseMap = baseMapURL + 1;
-            presentThumbNail = baseMapURL + 2;
+            var imgThumbnail = domConstruct.create("img", { "class": "esriCTBasemapThumbnail", "src": dojo.configData.BaseMapLayers[baseMapUrl + 1].ThumbnailSource }, null);
+            var presentBaseMap = baseMapUrl + 1;
+            presentThumbNail = baseMapUrl + 2;
             on(imgThumbnail, "click", lang.hitch(this, function () {
                 imgThumbnail.src = dojo.configData.BaseMapLayers[presentThumbNail].ThumbnailSource;
                 this._changeBaseMap(presentBaseMap);
-                if (baseMapURLCount - 1 == presentThumbNail) {
-                    presentThumbNail = baseMapURL;
+                if (baseMapUrlCount - 1 == presentThumbNail) {
+                    presentThumbNail = baseMapUrl;
                 }
                 else {
                     presentThumbNail++;
                 }
-                if (baseMapURLCount - 1 == presentBaseMap) {
-                    presentBaseMap = baseMapURL;
+                if (baseMapUrlCount - 1 == presentBaseMap) {
+                    presentBaseMap = baseMapUrl;
                 } else {
                     presentBaseMap++;
                 }
@@ -118,6 +118,5 @@ function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domCla
                 }
             }
         }
-
     });
 });

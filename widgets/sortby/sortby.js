@@ -39,45 +39,44 @@ define([
             nls: nls,
 
             postCreate: function () {
-                var flagSortByDate = true;
-                domAttr.set(this.sortByLabel, "innerHTML", nls.sortByDateText);
+                if (dojo.configData.AGOLItemSettings.sortField == "modified") {
+                    domAttr.set(this.sortByLabel, "innerHTML", nls.sortByViewText);
+                } else {
+                    domAttr.set(this.sortByLabel, "innerHTML", nls.sortByDateText);
+                }
                 this.own(on(this.sortByLabel, "click", lang.hitch(this, function () {
                     topic.publish("showProgressIndicator");
-                    if (flagSortByDate) {
-                        flagSortByDate = this._sortByDate(this.sortByLabel, flagSortByDate);
+                    if (dojo.sortBy == dojo.configData.AGOLItemSettings.sortField) {
+                        this._sortByDate(this.sortByLabel);
                     } else {
-                        flagSortByDate = this._sortByViews(this.sortByLabel, flagSortByDate);
+                        this._sortByViews(this.sortByLabel);
                     }
                 })));
                 this.own(on(this.sortByViewMbl, "click", lang.hitch(this, function () {
-                    flagSortByDate = this._sortByViews(this.sortByLabel, flagSortByDate);
+                    this._sortByViews(this.sortByLabel);
                 })));
                 this.own(on(this.sortByDateMbl, "click", lang.hitch(this, function () {
-                    flagSortByDate = this._sortByDate(this.sortByLabel, flagSortByDate);
+                    this._sortByDate(this.sortByLabel);
                 })));
             },
 
-            _sortByDate: function (sortByLabel, flagSortByDate) {
+            _sortByDate: function (sortByLabel) {
                 dojo.sortBy = "modified";
                 this._sortPodOrder(dojo.sortBy, sortByLabel, nls.sortByViewText);
-                flagSortByDate = false;
                 domClass.remove(query(".esriCTListSelected")[0], "esriCTListSelected");
                 domClass.add(query(".sortByDateMbl")[0], "esriCTListSelected");
-                return flagSortByDate;
             },
 
-            _sortByViews: function (sortByLabel, flagSortByDate) {
-                dojo.sortBy = "numViews";
+            _sortByViews: function (sortByLabel) {
+                dojo.sortBy = dojo.configData.AGOLItemSettings.sortField;
                 this._sortPodOrder(dojo.sortBy, sortByLabel, nls.sortByDateText);
-                flagSortByDate = true;
                 domClass.remove(query(".esriCTListSelected")[0], "esriCTListSelected");
                 domClass.add(query(".sortByViewMbl")[0], "esriCTListSelected");
-                return flagSortByDate;
             },
 
-            _sortPodOrder: function (sortOrder, sortByLabel, text) {
+            _sortPodOrder: function (sortField, sortByLabel, text) {
                 var defObj = new Deferred();
-                topic.publish("queryGroupItem", dojo.queryString, sortOrder, "desc", defObj);
+                topic.publish("queryGroupItem", dojo.queryString, sortField, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
                 defObj.then(function (data) {
                     domAttr.set(sortByLabel, "innerHTML", text);
                     dojo.nextQuery = data.nextQueryParams;

@@ -45,6 +45,11 @@ define([
 
             postCreate: function () {
                 domAttr.set(this.layoutLabel, "innerHTML", nls.layoutText);
+                if (dojo.configData.AGOLItemSettings.defaultLayout.toLowerCase() == "list") {
+                    domClass.add(this.layoutTitle, "icon-grid");
+                } else {
+                    domClass.add(this.layoutTitle, "icon-list");
+                }
                 this.own(on(this.toggleLayout, "click", lang.hitch(this, function () {
                     topic.publish("showProgressIndicator");
                     if (!dojo.gridView) {

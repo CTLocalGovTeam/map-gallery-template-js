@@ -78,6 +78,7 @@ define({
         unableToOpenItem: "Unable to open item.",
         wmsSpatialReferenceError: "Spatial reference of the WMS layer does not match with the spatial reference of the map.",
         noPublicItems: "There are no public items in this group",
-        emptyUsernamePassword: "Please enter Username and Password"
+        emptyUsernamePassword: "Please enter Username and Password",
+        noFullScreenSupport: "Browser does not support full screen mode."
     }
 });

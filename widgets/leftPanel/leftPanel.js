@@ -180,47 +180,52 @@ define([
 
         declare("leftPanelCollection", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Deferred], {
             templateString: template,
-            groupItems: [],
             nls: nls,
 
             postCreate: function () {
+                dojo.sortBy = dojo.configData.AGOLItemSettings.sortField;
+                if (query(".esriCTSortText")[0]) {
+                    if ((dojo.sortBy == "modified") && (query(".esriCTSortText")[0].innerHTML != nls.sortByViewText)) {
+                        domAttr.set(query(".esriCTSortText")[0], "innerHTML", nls.sortByViewText);
+                    } else if ((dojo.sortBy == "numViews") && (query(".esriCTSortText")[0].innerHTML != nls.sortByDateText)) {
+                        domAttr.set(query(".esriCTSortText")[0], "innerHTML", nls.sortByDateText);
+                    }
+                }
                 this._setGroupContent();
                 this._expandGroupdescEvent(this.expandGroupDescription, this);
                 this._queryGroupItems();
                 domAttr.set(this.leftPanelHeader, "innerHTML", dojo.configData.ApplicationName);
-                topic.subscribe("clearFilter", this._clearFilter);
                 topic.subscribe("queryGroupItems", this._queryGroupItems);
             },
 
             _queryGroupItems: function (nextQuery, queryString) {
                 var _self = this;
+                var groupItems = [];
                 var defObj = new Deferred();
                 if ((!nextQuery) && (!queryString)) {
                     dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
-                    dojo.sortBy = "numViews";
-                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
+                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
                 } else if (!queryString) {
                     topic.publish("queryGroupItem", null, null, null, defObj, nextQuery);
                 }
                 if (queryString) {
                     dojo.queryString = queryString;
-                    dojo.sortBy = "numViews";
-                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
+                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
                 }
 
                 defObj.then(function (data) {
                     if (data.results.length > 0) {
                         if (data.nextQueryParams.start != -1) {
                             for (var i = 0; i < data.results.length; i++) {
-                                _self.groupItems.push(data.results[i]);
+                                groupItems.push(data.results[i]);
                             }
                             _self._queryGroupItems(data.nextQueryParams);
                         } else {
                             for (var i = 0; i < data.results.length; i++) {
-                                _self.groupItems.push(data.results[i]);
+                                groupItems.push(data.results[i]);
                             }
-                            dojo.groupItems = _self.groupItems;
-                            _self._setLeftPanelContent(_self.groupItems);
+                            dojo.groupItems = groupItems;
+                            _self._setLeftPanelContent(groupItems);
                         }
                     } else {
                         if (queryString) {
@@ -263,10 +268,25 @@ define([
                     }
                     this._appendLeftPanel();
                     var defObj = new Deferred();
-                    dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
-                    dojo.sortBy = "numViews";
-                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
+                    var queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
+                    if (dojo.configData.AGOLItemSettings.searchString) {
+                        queryString += ' AND (';
+                        queryString += ' title:' + dojo.configData.AGOLItemSettings.searchString;
+                        queryString += ' OR tags:' + dojo.configData.AGOLItemSettings.searchString;
+                        queryString += ' OR typeKeywords:' + dojo.configData.AGOLItemSettings.searchString;
+                        queryString += ' OR snippet:' + dojo.configData.AGOLItemSettings.searchString;
+                        queryString += ' ) ';
+                    }
+
+                    if (dojo.configData.AGOLItemSettings.searchType) {
+                        queryString += ' AND type:' + dojo.configData.AGOLItemSettings.searchType;
+                    }
+
+                    dojo.queryString = queryString;
+                    dojo.sortBy = dojo.configData.AGOLItemSettings.sortField;
+                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
                     defObj.then(function (data) {
+                        topic.publish("showProgressIndicator");
                         dojo.nextQuery = data.nextQueryParams;
                         var gallery = new itemGallery();
                         dojo.results = data.results;
@@ -277,38 +297,6 @@ define([
                 } else {
                     this._appendLeftPanel();
                     var gallery = new itemGallery();
-                }
-            },
-
-            _clearFilter: function (flag) {
-                topic.publish("showProgressIndicator");
-                if (query(".esriCTTagCloudHighlight")[0]) {
-                    domClass.remove(query(".esriCTTagCloudHighlight")[0], "esriCTTagCloudHighlight");
-                }
-                if (query(".esriCTDetailsLeftPanel")[0]) {
-                    domClass.replace(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
-                    domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
-                    domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
-                    domClass.remove(query(".esriCTGalleryContent")[0], "displayNoneAll");
-                    domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
-                }
-                if (query(".esriCTNoResults")[0]) {
-                    domConstruct.destroy(query(".esriCTNoResults")[0]);
-                }
-                if (flag) {
-                    var defObj = new Deferred();
-                    dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
-                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
-                    defObj.then(function (data) {
-                        dojo.nextQuery = data.nextQueryParams;
-                        dojo.results = data.results;
-                        topic.publish("createPods", data.results, true);
-                    }, function (err) {
-                        alert(err.message);
-                        topic.publish("hideProgressIndicator");
-                    });
-                } else {
-                    topic.publish("hideProgressIndicator");
                 }
             },
 
@@ -368,14 +356,14 @@ define([
                             domClass.remove(query(".esriCTGalleryContent")[0], "displayNoneAll");
                             domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
                         }
-                    }
+                    };
                 }
             },
 
             _queryRelatedTags: function (tagName) {
                 var defObj = new Deferred();
                 dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (tags: ("' + tagName + '"))';
-                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, "desc", defObj);
+                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
                 defObj.then(function (data) {
                     if (data.total == 0) {
                         if (query(".esriCTInnerRightPanel")[0]) {
@@ -384,7 +372,12 @@ define([
                         if (query(".esriCTNoResults")[0]) {
                             domConstruct.destroy(query(".esriCTNoResults")[0]);
                         }
-                        var divItemTitleRight = domConstruct.create('div', { "class": "esriCTDivClear esriCTNoResults", "innerHTML": nls.noResultsText }, query(".esriCTRightPanel")[0]);
+                        domConstruct.create('div', { "class": "esriCTDivClear esriCTNoResults", "innerHTML": nls.noResultsText }, query(".esriCTRightPanel")[0]);
+                        if (domClass.contains(query(".esriCTInnerRightPanel")[0], "displayNone")) {
+                            domClass.replace(query(".esriCTNoResults")[0], "displayNoneAll", "displayBlockAll");
+                        } else {
+                            domClass.replace(query(".esriCTNoResults")[0], "displayBlockAll", "displayNoneAll");
+                        }
                         topic.publish("hideProgressIndicator");
                     } else {
                         if (query(".esriCTNoResults")[0]) {
@@ -419,15 +412,15 @@ define([
                 if (dojo.configData.groupIcon) {
                     _self.groupLogo.src = dojo.configData.groupIcon;
                 }
-                if (dojo.configData.groupName) {
-                    _self.setNodeText(_self.groupName, dojo.configData.groupName);
+                if (dojo.configData.groupTitle) {
+                    _self.setNodeText(_self.groupName, dojo.configData.groupTitle);
                 }
-                if (dojo.configData.homeSideContent) {
-                    _self.setNodeText(_self.groupDesc, dojo.configData.homeSideContent);
+                if (dojo.configData.AGOLItemSettings.groupDescription) {
+                    _self.setNodeText(_self.groupDesc, dojo.configData.AGOLItemSettings.groupDescription);
                     if (query(_self.groupDesc).text().length > 400) {
                         domClass.add(_self.groupDesc, "esriCTLeftTextReadLess");
-                        if (_self.nls.expandGroupDescText) {
-                            _self.setNodeText(_self.expandGroupDescription, _self.nls.expandGroupDescText);
+                        if (nls.expandGroupDescText) {
+                            _self.setNodeText(_self.expandGroupDescription, nls.expandGroupDescText);
                         }
                     }
                 }

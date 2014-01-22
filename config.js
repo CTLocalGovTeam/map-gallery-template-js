@@ -85,12 +85,47 @@ define([], function () {
             geometryService: "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
         },
 
+        //  groupDescription:  Displayed on the left panel of the index page. Defaults to group description.
+        //	mapTitle: If not specified, the ArcGIS.com map's title is used.
+        //	mapSnippet: If not specified, the ArcGIS.com web map's summary is used
+        //	mapItemDescription: Displayed on item details page. Defaults to map description.
+        //	mapLicenseInfo: Displayed on item details page. Defaults to map licenseInfo.
+        //  defaultLayout: Default layout to use. "grid" or "list".
+        //	searchString: Performs a default search on the group with the set string.
+        //	searchType: Performs a default search on the group for the specified item type. Valid fields are valid item types, eg. web map, feature service, map service, etc.
+        //	sortField: Order to display the group items. Valid fields are:  modified, numViews.
+        //	sortOrder: Order to sort the group: "asc" or "desc".
+        //	mapViewer: URL to open the gallery items to. "simple","arcgis".
+        //  showBasemapGallery: Show basemap gallery on map: true or false.
+        //	showOverviewMap: Show overview on map: true or false.
+        //	showMoreInfo: Show more info link on item details page: true or false.
+        //  showLicenseInfo: Show Use Constraints on item details page.
+        //	showAttribution: Show sources on item details page.
+        //	showComments: Show comments on item details page.
+        //	showRatings: Show ratings of items on item details page.
+        //	showViews: Show ratings of items on item details page.
+
         AGOLItemSettings: {
+            groupDescription: "",
+            mapTitle: "",
+            mapSnippet: "",
+            mapItemDescription: "",
+            mapLicenseInfo: "",
+            defaultLayout: "list",
+            sortField: "numViews",
+            sortOrder: "desc",
+            mapViewer: "",
+            searchString: "",
+            searchType: "",
+            showBasemapGallery: true,
+            showMapSearch: true,
+            showOverviewMap: false,
+            showMoreInfo: true,
             showRatings: true,
-            showNumberOfViews: true,
-            showAccessAndConstraints: true,
-            showAttribution: true,
-            showReviews: true
+            showViews: true,
+            showLicenseInfo: true,
+            showAttribution: false,
+            showComments: true
         },
 
         //------------------------------------------------------------------------------------------------------------------------
