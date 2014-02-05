@@ -67,6 +67,9 @@ define({
         showMoreResultsGalleryText: "Mostrar más resultados",
         geolocationBtnTitle: "geolocalización",
         fullScreenBtnTitle: "pantalla completa",
+        noLegendText: "No leyenda",
+        detailsContentText: "Detalles",
+        detailsLinkText: "Detalles del artículo",
         errorMessages: {
             emptyGroup: "El grupo configurado es no tener ningún dato para la consulta",
             invalidSearch: "No hay resultados",
@@ -79,7 +82,8 @@ define({
             unableToOpenItem: "No se puede abrir elemento.",
             wmsSpatialReferenceError: "Referencia espacial de la capa WMS no coincide con la referencia espacial del mapa.",
             noPublicItems: "No hay elementos comunes en este grupo",
-            emptyUsernamePassword: "Por favor, introduzca nombre de usuario y contraseña"
+            emptyUsernamePassword: "Por favor, introduzca nombre de usuario y contraseña",
+            noFullScreenSupport: "Navegador no admite el modo de pantalla completa."
         }
     }
 });

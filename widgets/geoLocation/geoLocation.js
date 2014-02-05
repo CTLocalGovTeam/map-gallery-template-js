@@ -22,7 +22,6 @@ define([
     "dojo/_base/lang",
     "dojo/dom-construct",
     "dojo/on",
-    "dojo/topic",
     "dijit/_WidgetBase",
     "esri/tasks/GeometryService",
     "esri/geometry/Point",
@@ -30,10 +29,9 @@ define([
     "esri/SpatialReference",
     "esri/graphic",
     "dojo/query",
-    "dojo/i18n!nls/localizedStrings",
-    "esri/layers/GraphicsLayer"
+    "dojo/i18n!nls/localizedStrings"
   ],
-function (declare, lang, domConstruct, on, topic, _WidgetBase, GeometryService, Point, PictureMarkerSymbol, SpatialReference, Graphic, query, nls, GraphicsLayer) {
+function (declare, lang, domConstruct, on, _WidgetBase, GeometryService, Point, PictureMarkerSymbol, SpatialReference, Graphic, query, nls) {
 
     //========================================================================================================================//
 
@@ -55,11 +53,6 @@ function (declare, lang, domConstruct, on, topic, _WidgetBase, GeometryService, 
                 domConstruct.create("span", { "class": "icon-gps esriCTGeolocationIcon" }, this.domNode);
                 domConstruct.place(this.domNode, query(".esriMapGeoInfo")[0], "after");
                 this.own(on(this.domNode, "click", lang.hitch(this, function () {
-
-                    /**
-                    * minimize other open header panel widgets and call geolocation service
-                    */
-                    topic.publish("toggleWidget", "geolocation");
                     this._showCurrentLocation();
                 })));
             }

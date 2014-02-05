@@ -18,12 +18,12 @@ input
 
 input
 {
-    height: 24px;
+    height: 26px;
     line-height: 22px;
     margin-top: 5px;
-    padding: 2px 22% 0 2%;
-    vertical-align: middle;
-    width: 76%;
+    width: 100%;
+    text-indent: 2px;
+    padding: 0 !important;
 }
 
 textarea
@@ -62,7 +62,6 @@ font
 
 .esriCTLayerInfo
 {
-    color: #007ac2;
     cursor: pointer;
     padding-top: 5px;
 }
@@ -133,7 +132,7 @@ font
 .esriCTSearchInput
 {
     float: left;
-    margin: 0 15px;
+    margin: 0 10px;
 }
 
 .esriCTSearch
@@ -146,23 +145,25 @@ font
 .esriCTSearch input
 {
     float: left;
+    border-right: 0;
 }
 
 .esriCTSearchIcon
 {
     float: right !important;
-    margin-top: -32px;
     color: #aaa !important;
     font-size: 15px;
-    padding: 0px 0px !important;
-    position: relative;
-    z-index: 1000;
+    cursor: pointer;
 }
 
 .esriCTLayout
 {
     float: left;
     padding: 0 10px;
+}
+
+.esriCTEyeIconPadding {
+    padding-left:5px
 }
 
 .esriCTSignIn
@@ -176,11 +177,6 @@ font
     display: none;
 }
 
-.esriCTSearchItemInput
-{
-    overflow: hidden;
-}
-
 .esriCTSearchItemInput::-ms-clear
 {
     display: none;
@@ -189,6 +185,57 @@ font
 .dijitInputInner::-ms-clear
 {
     display: none;
+}
+
+.esriCTSearchBtn
+{
+    background: none repeat scroll 0 0 #FFFFFF;
+    float: left;
+    margin-left: -40px;
+    margin-top: 6px;
+    width: 40px;
+    padding: 2px 0;
+}
+
+.esriCTSearchLocator
+{
+    float: left;
+    width: 100%;
+}
+
+.esriCTSearchLocatorInput
+{
+    margin-right: 41px;
+}
+
+.esriCTSearchBtnMap
+{
+    background: none repeat scroll 0 0 #FFFFFF;
+    float: left;
+    margin-left: -43px;
+    margin-top: 5px;
+    width: 42px;
+    height: 26px;
+}
+
+.esriCTClearInputMap
+{
+    color: #AAAAAA !important;
+    cursor: pointer;
+    float: left !important;
+    font-size: 20px;
+    width: 20px;
+}
+
+.esriCTSearchLocatorMap
+{
+    float: left;
+    width: 100%;
+}
+
+.esriCTSearchLocatorInputMap
+{
+    margin-right: 44px;
 }
 
 /* End of application header Styles */
@@ -204,9 +251,8 @@ font
 
 .esriCTLeftPanelDesc
 {
-    overflow: auto;
-    max-height: 80px;
-    font-size:small;
+    overflow: auto; /* max-height: 80px;*/
+    font-size: small;
 }
 
 .esriCTInnerLeftPanelTop
@@ -335,6 +381,11 @@ font
 .esriCTEyeNumViewsGrid
 {
     float: right !important;
+}
+
+.esriCTEyeNumViewsList
+{
+    padding-top: 2px;
 }
 
 .esriCTEyeNumViews span.esriCTEyeIcon
@@ -659,11 +710,8 @@ font
 {
     color: #AAAAAA !important;
     cursor: pointer;
-    float: right !important;
+    float: left !important;
     font-size: 20px;
-    height: 15px !important;
-    margin-right: 10px;
-    margin-top: -38px;
 }
 
 .esriCTTitleBorder
@@ -767,6 +815,11 @@ font
     margin-right: 15px;
 }
 
+.esriCTRatingsDiv
+{
+    float: left;
+}
+
 .esriCTRatingStarIcon
 {
     font-size: 14px;
@@ -851,6 +904,18 @@ font
 {
     border-bottom: 1px solid #e4e4e4;
     margin-bottom: 15px;
+}
+
+.esriCTMenuTab div.esriCTClearInput
+{
+    line-height: 18px !important;
+    width: 20px !important;
+}
+
+.esriCTMenuTab div.esriCTSearchIcon
+{
+    line-height: 22px !important;
+    width: 20px !important;
 }
 
 /* End of item details page Styles */
@@ -987,23 +1052,20 @@ font
 {
     padding-top: 5px;
     float: left;
-    width: 180px;
+    width: 182px;
 }
 
 .esriCTSearchIconMap
 {
     float: right !important;
-    margin-top: -23px;
     color: #aaa !important;
     font-size: 15px;
-    padding: 1px 0px !important;
-    background: #fff;
-    margin-right: 1px;
+    padding-top: 4px;
 }
 
 .esriCTMapGeoLocation
 {
-    float: right;
+    float: left;
     margin-top: 9px;
     width: 28px;
     height: 28px;
@@ -1049,7 +1111,7 @@ font
 
 .esriCTFullScreen
 {
-    float: right;
+    float: left;
     margin-top: 9px;
     margin-left: 6px;
     width: 28px;
@@ -1118,6 +1180,13 @@ font
     background-color: white;
 }
 
+.esriCTMapLogo
+{
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+}
+
 /* End of map page Styles */
 
 /* Locator Styles */
@@ -1129,9 +1198,6 @@ font
     background: #fff;
     height: 110px;
     overflow: auto;
-    border-left: 1px solid #007ac2;
-    border-right: 1px solid #007ac2;
-    border-bottom: 1px solid #007ac2;
     z-index: 10;
 }
 
@@ -1391,6 +1457,12 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     color: #007ac2;
 }
 
+.blueTheme .esriCTAutoSuggest
+{
+    border-left: 1px solid #007ac2;
+    border-right: 1px solid #007ac2;
+    border-bottom: 1px solid #007ac2;
+}
 /* Left panel */
 
 .blueTheme
@@ -1549,6 +1621,17 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     opacity: 0.55;
 }
 
+.blueTheme .esriCTSearchBtnMap
+{
+    border: 1px solid #007AC2;
+    border-left: none;
+}
+
+.blueTheme .esriCTLayerInfo
+{
+    color: #007ac2;
+}
+
 /* End of Blue theme Styles */
 
 /* Green Theme Styles */
@@ -1560,18 +1643,18 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 
 .greenTheme input
 {
-    border: 1px solid #008000;
+    border: 1px solid #028d6a;
 }
 
 .greenTheme .esriCTLeftPanelHeader
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .esriCTMenuTab
 {
-    background: none repeat scroll 0 0 #008000;
-    border-bottom: 1px solid #008000;
+    background: none repeat scroll 0 0 #028d6a;
+    border-bottom: 1px solid #028d6a;
 }
 
 .greenTheme .esriCTMenuTabRight div span
@@ -1582,23 +1665,23 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 
 .greenTheme .esriCTSharingTag
 {
-    background: #008000;
+    background: #028d6a;
     color: #fff;
 }
 
 .greenTheme .esriCTTagCloudHighlight
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .esriCTLeftText div p
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .esriCTAppImage
 {
-    border: 1px solid #008000;
+    border: 1px solid #028d6a;
 }
 
 .greenTheme .esriCTImageTopPanel
@@ -1608,41 +1691,47 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 
 .greenTheme .esriCTMenuTab
 {
-    background: none repeat scroll 0 0 #008000;
+    background: none repeat scroll 0 0 #028d6a;
 }
 
 .greenTheme .esriCTComments, .esriCTComments
 {
-    color: #008000;
+    color: #028d6a;
 }
 .greenTheme .esriCTRatingStarIconColor
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .esriCTMapIcons, .greenTheme .esriCTGeolocationIcon
 {
-    color: #008000;
+    color: #028d6a;
 }
 
+.greenTheme .esriCTAutoSuggest
+{
+    border-left: 1px solid #028d6a;
+    border-right: 1px solid #028d6a;
+    border-bottom: 1px solid #028d6a;
+}
 /* Item details page */
 
 .greenTheme .esriCTDetailsMap img
 {
-    border: 1px solid #008000;
+    border: 1px solid #028d6a;
 }
 
 .greenTheme .esriCTButtonPrimary
 {
-    background-color: #008000;
+    background-color: #028d6a;
     color: #fff;
-    border: 1px solid #008000;
+    border: 1px solid #028d6a;
     border-radius: 2px 2px 2px 2px;
 }
 
 .greenTheme .esriCTReviewHeader
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .esriCTGalleryName
@@ -1657,68 +1746,79 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 
 .greenTheme .dijitDialogTitleBar
 {
-    background-color: #008000;
+    background-color: #028d6a;
 }
 
 .greenTheme .esriCTExpand, .greenTheme .esriCTMoreInfo
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .esriCTMoreResultsButton
 {
-    background: #008000;
+    background: #028d6a;
     color: white;
 }
 
 .greenTheme .esriCTEyeIcon
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .esriCTLeftText div span a
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .esriCTListAppTitle
 {
-    color: #008000;
+    color: #028d6a;
 }
 
 .greenTheme .dijitButton
 {
-    border: 1px solid #008000;
+    border: 1px solid #028d6a;
     color: #fff;
-    background-color: #008000;
+    background-color: #028d6a;
 }
 
 .greenTheme .esriCTTabList li a.select
 {
-    background: #008000;
+    background: #028d6a;
     color: #fff;
     cursor: default !important;
 }
 
 .greenTheme .HomeButton .home, .greenTheme .HomeButton .home:hover
 {
-    background-color: #008000;
+    background-color: #028d6a;
 }
 
 .greenTheme .esriSimpleSliderDecrementButton, .greenTheme .esriSimpleSliderIncrementButton
 {
-    background-color: #008000 !important;
+    background-color: #028d6a !important;
 }
 
 .greenTheme .esriCTLoadingIndicator
 {
-    background: #008000;
+    background: #028d6a;
 }
 
 .greenTheme .dijitDialogUnderlay
 {
-    background: #008000;
+    background: #028d6a;
     opacity: 0.55;
+}
+
+.greenTheme .esriCTSearchBtnMap
+{
+    border: 1px solid #028d6a;
+    border-left: none;
+}
+
+.greenTheme .esriCTLayerInfo
+{
+    color: #028d6a;
 }
 
 /* End of green Theme Styles */
@@ -1782,6 +1882,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 {
     color: #800000;
 }
+
 .redTheme .esriCTRatingStarIconColor
 {
     color: #800000;
@@ -1792,6 +1893,12 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     color: #800000;
 }
 
+.redTheme .esriCTAutoSuggest
+{
+    border-left: 1px solid #800000;
+    border-right: 1px solid #800000;
+    border-bottom: 1px solid #800000;
+}
 /* Item details page */
 
 .redTheme .esriCTDetailsMap img
@@ -1890,6 +1997,17 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     opacity: 0.55;
 }
 
+.redTheme .esriCTSearchBtnMap
+{
+    border: 1px solid #800000;
+    border-left: none;
+}
+
+.redTheme .esriCTLayerInfo
+{
+    color: #800000;
+}
+
 /* End of red theme styles */
 
 /* Loading indicator Styles */
@@ -1922,9 +2040,9 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     background-repeat: no-repeat;
     position: absolute;
     top: 50%;
-    left: 50%;
-    height: 40px;
-    width: 40px;
+    left: 49%;
+    height: 25px;
+    width: 25px;
 }
 
 /* End of loading indicator Styles */

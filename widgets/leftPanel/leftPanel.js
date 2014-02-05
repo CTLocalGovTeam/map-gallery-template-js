@@ -48,7 +48,7 @@ define([
                 }
             },
 
-            //This function is used to collect all the tags in array
+            //Collect all the tags in an array
             collectTags: function (results, geoTag, prefixTag) {
                 var groupItemsTagsdata = [];
                 var geoTagCollection = [];
@@ -92,7 +92,7 @@ define([
                 return tagsObj;
             },
 
-            //This function sorts the the tag cloud array in order
+            //Sort the the tag cloud array in order
             _sortArray: function (tagArray) {
                 var sortedArray = [];
                 for (var i in tagArray) {
@@ -114,7 +114,7 @@ define([
                 return sortedArray;
             },
 
-            //This function search for the tags with the geo tag configured
+            //Search for the tags with the geographiesTagText tag configured
             _searchGeoTag: function (tag, geoTag) {
                 var geoTagValue = tag.toLowerCase().indexOf(geoTag.toLowerCase());
                 return geoTagValue;
@@ -123,7 +123,7 @@ define([
 
         declare("tagCloudObj", null, {
 
-            //This function generates the Tag cloud based on the inputs provided
+            //Generate the Tag cloud based on the inputs provided
             generateTagCloud: function (tagsCollection, maxTags, fontsRange) {
                 if (tagsCollection.length < maxTags) {
                     maxTags = tagsCollection.length;
@@ -134,7 +134,7 @@ define([
                 return tagCloudTags;
             },
 
-            //This function identifies maximum used tags
+            //Identify maximum used tags
             _identifyMaxUsedTags: function (tagsCollection, maxTagsToDisplay) {
                 var maxUsedTags = [];
                 for (var i = 0; i < maxTagsToDisplay; i++) {
@@ -143,7 +143,7 @@ define([
                 return maxUsedTags;
             },
 
-            //This function generates the required font ranges for each and every tag in tag cloud
+            //Generate the required font ranges for each and every tag in tag cloud
             _generateFontSize: function (min, max, count) {
                 var diff = ((max - min) / (count - 1));
                 var fontSizeArray = [];
@@ -162,7 +162,7 @@ define([
                 });
             },
 
-            //This function merges the display tags and font ranges in single array
+            //Merge the displayed tags and font ranges in single array
             _mergeTags: function (maxUsedTags, fontSizeArray) {
                 for (var i = 0; i < maxUsedTags.length; i++) {
                     maxUsedTags[i].fontSize = fontSizeArray[i];
@@ -198,6 +198,7 @@ define([
                 topic.subscribe("queryGroupItems", this._queryGroupItems);
             },
 
+            //Store the item details in an array
             _queryGroupItems: function (nextQuery, queryString) {
                 var _self = this;
                 var groupItems = [];
@@ -237,10 +238,12 @@ define([
                 });
             },
 
+            //Create the categories and geographies tag cloud container
             _setLeftPanelContent: function (results) {
+                dojo.selectedTags = "";
+                dojo.tagCloudArray = [];
                 if (dojo.configData.ApplicationSettings.showCategoriesTagCloud || dojo.configData.ApplicationSettings.showGeographiesTagCloud) {
                     var uniqueTags = new collectUniqueTags();
-                    var tagCloudArray = [];
                     var tagsObj = uniqueTags.collectTags(results, dojo.configData.ApplicationSettings.geographiesTagText, dojo.configData.ApplicationSettings.geographiesPrefixText);
                     var tagCloud = new tagCloudObj();
                     if (!dojo.configData.ApplicationSettings.tagCloudFontRange.minValue && !dojo.configData.ApplicationSettings.tagCloudFontRange.maxValue && dojo.configData.ApplicationSettings.tagCloudFontRange.units) {
@@ -257,53 +260,51 @@ define([
                         uniqueTags.setNodeValue(this.tagsCategories, nls.tagCategoriesHeaderText);
 
                         var displayCategoryTags = tagCloud.generateTagCloud(tagsObj.groupItemsTagsdata, dojo.configData.ApplicationSettings.showMaxTopTags, dojo.configData.ApplicationSettings.tagCloudFontRange);
-                        this.displayTagCloud(displayCategoryTags, this.tagsCategoriesCloud, this.tagsCategories.innerHTML, tagCloudArray);
+                        this.displayTagCloud(displayCategoryTags, this.tagsCategoriesCloud, this.tagsCategories.innerHTML);
                     }
                     if (dojo.configData.ApplicationSettings.showGeographiesTagCloud && dojo.configData.ApplicationSettings.geographiesTagText && tagsObj.geoTagCollection) {
                         domStyle.set(this.geographicTagsContent, "display", "block");
                         uniqueTags.setNodeValue(this.geoTagsCloudHeader, nls.geographicTagsHeaderText);
 
                         var displaygeoTags = tagCloud.generateTagCloud(tagsObj.geoTagCollection, dojo.configData.ApplicationSettings.showMaxTopTags, dojo.configData.ApplicationSettings.tagCloudFontRange);
-                        this.displayTagCloud(displaygeoTags, this.geoTagsCloud, this.geoTagsCloudHeader.innerHTML, tagCloudArray);
+                        this.displayTagCloud(displaygeoTags, this.geoTagsCloud, this.geoTagsCloudHeader.innerHTML);
                     }
-                    this._appendLeftPanel();
-                    var defObj = new Deferred();
-                    var queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
-                    if (dojo.configData.AGOLItemSettings.searchString) {
-                        queryString += ' AND (';
-                        queryString += ' title:' + dojo.configData.AGOLItemSettings.searchString;
-                        queryString += ' OR tags:' + dojo.configData.AGOLItemSettings.searchString;
-                        queryString += ' OR typeKeywords:' + dojo.configData.AGOLItemSettings.searchString;
-                        queryString += ' OR snippet:' + dojo.configData.AGOLItemSettings.searchString;
-                        queryString += ' ) ';
-                    }
-
-                    if (dojo.configData.AGOLItemSettings.searchType) {
-                        queryString += ' AND type:' + dojo.configData.AGOLItemSettings.searchType;
-                    }
-
-                    dojo.queryString = queryString;
-                    dojo.sortBy = dojo.configData.AGOLItemSettings.sortField;
-                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
-                    defObj.then(function (data) {
-                        topic.publish("showProgressIndicator");
-                        dojo.nextQuery = data.nextQueryParams;
-                        var gallery = new itemGallery();
-                        dojo.results = data.results;
-                        gallery.createItemPods(data.results, false, data.total);
-                    }, function (err) {
-                        alert(err.message);
-                    });
-                } else {
-                    this._appendLeftPanel();
-                    var gallery = new itemGallery();
                 }
+                this._appendLeftPanel();
+                var defObj = new Deferred();
+                var queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
+                //if searchString exists in the config file, perform a default serach with the specified string
+                if (dojo.configData.AGOLItemSettings.searchString) {
+                    queryString += ' AND (';
+                    queryString += ' title:' + dojo.configData.AGOLItemSettings.searchString;
+                    queryString += ' OR tags:' + dojo.configData.AGOLItemSettings.searchString;
+                    queryString += ' OR typeKeywords:' + dojo.configData.AGOLItemSettings.searchString;
+                    queryString += ' OR snippet:' + dojo.configData.AGOLItemSettings.searchString;
+                    queryString += ' ) ';
+                }
+
+                //if searchType exists in the config file, perform a default type search with the specified string
+                if (dojo.configData.AGOLItemSettings.searchType) {
+                    queryString += ' AND type:' + dojo.configData.AGOLItemSettings.searchType;
+                }
+
+                dojo.queryString = queryString;
+                dojo.sortBy = dojo.configData.AGOLItemSettings.sortField;
+                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                defObj.then(function (data) {
+                    topic.publish("showProgressIndicator");
+                    dojo.nextQuery = data.nextQueryParams;
+                    var gallery = new itemGallery();
+                    dojo.results = data.results;
+                    gallery.createItemPods(data.results, false, data.total);
+                }, function (err) {
+                    alert(err.message);
+                });
             },
 
-            //This function creates the required HTML for generating the tag cloud
-            displayTagCloud: function (displayTags, node, text, tagCloudArray) {
+            //Create the required HTML for generating the tag cloud
+            displayTagCloud: function (displayTags, node, text) {
                 var _self = this;
-                var selectedTags = "";
 
                 for (var i = 0; i < displayTags.length; i++) {
                     var span = domConstruct.place(domConstruct.create('h3'), node);
@@ -329,25 +330,25 @@ define([
                         }
                         if (domClass.contains(this, "esriCTTagCloudHighlight")) {
                             domClass.remove(this, "esriCTTagCloudHighlight");
-                            var index = array.indexOf(tagCloudArray, val);
+                            var index = array.indexOf(dojo.tagCloudArray, val);
                             if (index > -1) {
-                                tagCloudArray.splice(index, 1);
+                                dojo.tagCloudArray.splice(index, 1);
                             }
                         } else {
                             domClass.add(this, "esriCTTagCloudHighlight");
-                            tagCloudArray.push(val);
+                            dojo.tagCloudArray.push(val);
                         }
 
                         if (domGeom.position(query(".esriCTAutoSuggest")[0]).h > 0) {
                             domClass.replace(query(".esriCTAutoSuggest")[0], "displayNoneAll", "displayBlockAll");
                         }
 
-                        if (selectedTags != "") {
-                            selectedTags = tagCloudArray.join('"' + " AND " + '"');
+                        if (dojo.selectedTags != "") {
+                            dojo.selectedTags = dojo.tagCloudArray.join('"' + " AND " + '"');
                         } else {
-                            selectedTags = val;
+                            dojo.selectedTags = val;
                         }
-                        _self._queryRelatedTags(selectedTags);
+                        _self._queryRelatedTags(dojo.selectedTags);
 
                         if (query(".esriCTDetailsLeftPanel")[0]) {
                             domClass.replace(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
@@ -355,11 +356,13 @@ define([
                             domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
                             domClass.remove(query(".esriCTGalleryContent")[0], "displayNoneAll");
                             domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
+                            domClass.replace(query(".esriCTApplicationIcon")[0], "esriCTCursorDefault", "esriCTCursorPointer");
                         }
                     };
                 }
             },
 
+            //Executed on the click of a tag cloud and queries to fetch items containing the selected tag cloud
             _queryRelatedTags: function (tagName) {
                 var defObj = new Deferred();
                 dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (tags: ("' + tagName + '"))';
@@ -394,11 +397,13 @@ define([
                 });
             },
 
-            //This function shrinks or expands the group description content based on the click event
+            //Shrinks or expands the group description content on the left panel based on the click event
             _expandGroupdescEvent: function (node, _self) {
                 node.onclick = function () {
                     if (this.innerHTML == nls.expandGroupDescText) {
                         domAttr.set(this, "innerHTML", nls.shrinkGroupDescText);
+                        var height = window.innerHeight - (domGeom.position(query(".esriCTMenuTab")[0]).h + domGeom.position(query(".esriCTInnerLeftPanelBottom")[0]).h + domGeom.position(query(".esriCTLogo")[0]).h + 50) + "px";
+                        domStyle.set(query(".esriCTLeftPanelDesc")[0], "maxHeight", height);
                     } else {
                         domAttr.set(this, "innerHTML", nls.expandGroupDescText);
                     }
@@ -406,7 +411,7 @@ define([
                 };
             },
 
-            //This function sets the required group content in the containers
+            //Sets the required group content in the containers
             _setGroupContent: function () {
                 var _self = this;
                 if (dojo.configData.groupIcon) {
@@ -430,14 +435,14 @@ define([
                 }
             },
 
-            //This function is used to set the innerHTML
+            //Used to set the innerHTML
             setNodeText: function (node, htmlString) {
                 if (node) {
                     domAttr.set(node, "innerHTML", htmlString);
                 }
             },
 
-            //This function append the left panel to parent container
+            //Append the left panel to parent container
             _appendLeftPanel: function () {
                 var applicationHeaderDiv = dom.byId("esriCTParentDivContainer");
                 domConstruct.place(this.galleryandPannels, applicationHeaderDiv);

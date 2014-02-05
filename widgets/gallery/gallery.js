@@ -21,7 +21,6 @@ define([
         "dojo/_base/declare",
         "dojo/dom-construct",
         "dojo/_base/lang",
-        "dojo/_base/array",
         "dojo/dom-attr",
         "dojo/dom",
         "dojo/text!./templates/gallery.html",
@@ -37,9 +36,10 @@ define([
         "dojo/number",
         "dojo/topic",
         "dojo/dom-style",
-        "esri/arcgis/utils"
+        "esri/arcgis/utils",
+        "dojo/dom-geometry"
     ],
-    function (declare, domConstruct, lang, array, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, ItemDetails, query, domClass, on, Deferred, number, topic, domStyle, utils) {
+    function (declare, domConstruct, lang, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, ItemDetails, query, domClass, on, Deferred, number, topic, domStyle, utils, domGeom) {
         declare("itemGallery", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
             nls: nls,
@@ -57,6 +57,7 @@ define([
                         dojo.gridView = false;
                     }
                 }
+
                 this.own(on(this.galleryNext, "click", lang.hitch(this, function () {
                     var defObj = new Deferred();
                     var _self = this;
@@ -80,8 +81,19 @@ define([
                     domClass.remove(query(".esriCTInnerRightPanel")[0], "displayNoneAll");
                     domClass.remove(query(".esriCTApplicationIcon")[0], "esriCTCursorPointer");
                 })));
+
+                on(window, "resize", lang.hitch(this, function () {
+                    if (domClass.contains(query(".esriCTInnerLeftPanelBottom")[0], "esriCTInnerLeftPanelBottomShift")) {
+                        query(".esriCTInnerLeftPanelBottom")[0].style.height = dojo.window.getBox().h + "px";
+                    }
+                    if (domClass.contains(query(".esriCTInnerLeftPanelTop")[0], "displayBlock")) {
+                        var height = window.innerHeight - (domGeom.position(query(".esriCTMenuTab")[0]).h + domGeom.position(query(".esriCTInnerLeftPanelBottom")[0]).h + domGeom.position(query(".esriCTLogo")[0]).h + 50) + "px";
+                        domStyle.set(query(".esriCTLeftPanelDesc")[0], "maxHeight", height);
+                    }
+                }));
             },
 
+            //Creates the gallery item pods
             createItemPods: function (itemResults, clearContainerFlag) {
                 if (clearContainerFlag) {
                     domConstruct.empty(this.itemPodsList);
@@ -108,6 +120,7 @@ define([
                 topic.publish("hideProgressIndicator");
             },
 
+            //Create HTML for grid layout
             _createGridItemOverview: function (itemResult, divPodParent) {
                 var divItemTitleRight = domConstruct.create('div', { "class": "esriCTDivClear" }, divPodParent);
                 var divItemTitleText = domConstruct.create('div', { "class": "esriCTListAppTitle esriCTGridTitleContent esriCTCursorPointer" }, divItemTitleRight);
@@ -127,6 +140,7 @@ define([
                 })));
             },
 
+            //Create the thumbnails displayed for gallery items
             _createThumbnails: function (itemResult, divPodParent) {
                 if (!dojo.gridView) {
                     var divThumbnail = domConstruct.create('div', { "class": "esriCTImageContainerList" }, divPodParent);
@@ -156,6 +170,7 @@ define([
                 })));
             },
 
+            //Executed when user clicks on a item thumbnail or clicks the button on the item info page. It performs a query to fetch the type of the selected item.
             _showItemOverview: function (itemId, thumbnailUrl, itemResult, flag) {
                 var tokenString;
                 var _self = this;
@@ -208,6 +223,7 @@ define([
                 topic.publish("queryItemInfo", itemUrl, defObj);
             },
 
+            //Create a tag on the thumbnail image to indicate the access type of the item
             _accessLogoType: function (itemResult, divTagContent) {
                 var title;
                 if (itemResult.access == "public") {
@@ -222,6 +238,7 @@ define([
                 }
             },
 
+            //Create HTML for list layout
             _createItemOverviewPanel: function (itemResult, divPodParent) {
                 var divContent = domConstruct.create('div', { "class": "esriCTListContent" }, divPodParent);
                 var divTitle = domConstruct.create('div', { "class": "esriCTAppListTitle" }, divContent);
@@ -236,7 +253,7 @@ define([
                 var divItemType = domConstruct.create('div', { "class": "esriCTListItemType" }, divItemInfo);
                 domAttr.set(divItemType, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.showNullValue));
 
-                var divRatings = domConstruct.create('div', { "style": "float:left" }, divItemInfo);
+                var divRatings = domConstruct.create('div', { "class": "esriCTRatingsDiv" }, divItemInfo);
                 var numberStars = Math.round(itemResult.avgRating);
                 for (var i = 0; i < 5; i++) {
                     var imgRating = document.createElement("span");
@@ -249,8 +266,8 @@ define([
                     }
                 }
 
-                var divItemWatchEye = domConstruct.create('div', { "class": "esriCTEyeNumViews", "style": "padding-top:2px" }, divItemInfo);
-                domConstruct.create('span', { "class": "esriCTEyeIcon icon-eye", "style": "padding-left:5px" }, divItemWatchEye);
+                var divItemWatchEye = domConstruct.create('div', { "class": "esriCTEyeNumViews esriCTEyeNumViewsList" }, divItemInfo);
+                domConstruct.create('span', { "class": "esriCTEyeIcon icon-eye esriCTEyeIconPadding" }, divItemWatchEye);
                 var spanItemWatchEyeText = domConstruct.create('span', { "class": "view" }, divItemWatchEye);
                 domAttr.set(spanItemWatchEyeText, "innerHTML", (itemResult.numViews) ? (number.format(parseInt(itemResult.numViews, 10))) : (nls.showNullValue));
 
@@ -273,8 +290,9 @@ define([
         });
 
         declare("itemInfoPage", null, {
+            //Create the HTML for item info page
             displayPanel: function (itemResult, _self) {
-                domClass.add(query(".esriCTApplicationIcon")[0], "esriCTCursorPointer");
+                domClass.replace(query(".esriCTApplicationIcon")[0], "esriCTCursorPointer", "esriCTCursorDefault");
                 domClass.replace(query(".esriCTMenuTabRight")[0], "displayNoneAll", "displayBlockAll");
                 domClass.replace(query(".esriCTInnerRightPanel")[0], "displayNoneAll", "displayBlockAll");
                 domClass.remove(_self.detailsLeftPanel, "displayNoneAll");
@@ -298,11 +316,11 @@ define([
                     domAttr.set(_self.numOfCommentsViews, "innerHTML", itemReviewDetails);
                 }
                 domAttr.set(_self.itemSnippet, "innerHTML", dojo.configData.AGOLItemSettings.mapSnippet ? dojo.configData.AGOLItemSettings.mapSnippet : itemResult.snippet ? itemResult.snippet : "");
-                var descHeader = domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.appDesText }, _self.detailsContent);
+                domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.appDesText }, _self.detailsContent);
                 var itemDescription = domConstruct.create('div', { "class": "esriCTText esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
                 if (dojo.configData.AGOLItemSettings.showLicenseInfo) {
                     var accessContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
-                    var accessHeader = domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.accessConstraintsText }, accessContainer);
+                    domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.accessConstraintsText }, accessContainer);
                     var accessInfo = domConstruct.create('div', { "class": "esriCTText" }, accessContainer);
                     domAttr.set(accessInfo, "innerHTML", dojo.configData.AGOLItemSettings.mapLicenseInfo ? dojo.configData.AGOLItemSettings.mapLicenseInfo : itemResult.licenseInfo ? itemResult.licenseInfo : "");
                 }
@@ -316,6 +334,7 @@ define([
                 this._createPropertiesContent(itemResult, _self.detailsContent, defObj);
 
                 if (_self._btnTryItNowHandle) {
+                    // remove the click event handler if it already exists, to prevent the binding of the event multiple times
                     _self._btnTryItNowHandle.remove();
                 }
                 _self._btnTryItNowHandle = on(_self.btnTryItNow, "click", lang.hitch(this, function () {
@@ -325,6 +344,7 @@ define([
                 }));
             },
 
+            //Extract the item info (tags, extent) and display it in the created properties container
             _createPropertiesContent: function (itemResult, detailsContent, defObj) {
                 var itemDeferred = utils.getItem(itemResult.id);
                 var _self = this;
@@ -360,6 +380,7 @@ define([
                 });
             },
 
+            //Create the item description container
             _createItemDescription: function (itemResult, _self, itemDescription) {
                 domAttr.set(itemDescription, "innerHTML", dojo.configData.AGOLItemSettings.mapItemDescription ? dojo.configData.AGOLItemSettings.mapItemDescription : itemResult.description ? itemResult.description : "");
                 domAttr.set(_self.itemCategory, "innerHTML", dojo.configData.AGOLItemSettings.mapTitle ? dojo.configData.AGOLItemSettings.mapTitle : itemResult.title ? itemResult.title : "");
@@ -389,10 +410,12 @@ define([
                 });
                 topic.publish("queryItemInfo", itemUrl, defObject);
 
+                // if showMoreInfo flag is set to true in config file and item is of type web map
                 if (dojo.configData.AGOLItemSettings.showMoreInfo && itemResult.type.toLowerCase() == "web map") {
+                    // item page link
                     var detailsContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
-                    domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": "Details" }, detailsContainer);
-                    var divDetailsContent = domConstruct.create('div', { "class": "esriCTMoreInfo esriCTDivClear", "innerHTML": "Item Details" }, detailsContainer);
+                    domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.detailsContentText }, detailsContainer);
+                    var divDetailsContent = domConstruct.create('div', { "class": "esriCTMoreInfo esriCTDivClear", "innerHTML": nls.detailsLinkText }, detailsContainer);
                     if (_self._moreInfoHandle) {
                         _self._moreInfoHandle.remove();
                     }
@@ -400,9 +423,11 @@ define([
                         window.open(dojo.configData.ApplicationSettings.portalURL + '/home/item.html?id=' + itemResult.id);
                     }));
                 }
+                // if showComments flag is set to true in config file
                 if (dojo.configData.AGOLItemSettings.showComments) {
                     this._createCommentsContainer(itemResult, _self.detailsContent);
                 }
+                // if showRatings flag is set to true in config file
                 if (dojo.configData.AGOLItemSettings.showRatings) {
                     var numberStars = Math.round(itemResult.avgRating);
                     for (var i = 0; i < 5; i++) {
@@ -420,6 +445,7 @@ define([
                 domAttr.set(_self.btnTryItNow, "selectedThumbnail", itemResult.thumbnailUrl);
             },
 
+            //Query the item to fetch comments and display the data in the comments container displayed on the item info page
             _createCommentsContainer: function (itemResult, detailsContent) {
                 var reviewContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, detailsContent);
                 domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.reviewText }, reviewContainer);
@@ -449,6 +475,7 @@ define([
                 });
             },
 
+            //Create the extent container and display the extent data
             _createItemExtentContent: function (divParent, firstKey, secondKey, firstValue, secondValue) {
                 var extentContent = domConstruct.create('div', { "class": "esriCTExtent" }, divParent);
                 var extentInnerDivFirst = domConstruct.create('div', { "class": "esriCTExtentLeft" }, extentContent);

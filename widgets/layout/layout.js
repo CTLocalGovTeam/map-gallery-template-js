@@ -44,6 +44,7 @@ define([
             nls: nls,
 
             postCreate: function () {
+                // gets executed on the click of the layout button in the header panel. It switches the layout from list view to grid view and vice versa.
                 domAttr.set(this.layoutLabel, "innerHTML", nls.layoutText);
                 if (dojo.configData.AGOLItemSettings.defaultLayout.toLowerCase() == "list") {
                     domClass.add(this.layoutTitle, "icon-grid");

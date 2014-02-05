@@ -52,24 +52,41 @@ define([
             tempGraphicsLayerId: "esriGraphicsLayerMapSettings",
 
             attachLocatorEvents: function () {
+                domStyle.set(this.hideMapText, "display", "none");
                 this.own(on(this.addressSearchIcon, "click", lang.hitch(this, function () {
-                    this._locateAddress();
+                    domStyle.set(this.hideMapText, "display", "none");
+                    if (lang.trim(this.txtAddressSearch.value) != '') {
+                        this._locateAddress();
+                    }
                 })));
                 this.own(on(this.txtAddressSearch, "keyup", lang.hitch(this, function (evt) {
+                    domStyle.set(this.hideMapText, "display", "block");
                     this._submitAddress(evt);
                 })));
                 this.own(on(this.txtAddressSearch, "dblclick", lang.hitch(this, function (evt) {
                     topic.publish("clearDefaultText", evt);
                 })));
                 this.own(on(this.txtAddressSearch, "focus", lang.hitch(this, function () {
+                    if (this.txtAddressSearch.value == '') {
+                        domStyle.set(this.hideMapText, "display", "none");
+                    } else {
+                        domStyle.set(this.hideMapText, "display", "block");
+                    }
                     domClass.add(this.txtAddressSearch, "esriCTColorChange");
+                })));
+                this.own(on(this.hideMapText, "click", lang.hitch(this, function (evt) {
+                    this.txtAddressSearch.value = '';
+                    domAttr.set(this.txtAddressSearch, "defaultAddress", this.txtAddressSearch.value);
+                    if (domGeom.position(this.autocompleteResults).h > 0) {
+                        domClass.replace(this.autocompleteResults, "displayNoneAll", "displayBlockAll");
+                    }
                 })));
             },
 
             _submitAddress: function (evt) {
                 if (evt) {
                     if (evt.keyCode == dojo.keys.ENTER) {
-                        if (this.txtAddressSearch.value != '') {
+                        if (lang.trim(this.txtAddressSearch.value) != '') {
                             this._locateAddress(evt);
                             return;
                         }
@@ -122,17 +139,17 @@ define([
                 /**
                 * call locator service specified in configuration file
                 */
-                var locatorSettings = dojo.configData.LocatorSettings.itemsLocator;
-                var locator = new Locator(locatorSettings[0].LocatorURL);
-                var searchFieldName = locatorSettings[0].LocatorParameters.SearchField;
+                var locatorSettings = dojo.configData.LocatorSettings;
+                var locator = new Locator(locatorSettings.LocatorURL);
+                var searchFieldName = locatorSettings.LocatorParameters.SearchField;
                 var addressField = {};
                 addressField[searchFieldName] = lang.trim(this.txtAddressSearch.value);
                 var baseMapExtent = this.map.getLayer(this.basemapLayer).fullExtent;
 
                 var options = {};
                 options["address"] = addressField;
-                options["outFields"] = locatorSettings[0].LocatorOutFields;
-                options[locatorSettings[0].LocatorParameters.SearchBoundaryField] = baseMapExtent;
+                options["outFields"] = locatorSettings.LocatorOutFields;
+                options[locatorSettings.LocatorParameters.SearchBoundaryField] = baseMapExtent;
                 locator.outSpatialReference = this.map.spatialReference;
 
                 /**
@@ -160,47 +177,33 @@ define([
                     domClass.replace(this.autocompleteResults, "displayBlockAll", "displayNoneAll");
                     var hasValidRecords = false;
                     var validResult = true;
-                    var locatorSettings = dojo.configData.LocatorSettings.itemsLocator;
+                    var locatorSettings = dojo.configData.LocatorSettings;
                     var searchFields = [];
-                    var addressFieldName = locatorSettings[0].AddressSearch.FilterFieldName;
-                    var addressFieldValues = locatorSettings[0].AddressSearch.FilterFieldValues;
-                    var placeFieldName = locatorSettings[0].PlaceNameSearch.FilterFieldName;
-                    var placeFieldValues = locatorSettings[0].PlaceNameSearch.FilterFieldValues;
+                    var addressFieldName = locatorSettings.FilterFieldName;
+                    var addressFieldValues = locatorSettings.FilterFieldValues;
                     for (var s in addressFieldValues) {
                         searchFields.push(addressFieldValues[s]);
-                    }
-                    if (locatorSettings[0].PlaceNameSearch.enabled) {
-                        searchFields.push(locatorSettings[0].PlaceNameSearch.LocatorFieldValue);
                     }
 
                     for (var i in candidates) {
                         /**
                         * for every result returned by locator service verify if match score is greater than minimum match score specified in configuration file
                         */
-                        if (candidates[i].attributes[locatorSettings[0].AddressMatchScore.Field] > locatorSettings[0].AddressMatchScore.Value) {
+                        if (candidates[i].attributes[locatorSettings.AddressMatchScore.Field] > locatorSettings.AddressMatchScore.Value) {
                             for (var j in searchFields) {
                                 /**
                                 * verify if FilterFieldName of results match with FilterFieldValues of locator settings specified in configuration file
                                 */
                                 if (candidates[i].attributes[addressFieldName].toUpperCase() == searchFields[j].toUpperCase()) {
-                                    if (candidates[i].attributes[addressFieldName].toUpperCase() == locatorSettings[0].PlaceNameSearch.LocatorFieldValue.toUpperCase()) {
-                                        for (var placeField in placeFieldValues) {
-                                            if (candidates[i].attributes[placeFieldName].toUpperCase() != placeFieldValues[placeField].toUpperCase()) {
-                                                validResult = false;
-                                            } else {
-                                                validResult = true;
-                                                break;
-                                            }
-                                        }
-                                    } else {
-                                        validResult = true;
-                                    }
-                                    /**
-                                    * display the result if it is valid
-                                    */
-                                    if (validResult) {
-                                        hasValidRecords = this._displayValidLocations(candidates[i]);
-                                    }
+                                    validResult = true;
+                                } else {
+                                    validResult = false;
+                                }
+                                /**
+                                * display the result if it is valid
+                                */
+                                if (validResult) {
+                                    hasValidRecords = this._displayValidLocations(candidates[i]);
                                 }
                             }
                         }
@@ -218,26 +221,25 @@ define([
             * display error message if locator service fails or does not return any results
             */
             _locatorErrBack: function () {
-                if (domClass.contains(this.autocompleteResults, "displayBlockAll") && (lang.trim(this.txtAddressSearch.value) == this.lastSearchString)) {
-                    domClass.replace(this.autocompleteResults, "displayNoneAll", "displayBlockAll");
-                } else {
+                if (domClass.contains(this.autocompleteResults, "displayNoneAll")) {
                     domClass.replace(this.autocompleteResults, "displayBlockAll", "displayNoneAll");
                 }
                 this.spanErrResults = domConstruct.create('div', { "class": "esriCTCursorDefault", "innerHTML": nls.errorMessages.invalidSearch }, this.autocompleteResults);
             },
 
+            //display a list of valid results
             _displayValidLocations: function (candidate) {
-                var locatorSettings = dojo.configData.LocatorSettings.itemsLocator;
+                var locatorSettings = dojo.configData.LocatorSettings;
                 var tdData = domConstruct.create("div", { "class": "esriCTBottomBorder esriCTCursorPointer" }, this.autocompleteResults);
                 try {
                     /**
                     * bind x, y co-ordinates and address of search result with respective row in search panel
                     */
-                    tdData.innerHTML = string.substitute(locatorSettings[0].DisplayField, candidate.attributes);
+                    tdData.innerHTML = string.substitute(locatorSettings.DisplayField, candidate.attributes);
 
                     domAttr.set(tdData, "x", candidate.location.x);
                     domAttr.set(tdData, "y", candidate.location.y);
-                    domAttr.set(tdData, "address", string.substitute(locatorSettings[0].DisplayField, candidate.attributes));
+                    domAttr.set(tdData, "address", string.substitute(locatorSettings.DisplayField, candidate.attributes));
                 } catch (err) {
                     alert(nls.errorMessages.falseConfigParams);
                 }
@@ -253,8 +255,7 @@ define([
                     domClass.replace(_this.autocompleteResults, "displayNoneAll", "displayBlockAll");
                     _this._locateAddressOnMap(_this.mapPoint);
                 };
-                var hasValidRecord = true;
-                return hasValidRecord;
+                return true;
             },
 
             /**

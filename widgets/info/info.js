@@ -38,6 +38,7 @@ define([
                 })));
             },
 
+            // Slide in and out the right panel upon clicking the info icon. Only for smart phone devices.
             _slideRightPanel: function () {
                 domClass.add(query(".esriCTInnerLeftPanelBottom")[0], "displayNone");
                 if (query(".esriCTMenuTab")[0]) {
@@ -50,6 +51,7 @@ define([
                     domClass.toggle(query(".esriCTLeftPanel")[0], "esriCTShiftLeftPanel");
                 }
                 if (query(".esriCTSearchIcon")[0]) {
+                    domClass.toggle(query(".esriCTClearInput")[0], "displayNone");
                     domClass.toggle(query(".esriCTSearchIcon")[0], "displayNone");
                     domClass.toggle(query(".esriCTSearchItemInput")[0], "displayNone");
                 }

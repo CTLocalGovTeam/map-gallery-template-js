@@ -44,6 +44,7 @@ define([
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
             nls: nls,
+            flag: false,
 
             postCreate: function () {
                 domAttr.set(this.signInLabel, "innerHTML", nls.signInText);
@@ -55,16 +56,43 @@ define([
                     }));
                 }));
                 this.own(on(this.signInContainer, "click", lang.hitch(this, function () {
-                    var defObj = new Deferred();
-                    this.portalSignIn(defObj);
-                    defObj.then(function () {
-                        if (query(".esriCTGalleryContent")[0]) {
-                            domConstruct.destroy(query(".esriCTGalleryContent")[0]);
+                    if (query(".signin")[0].innerHTML == nls.signInText) {
+                        //flag to check if the sign in button is clicked for a public or private group
+                        if (this.flag) {
+                            //executed if the group is private
+                            this.createPortal().then(lang.hitch(this, function () {
+                                this.queryGroup().then(lang.hitch(this, function () {
+                                    topic.subscribe("queryGroupItem", dojo.hitch(this._portal, this.queryGroupForItems));
+                                    topic.subscribe("queryItemInfo", dojo.hitch(this._portal, this.queryItemInfo));
+                                    var leftPanelObj = new leftPanelCollection();
+                                }));
+                            }));
+                        } else {
+                            //executed if the group is public
+                            var defObj = new Deferred();
+                            this.portalSignIn(defObj);
+                            defObj.then(function () {
+                                if (query(".esriCTGalleryContent")[0]) {
+                                    domConstruct.destroy(query(".esriCTGalleryContent")[0]);
+                                }
+                                var leftPanelObj = new leftPanelCollection();
+                            }, function (err) {
+                                alert(err.message);
+                            });
                         }
-                        var leftPanelObj = new leftPanelCollection();
-                    }, function (err) {
-                        alert(err.message);
-                    });
+                    } else {
+                        //executed on clicking of the sign out button
+                        var defObj = new Deferred();
+                        this.portalSignIn(defObj);
+                        defObj.then(function () {
+                            if (query(".esriCTGalleryContent")[0]) {
+                                domConstruct.destroy(query(".esriCTGalleryContent")[0]);
+                            }
+                            var leftPanelObj = new leftPanelCollection();
+                        }, function (err) {
+                            alert(err.message);
+                        });
+                    }
                 })));
             },
 
@@ -96,6 +124,8 @@ define([
                             alert(nls.errorMessages.emptyGroup);
                             def.resolve();
                         }
+                    } else {
+                        def.resolve();
                     }
                 });
                 return def;
@@ -147,6 +177,11 @@ define([
                                 domAttr.set(query(".esriErrorMsg")[0], "innerHTML", nls.errorMessages.emptyUsernamePassword);
                                 domStyle.set(query(".esriErrorMsg")[0], "display", "block");
                             }
+                        })));
+                    }
+                    if (query(".esriIdCancel")[0]) {
+                        _self.own(on(query(".esriIdCancel")[0], "click", lang.hitch(this, function () {
+                            _self.flag = true;
                         })));
                     }
                 }, 1000);
@@ -202,8 +237,8 @@ define([
                     params = {
                         q: queryString,
                         num: 100, //should be in number format ex: 100
-                        sortField: sortfields, //should be in string format with comma separated values ex: "created"
-                        sortOrder: sortorder //should be in string format ex: desc
+                        sortField: sortfields, //should be in string format
+                        sortOrder: sortorder //should be in string format
                     };
                 } else {
                     params = nextQuery;
@@ -256,6 +291,7 @@ define([
                         domAttr.set(query(".signin")[0], "innerHTML", nls.signInText);
                         domClass.replace(query(".esriCTSignInIcon")[0], "icon-login", "icon-logout");
                         _self.globalUser = null;
+                        // query to check if the group has any public items to be displayed on sign out
                         var queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (access: ("' + "public" + '"))';
                         topic.publish("queryGroupItems", null, queryString);
                         def.resolve();

@@ -61,7 +61,7 @@ define([
 
             postCreate: function () {
                 domClass.add(query(".esriCTGalleryContent")[0], "displayNoneAll");
-                domClass.add(query(".esriCTApplicationIcon")[0], "esriCTCursorPointer");
+                domClass.replace(query(".esriCTApplicationIcon")[0], "esriCTCursorPointer", "esriCTCursorDefault");
                 var applicationHeaderDiv = dom.byId("esriCTParentDivContainer");
                 domClass.replace(query(".esriCTMenuTabRight")[0], "displayNoneAll", "displayBlockAll");
                 this.itemIcon.src = this.data.thumbnailUrl;
@@ -72,14 +72,14 @@ define([
                 this.own(on(query(".esriCTFullScreen")[0], "click", lang.hitch(this, function () {
                     this._toggleFullScreen();
                 })));
-                domAttr.set(this.txtAddressSearch, "defaultAddress", dojo.configData.LocatorSettings.itemsLocator[0].LocatorDefaultAddress);
+                domAttr.set(this.txtAddressSearch, "defaultAddress", dojo.configData.LocatorSettings.LocatorDefaultAddress);
                 domAttr.set(this.txtAddressSearch, "value", domAttr.get(this.txtAddressSearch, "defaultAddress"));
                 this.own(on(this.divLegendLayer, "click", lang.hitch(this, function () {
-                    this._toggleLayout();
+                    this._slideLegendsPanel();
                 })));
 
                 this.own(on(this.divBackToMap, "click", lang.hitch(this, function () {
-                    this._toggleLayout();
+                    this._slideLegendsPanel();
                 })));
 
                 this.own(on(this.legendTab, "click", lang.hitch(this, function () {
@@ -111,7 +111,7 @@ define([
                         }
                     }
                 }));
-
+                // if showMapSearch flag is set to true in config file then show textbox for map search or hide the textbox
                 if (dojo.configData.AGOLItemSettings.showMapSearch) {
                     this.attachLocatorEvents();
                 } else {
@@ -119,6 +119,7 @@ define([
                 }
             },
 
+            // Add and remove classes on switching tabs in tab container
             _switchTabs: function (selectedTab, firstUnselectedTab, secondUnselectedTab, selectedContainer, firstUnselectedContainer, secondUnselectedContainer) {
                 if (!domClass.contains(selectedTab, "select")) {
                     domClass.add(selectedTab, "select");
@@ -134,7 +135,8 @@ define([
                 domClass.replace(secondUnselectedContainer, "displayNoneAll", "displayBlockAll");
             },
 
-            _toggleLayout: function () {
+            // Slides in and out the legends panel on the right upon clicking the info icon. Only for smart phone devices.
+            _slideLegendsPanel: function () {
                 if (query(".esriCTRightControlPanel")[0]) {
                     domClass.toggle(query(".esriCTBackToMapPosition")[0], "displayNoneAll");
                 }
@@ -161,7 +163,6 @@ define([
                     }
                 }
                 if (query(".esriCTLegendTab")[0]) {
-                    domClass.toggle(query(".esriCTLegendTab")[0], "esriCTLegendPanelShift");
                     domClass.toggle(query(".esriCTLegendTab")[0], "displayBlock");
                     domClass.toggle(query(".esriCTRightPanelMap")[0], "esriCTMapPanelShift");
                     if (domClass.contains(query(".esriCTMapInfoIcon")[0], "esriMapGeoInfo")) {
@@ -186,6 +187,7 @@ define([
                 }
             },
 
+            // Add full screen functionality.
             _toggleFullScreen: function () {
                 var element = document.documentElement;
                 // Supports most browsers and their versions.
@@ -204,6 +206,7 @@ define([
                 }
             },
 
+            // Identify different item types
             _createMapLayers: function (data) {
                 var mapId = data.id;
                 var _self = this;
@@ -251,6 +254,7 @@ define([
                 }
             },
 
+            // Create legend
             createLegend: function (layerObj, itemMap, legendDiv) {
                 if (domStyle.get(query(".esriMapGeoInfo")[0], "display") == "block") {
                     query(".esriCTLegendContainer")[0].style.height = dojo.window.getBox().h - (domGeom.position(query(".esriCTRightControlPanel")[0]).h + domGeom.position(query(".esriCTTabList")[0]).h + 40) + "px";
@@ -264,6 +268,7 @@ define([
                 legendDijit.startup();
             },
 
+            // Fetch data from webmap
             addWebMap: function (mapId) {
                 topic.publish("showProgressIndicator");
                 var _self = this;
@@ -297,6 +302,7 @@ define([
                 });
             },
 
+            // Create map object for items of type "feature service","map service","kml" and "wms".
             addLayerToMap: function (mapId, url, title, type, data) {
                 topic.publish("showProgressIndicator");
                 this.map = new esriMap(this.itemMap, {
@@ -305,14 +311,20 @@ define([
                     autoResize: true
                 });
                 var home = this._addHomeButton();
+                // if showBasemapGallery flag is set to true in config file
                 if (dojo.configData.AGOLItemSettings.showBasemapGallery) {
+                    //add basemap widget
                     var baseMapGalleryWidget = new baseMapGallery({
                         map: this.map
                     }, domConstruct.create("div", {}, null));
                 } else {
+                    //add basemap layer
                     var baseMapLayers = dojo.configData.BaseMapLayers;
                     var layer = new esri.layers.ArcGISTiledMapServiceLayer(baseMapLayers[0].MapURL, { id: baseMapLayers[0].Key, visible: true });
                     this.map.addLayer(layer);
+                }
+                if (dojo.configData.CustomLogoUrl && lang.trim(dojo.configData.CustomLogoUrl).length != 0) {
+                    domConstruct.create("img", { "src": dojoConfig.baseURL + dojo.configData.CustomLogoUrl, "class": "esriCTMapLogo" }, this.itemMap);
                 }
                 this.map.on("load", lang.hitch(this, function () {
                     domConstruct.place(home.domNode, query(".esriSimpleSliderIncrementButton")[0], "after");
@@ -326,6 +338,7 @@ define([
                         });
                         overviewMapDijit.startup();
                     }
+                    //add graphics layer
                     var graphicsLayer = new GraphicsLayer();
                     graphicsLayer.id = this.tempGraphicsLayerId;
                     this.map.addLayer(graphicsLayer);
@@ -352,6 +365,7 @@ define([
                 }));
             },
 
+            // Add KML layer to map
             _addKMLLayer: function (map, mapId, url, title) {
                 var kml = new esri.layers.KMLLayer(url);
                 kml.id = mapId;
@@ -366,6 +380,7 @@ define([
                 topic.publish("hideProgressIndicator");
             },
 
+            // Add WMS layer to map
             _addWMSLayer: function (map, mapId, url, title, data) {
                 var wmsLayer = new esri.layers.WMSLayer(url);
                 wmsLayer.setImageFormat("png");
@@ -393,6 +408,7 @@ define([
                 topic.publish("hideProgressIndicator");
             },
 
+            // Add Home button to the esri slider
             _addHomeButton: function () {
                 this.home = new HomeButton({
                     map: this.map
@@ -400,6 +416,7 @@ define([
                 return this.home;
             },
 
+            // Extract the feature layer url
             _addFeatureLayer: function (map, id, url, title) {
                 var _self = this;
                 var layerInfo = [];
@@ -418,6 +435,7 @@ define([
                 }
             },
 
+            // Fetch the feature layer details
             _fetchFeaturelayerDetails: function (map, id, url, layerInfo) {
                 var _self = this;
                 esriRequest({
@@ -437,6 +455,7 @@ define([
                 });
             },
 
+            // Add feature layer to map
             _addFeaturelayerToMap: function (map, id, url, title, layerInfo, layerFlag) {
                 var featureLayer = new esri.layers.FeatureLayer(url, {
                     mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
@@ -458,6 +477,7 @@ define([
                 topic.publish("hideProgressIndicator");
             },
 
+            // Add cached and dynamic map services to map
             _addCachedAndDynamicService: function (map, id, url, title) {
                 var _self = this;
                 var url1 = url + "?f=json";
@@ -495,6 +515,7 @@ define([
                 topic.publish("queryItemInfo", url1, defObj);
             },
 
+            // Store the data to be displayed in the INFO tab of the tab container
             _createLayerInfoContent: function (_self, layerInfo) {
                 var layerContainer = domConstruct.create("div", {}, _self.layerDetails);
                 for (var i = 0; i < layerInfo.length; i++) {
@@ -507,10 +528,12 @@ define([
                 }
             },
 
+            // Store the data to be displayed in the LAYER tab of the tab container
             _createItemDescriptionContent: function (data) {
                 domAttr.set(this.layerDescription, "innerHTML", (data.description) ? (data.description) : (nls.showNullValue));
             },
 
+            // Create the default extent of the map
             _setExtentForLayer: function (map, url, type) {
                 var _self = this;
                 var url1 = url + "?f=json";

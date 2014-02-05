@@ -20,31 +20,22 @@
 define([
     "dojo/_base/declare",
     "dojo/dom-construct",
-    "dojo/dom-style",
     "dojo/_base/lang",
-    "dojo/_base/array",
-    "dojo/dom-attr",
     "dojo/on",
     "dojo/dom",
-    "dojo/dom-class",
-    "dojo/dom-geometry",
-    "dojo/string",
     "dojo/_base/html",
     "dojo/text!./templates/baseMapGalleryTemplate.html",
     "dijit/_WidgetBase",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
-    "dojo/i18n!nls/localizedStrings",
-    "dojo/query",
-    "dojo/topic"
+    "dojo/query"
   ],
-function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domClass, domGeom, string, html, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, nls, query, topic) {
+function (declare, domConstruct, lang, on, dom, html, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query) {
 
     //========================================================================================================================//
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         templateString: template,
-        nls: nls,
 
         postCreate: function () {
             var baseMapUrl = 0;
@@ -66,16 +57,16 @@ function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domCla
             if (baseMapUrlCount >= 1) {
                 var layer = this.map.getLayer(baseMapLayers[baseMapUrl].Key);
                 layer.show();
-
             }
         },
 
+        //Create BaseMap layers
         _createBaseMapLayer: function (layerURL, layerId, isVisible) {
             var layer = new esri.layers.ArcGISTiledMapServiceLayer(layerURL, { id: layerId, visible: isVisible });
             return layer;
-
         },
 
+        //Create BaseMap images
         _createBaseMapElement: function (baseMapUrl, baseMapUrlCount) {
             var presentThumbNail;
             var divContainer = domConstruct.create("div", { "class": "esriCTbaseMapContainerNode" });
@@ -87,8 +78,7 @@ function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domCla
                 this._changeBaseMap(presentBaseMap);
                 if (baseMapUrlCount - 1 == presentThumbNail) {
                     presentThumbNail = baseMapUrl;
-                }
-                else {
+                } else {
                     presentThumbNail++;
                 }
                 if (baseMapUrlCount - 1 == presentBaseMap) {
@@ -96,18 +86,19 @@ function (declare, domConstruct, domStyle, lang, array, domAttr, on, dom, domCla
                 } else {
                     presentBaseMap++;
                 }
-
             }));
             divContainer.appendChild(imgThumbnail);
             return divContainer;
         },
 
+        //Changes the BaseMap and hides the previous basemap
         _changeBaseMap: function (spanControl) {
             this._hideMapLayers();
             var layer = this.map.getLayer(dojo.configData.BaseMapLayers[spanControl].Key);
             layer.show();
         },
 
+        //hides the BaseMap
         _hideMapLayers: function () {
             for (var i = 0; i < dojo.configData.BaseMapLayers.length; i++) {
                 if (dojo.configData.BaseMapLayers[i].MapURL) {

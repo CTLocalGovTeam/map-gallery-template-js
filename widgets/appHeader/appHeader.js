@@ -21,7 +21,6 @@ define([
         "dojo/_base/declare",
         "dojo/dom-construct",
         "dojo/_base/lang",
-        "dojo/_base/array",
         "dojo/dom-attr",
         "dojo/dom",
         "dojo/text!./templates/appHeaderTemplate.html",
@@ -34,7 +33,7 @@ define([
         "dojo/dom-class",
         "dojo/topic"
     ],
-    function (declare, domConstruct, lang, array, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, on, nls, domClass, topic) {
+    function (declare, domConstruct, lang, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, on, nls, domClass, topic) {
 
         //========================================================================================================================//
 
@@ -118,7 +117,7 @@ define([
                         domClass.remove(query(".esriCTGalleryContent")[0], "displayNoneAll");
                         domClass.remove(query(".esriCTApplicationIcon")[0], "esriCTCursorPointer");
                     }
-                    if (query(".esriCTDetailsLeftPanel")[0]) {
+                    if (query(".esriCTDetailsLeftPanel")[0] && (!query(".esriCTNoResults")[0])) {
                         domClass.replace(query(".esriCTMenuTabRight")[0], "displayBlockAll", "displayNoneAll");
                         domClass.add(query(".esriCTDetailsLeftPanel")[0], "displayNoneAll");
                         domClass.add(query(".esriCTDetailsRightPanel")[0], "displayNoneAll");
@@ -128,6 +127,7 @@ define([
                     }
                 })));
             },
+
             _loadIcons: function (rel, iconPath) {
                 var icon = domConstruct.create("link");
                 icon.rel = rel;

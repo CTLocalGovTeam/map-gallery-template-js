@@ -79,6 +79,7 @@ define([
                 topic.publish("queryGroupItem", dojo.queryString, sortField, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
                 defObj.then(function (data) {
                     domAttr.set(sortByLabel, "innerHTML", text);
+                    dojo.results = data.results;
                     dojo.nextQuery = data.nextQueryParams;
                     topic.publish("createPods", data.results, true);
                 }, function (err) {

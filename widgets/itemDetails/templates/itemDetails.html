@@ -41,13 +41,18 @@
         </div>
         <div class="esriCTMapInput">
             <div data-dojo-attach-point="divAddressContainer" class="esriCTSearch">
-                <div>
-                    <input data-dojo-attach-point="txtAddressSearch" class="esriCTSearchItemInput" type="text">
-                    <span data-dojo-attach-point="addressSearchIcon" class="esriCTSearchIconMap icon-search esriCTCursorPointer">
+                <div class="esriCTSearchLocatorMap">
+                    <div class="esriCTSearchLocatorInputMap">
+                        <input data-dojo-attach-point="txtAddressSearch" class="esriCTSearchItemInput" type="text" />
+                    </div>
+                </div>
+                <div class="esriCTSearchBtnMap">
+                    <span class="esriCTClearInputMap icon-cancel" title="Clear" data-dojo-attach-point="hideMapText">
+                    </span><span data-dojo-attach-point="addressSearchIcon" class="esriCTSearchIconMap icon-search esriCTCursorPointer">
                     </span>
                 </div>
-                <div class="esriCTAutoSuggest esriCTAddressSearch displayNoneAll" data-dojo-attach-point="autocompleteResults">
-                </div>
+            </div>
+            <div class="esriCTAutoSuggest esriCTAddressSearch displayNoneAll" data-dojo-attach-point="autocompleteResults">
             </div>
         </div>
         <div data-dojo-attach-point="divLegendLayer" class="esriCTMapInfoIcon esriMapGeoInfo icon-info-circled-alt">

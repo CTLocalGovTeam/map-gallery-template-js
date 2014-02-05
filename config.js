@@ -25,9 +25,14 @@ define([], function () {
         // 1.  Specify application Name                      - [ Tag(s) to look for: ApplicationName ]
         // 2.  Set path for application icon                 - [ Tag(s) to look for: ApplicationIcon ]
         // 3.  Set path for application favicon              - [ Tag(s) to look for: ApplicationFavicon ]
-        // 4.  Customize application settings here           - [ Tag(s) to look for: ApplicationSettings ]
-        // 5.  Specify header widget settings                - [ Tag(s) to look for: AppHeaderWidgets ]
-        // 6.  Customize address search settings             - [ Tag(s) to look for: LocatorSettings]
+        // 4.  Set path for custom map logo                  - [ Tag(s) to look for: CustomLogoUrl ]
+        // 5.  Set the default value to search               - [ Tag(s) to look for: ItemSearchDefaultValue ]
+        // 6.  Customize application settings here           - [ Tag(s) to look for: ApplicationSettings ]
+        // 7.  Customize AGOL settings here                  - [ Tag(s) to look for: AGOLItemSettings ]
+        // 8.  Specify header widget settings                - [ Tag(s) to look for: AppHeaderWidgets ]
+        // 9.  Specify URLs for base maps                    - [ Tag(s) to look for: BaseMapLayers ]
+        // 10.  Customize address search settings            - [ Tag(s) to look for: LocatorSettings]
+
         // ------------------------------------------------------------------------------------------------------------------------
         // GENERAL SETTINGS
         // ------------------------------------------------------------------------------------------------------------------------
@@ -39,6 +44,12 @@ define([], function () {
 
         // Set application Favicon path
         ApplicationFavicon: "/themes/images/favicon.ico",
+
+        // Set custom map logo path
+        CustomLogoUrl: "",
+
+        // Set the default value to search
+        ItemSearchDefaultValue: "Web Map",
 
         //------------------------------------------------------------------------------------------------------------------------
         // Header Widget Settings
@@ -86,24 +97,25 @@ define([], function () {
         },
 
         //  groupDescription:  Displayed on the left panel of the index page. Defaults to group description.
-        //	mapTitle: If not specified, the ArcGIS.com map's title is used.
-        //	mapSnippet: If not specified, the ArcGIS.com web map's summary is used
-        //	mapItemDescription: Displayed on item details page. Defaults to map description.
-        //	mapLicenseInfo: Displayed on item details page. Defaults to map licenseInfo.
+        //  mapTitle: If not specified, the ArcGIS.com map's title is used.
+        //  mapSnippet: If not specified, the ArcGIS.com web map's summary is used
+        //  mapItemDescription: Displayed on item details page. Defaults to map description.
+        //  mapLicenseInfo: Displayed on item details page. Defaults to map licenseInfo.
         //  defaultLayout: Default layout to use. "grid" or "list".
-        //	searchString: Performs a default search on the group with the set string.
-        //	searchType: Performs a default search on the group for the specified item type. Valid fields are valid item types, eg. web map, feature service, map service, etc.
-        //	sortField: Order to display the group items. Valid fields are:  modified, numViews.
-        //	sortOrder: Order to sort the group: "asc" or "desc".
-        //	mapViewer: URL to open the gallery items to. "simple","arcgis".
+        //  sortField: Order to display the group items. Valid fields are:  modified, numViews.
+        //  sortOrder: Order to sort the group: "asc" or "desc".
+        //  mapViewer: URL to open the gallery items to. "simple","arcgis".
+        //  searchString: Performs a default search on the group with the set string.
+        //  searchType: Performs a default search on the group for the specified item type. Valid fields are valid item types, eg. web map, feature service, map service, etc.
         //  showBasemapGallery: Show basemap gallery on map: true or false.
-        //	showOverviewMap: Show overview on map: true or false.
-        //	showMoreInfo: Show more info link on item details page: true or false.
+        //  showMapSearch: Show textbox for address search on map: true or false
+        //  showOverviewMap: Show overview on map: true or false.
+        //  showMoreInfo: Show more info link on item details page: true or false.
+        //  showRatings: Show ratings of items on item details page.
+        //  showViews: Show ratings of items on item details page.
         //  showLicenseInfo: Show Use Constraints on item details page.
-        //	showAttribution: Show sources on item details page.
-        //	showComments: Show comments on item details page.
-        //	showRatings: Show ratings of items on item details page.
-        //	showViews: Show ratings of items on item details page.
+        //  showAttribution: Show sources on item details page.
+        //  showComments: Show comments on item details page.
 
         AGOLItemSettings: {
             groupDescription: "",
@@ -131,7 +143,7 @@ define([], function () {
         //------------------------------------------------------------------------------------------------------------------------
         // Header Widget Settings
         //------------------------------------------------------------------------------------------------------------------------
-        // Set widgets settings such as widget title, widgetPath, mapInstanceRequired to be displayed in header panel
+        // Set widgets settings such as widget title, widgetPath to be displayed in header panel
         // Title: Name of the widget, will displayed as title of widget in header panel
         // WidgetPath: path of the widget respective to the widgets package.
 
@@ -181,7 +193,23 @@ define([], function () {
         // ------------------------------------------------------------------------------------------------------------------------
         // ADDRESS SEARCH SETTINGS
         // ------------------------------------------------------------------------------------------------------------------------
-        // Set locator settings such as locator symbol, size, display fields
+        // Set locator settings such as locator symbol, size, display fields, match score
+        // DefaultLocatorSymbol: Set the image path for locator symbol. e.g. pushpin.
+        // MarkupSymbolSize: Set the image dimensions in pixels for locator symbol.
+        // LocatorDefaultAddress: Set the default address to search.
+        // LocatorParameters: Required parameters to search the address candidates.
+        //   SearchField: The name of geocode service input field that accepts the search address. e.g. 'SingleLine' or 'Address'.
+        //   SearchBoundaryField: The name of geocode service input field that accepts an extent to search an input address within. e.g."searchExtent".
+        // LocatorURL: Specify URL for geocode service.
+        // LocatorOutFields: The list of outfields to be included in the result set provided by geocode service.
+        // DisplayField: Specify the outfield of geocode service. The value in this field will be displayed for search results in the application.
+        // AddressMatchScore: Required parameters to specify the accuracy of address match.
+        //   Field: Set the outfield of geocode service that contains the Address Match Score.
+        //   Value: Set the minimum score value for filtering the candidate results. The value should a number between 0-100.
+        // FilterFieldName,FilterFieldValues: Candidates based on which the address search will be performed.
+        //   FilterFieldName: Set the outfield that contains the match level for geocode request. e.g. For World GeoCode, the field that contains the match level is 'Addr_type'.
+        //   FilterFieldValues: Specify the desired match levels to filter address search results. e.g. 'StreetAddress', 'StreetName' etc.
+
         LocatorSettings: {
             DefaultLocatorSymbol: "/themes/images/redpushpin.png",
             MarkupSymbolSize: {
@@ -189,41 +217,20 @@ define([], function () {
                 height: 35
             },
             ZoomLevel: 12,
-            itemsLocator: [{
-                DisplayText: "Items Search",
-                LocatorPlaceholder: "Search",
-                LocatorDefaultAddress: "Lake Echo Rd Tracy City TN 37387",
-                LocatorParameters: {
-                    SearchField: "SingleLine",
-                    SearchBoundaryField: "searchExtent"
-                },
-                LocatorURL: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
-                LocatorOutFields: [
-                    "Addr_Type",
-                    "Type",
-                    "Score",
-                    "Match_Addr",
-                    "xmin",
-                    "xmax",
-                    "ymin",
-                    "ymax"
-                ],
-                DisplayField: "${Match_Addr}",
-                AddressMatchScore: {
-                    Field: "Score",
-                    Value: 80
-                },
-                AddressSearch: {
-                    FilterFieldName: 'Addr_Type',
-                    FilterFieldValues: ["StreetAddress", "StreetName", "PointAddress", "POI"]
-                },
-                PlaceNameSearch: {
-                    LocatorFieldValue: "POI",
-                    FilterFieldName: 'Type',
-                    FilterFieldValues: ["county"],
-                    enabled: true
-                }
-            }]
+            LocatorDefaultAddress: "Lake Echo Rd Tracy City TN 37387",
+            LocatorParameters: {
+                SearchField: "SingleLine",
+                SearchBoundaryField: "searchExtent"
+            },
+            LocatorURL: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+            LocatorOutFields: ["Addr_Type", "Type", "Score", "Match_Addr", "xmin", "xmax", "ymin", "ymax"],
+            DisplayField: "${Match_Addr}",
+            AddressMatchScore: {
+                Field: "Score",
+                Value: 80
+            },
+            FilterFieldName: 'Addr_Type',
+            FilterFieldValues: ["StreetAddress", "StreetName", "PointAddress", "POI"]
         }
     }
 });

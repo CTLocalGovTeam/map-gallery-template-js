@@ -27,14 +27,17 @@ define([
         "dijit/_WidgetsInTemplateMixin",
         "dojo/query",
         "dojo/dom-class",
-        "dojo/dom-construct"
+        "dojo/dom-construct",
+        "dojo/dom-geometry"
     ],
-    function (declare, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, domClass, domConstruct) {
+    function (declare, lang, on, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, domClass, domConstruct, domGeom) {
 
         //========================================================================================================================//
 
         return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             templateString: template,
+            flag: null,
+
             postCreate: function () {
                 this.own(on(this.settingsIcon, "click", lang.hitch(this, function () {
                     if ((query(".esriCTSortByContainer")[0].children.length <= 0) && (query(".esriCTSortByTitle")[0])) {
@@ -44,6 +47,7 @@ define([
                 })));
             },
 
+            // Slide in and out the left panel upon clicking the settings icon. Only for smart phone devices.
             _slideLeftPanel: function () {
                 query(".esriCTInnerLeftPanelBottom")[0].style.height = dojo.window.getBox().h + "px";
                 if (query(".esriCTMenuTab")[0]) {
@@ -59,9 +63,13 @@ define([
                 if (query(".esriCTSearchIcon")[0]) {
                     domClass.toggle(query(".esriCTSearchIcon")[0], "displayNone");
                     domClass.toggle(query(".esriCTSearchItemInput")[0], "displayNone");
+                    domClass.toggle(query(".esriCTClearInput")[0], "displayNone");
                 }
                 if (query(".esriCTInfoIcon")[0]) {
                     domClass.toggle(query(".esriCTInfoIcon")[0], "displayNone");
+                }
+                if (query(".esriCTSearch")[0]) {
+                    domClass.toggle(query(".esriCTSearch")[0], "displayNone");
                 }
                 if (query(".esriCTRightPanel")[0]) {
                     domClass.toggle(query(".esriCTRightPanel")[0], "esriCTShiftRight");
@@ -78,6 +86,10 @@ define([
                                 domClass.replace(query(".esriCTNoResults")[0], "displayNoneAll", "displayBlockAll");
                             }
                         }
+                        if (domClass.contains(query(".esriCTItemSearch")[0], "displayBlockAll")) {
+                            this.flag = true;
+                            domClass.replace(query(".esriCTItemSearch")[0], "displayNoneAll", "displayBlockAll");
+                        }
                     } else {
                         domClass.replace(query(".esriCTMenuTabLeft")[0], "displayBlock", "displayNone");
                         domClass.replace(query(".esriCTSignIn")[0], "displayBlock", "displayNone");
@@ -86,6 +98,10 @@ define([
                             if (domClass.contains(query(".esriCTNoResults")[0], "displayNoneAll")) {
                                 domClass.replace(query(".esriCTNoResults")[0], "displayBlockAll", "displayNoneAll");
                             }
+                        }
+                        if (this.flag) {
+                            domClass.replace(query(".esriCTItemSearch")[0], "displayBlockAll", "displayNoneAll");
+                            this.flag = false;
                         }
                     }
                 }
