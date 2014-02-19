@@ -65,6 +65,8 @@ define({
     backToMapButtonText: "carte",
     showMoreResultsGalleryText: "Afficher plus de résultats",
     geolocationBtnTitle: "Géolocalisation",
+    clearBtnTitle: "Clear",
+    addressSearchBtnTitle: "Address Search",
     fullScreenBtnTitle: "plein écran",
     noLegendText: "Pas de Légende",
     detailsContentText: "détails",

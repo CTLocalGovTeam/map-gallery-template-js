@@ -265,10 +265,14 @@ define([
             */
             _locateAddressOnMap: function (mapPoint) {
                 var geoLocationPushpin, locatorMarkupSymbol, graphic;
-                this.map.setLevel(dojo.configData.LocatorSettings.ZoomLevel);
+                this.map.setLevel(dojo.configData.ApplicationSettings.zoomLevel);
                 this.map.centerAt(mapPoint);
-                geoLocationPushpin = dojoConfig.baseURL + dojo.configData.LocatorSettings.DefaultLocatorSymbol;
-                locatorMarkupSymbol = new esri.symbol.PictureMarkerSymbol(geoLocationPushpin, "35", "35");
+                if (dojo.configData.ApplicationSettings.defaultLocatorSymbol.indexOf("http") == 0) {
+                    geoLocationPushpin = dojo.configData.ApplicationSettings.defaultLocatorSymbol;
+                } else {
+                    geoLocationPushpin = dojoConfig.baseURL + dojo.configData.ApplicationSettings.defaultLocatorSymbol;
+                }
+                locatorMarkupSymbol = new esri.symbol.PictureMarkerSymbol(geoLocationPushpin, dojo.configData.ApplicationSettings.markupSymbolWidth, dojo.configData.ApplicationSettings.markupSymbolHeight);
                 graphic = new esri.Graphic(mapPoint, locatorMarkupSymbol, {}, null);
                 this.map.getLayer("esriGraphicsLayerMapSettings").clear();
                 this.map.getLayer("esriGraphicsLayerMapSettings").add(graphic);

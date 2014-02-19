@@ -158,7 +158,7 @@ define([
                 var queryString = dojo.queryString;
                 var defObj = new Deferred();
                 dojo.queryString = this.txtItemSearch.value + ' AND group:("' + dojo.configData.ApplicationSettings.group + '")';
-                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.ApplicationSettings.sortOrder.toLowerCase(), defObj);
                 defObj.then(function (data) {
                     domConstruct.empty(_self.autoResults);
                     _self._clearFilter(false);
@@ -176,7 +176,7 @@ define([
                                 var itemId = domAttr.get(this, "searchedItem");
                                 var defObj = new Deferred();
                                 dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (id: ("' + itemId + '"))';
-                                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.ApplicationSettings.sortOrder.toLowerCase(), defObj);
                                 defObj.then(function (data) {
                                     dojo.results = data.results;
                                     topic.publish("createPods", data.results, true);
@@ -220,8 +220,8 @@ define([
                 if (query(".esriCTNoResults")[0]) {
                     domConstruct.destroy(query(".esriCTNoResults")[0]);
                 }
-                dojo.configData.AGOLItemSettings.searchString = '';
-                dojo.configData.AGOLItemSettings.searchType = '';
+                dojo.configData.ApplicationSettings.searchString = '';
+                dojo.configData.ApplicationSettings.searchType = '';
 
                 if (flag) {
                     var defObj = new Deferred();
@@ -230,7 +230,7 @@ define([
                     } else {
                         dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
                     }
-                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.ApplicationSettings.sortOrder.toLowerCase(), defObj);
                     defObj.then(function (data) {
                         if (data.total == 0) {
                             if (query(".esriCTInnerRightPanel")[0]) {
@@ -326,10 +326,10 @@ define([
                 * @private
                 * @memberOf widgets/locator/locator
                 */
-                if (dojo.configData.AGOLItemSettings.searchString) {
-                    domAttr.set(this.txtItemSearch, "defaultItem", dojo.configData.AGOLItemSettings.searchString);
+                if (dojo.configData.ApplicationSettings.searchString) {
+                    domAttr.set(this.txtItemSearch, "defaultItem", dojo.configData.ApplicationSettings.searchString);
                 } else {
-                    domAttr.set(this.txtItemSearch, "defaultItem", dojo.configData.ItemSearchDefaultValue);
+                    domAttr.set(this.txtItemSearch, "defaultItem", dojo.configData.ApplicationSettings.itemSearchDefaultValue);
                 }
             }
         });

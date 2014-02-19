@@ -39,6 +39,11 @@
                 <span class="icon-left-open-big esriCTBackBtnIcon"></span><span class="esriCTBackBtnText">
                     ${nls.backToMapButtonText}</span></div>
         </div>
+        <div class="esriCTIconContainer">
+            <div title="${nls.fullScreenBtnTitle}" class="esriCTFullScreen">
+                <span class="esriCTMapIcons icon-resize-full-alt"></span>
+            </div>
+        </div>
         <div class="esriCTMapInput">
             <div data-dojo-attach-point="divAddressContainer" class="esriCTSearch">
                 <div class="esriCTSearchLocatorMap">
@@ -47,8 +52,8 @@
                     </div>
                 </div>
                 <div class="esriCTSearchBtnMap">
-                    <span class="esriCTClearInputMap icon-cancel" title="Clear" data-dojo-attach-point="hideMapText">
-                    </span><span data-dojo-attach-point="addressSearchIcon" class="esriCTSearchIconMap icon-search esriCTCursorPointer">
+                    <span class="esriCTClearInputMap icon-cancel" title="${nls.clearBtnTitle}" data-dojo-attach-point="hideMapText">
+                    </span><span data-dojo-attach-point="addressSearchIcon" title="${nls.addressSearchBtnTitle}" class="esriCTSearchIconMap icon-search esriCTCursorPointer">
                     </span>
                 </div>
             </div>
@@ -56,9 +61,6 @@
             </div>
         </div>
         <div data-dojo-attach-point="divLegendLayer" class="esriCTMapInfoIcon esriMapGeoInfo icon-info-circled-alt">
-        </div>
-        <div title="${nls.fullScreenBtnTitle}" class="esriCTFullScreen">
-            <span class="esriCTMapIcons icon-resize-full-alt"></span>
         </div>
     </div>
 </div>

@@ -47,7 +47,7 @@ define([
             postCreate: function () {
                 domConstruct.place(this.galleryView, query(".esriCTGalleryContent")[0]);
                 this.own(topic.subscribe("createPods", lang.hitch(this, this.createItemPods)));
-                if (dojo.configData.AGOLItemSettings.defaultLayout.toLowerCase() == "list") {
+                if (dojo.configData.ApplicationSettings.defaultLayout.toLowerCase() == "list") {
                     dojo.gridView = false;
                 } else {
                     dojo.gridView = true;
@@ -59,6 +59,7 @@ define([
                 }
 
                 this.own(on(this.galleryNext, "click", lang.hitch(this, function () {
+                    topic.publish("showProgressIndicator");
                     var defObj = new Deferred();
                     var _self = this;
                     topic.publish("queryGroupItem", null, null, null, defObj, dojo.nextQuery);
@@ -69,6 +70,7 @@ define([
                         }
                         _self.createItemPods(data.results);
                     }, function (err) {
+                        topic.publish("hideProgressIndicator");
                         alert(err.message);
                     });
                 })));
@@ -189,7 +191,7 @@ define([
                             if (dojo.configData.ApplicationSettings.useItemPage && flag) {
                                 _self.showInfoPage(_self, itemResult);
                             } else {
-                                if ((dataType == "web map") && dojo.configData.AGOLItemSettings.mapViewer.toLowerCase() == "arcgis") {
+                                if ((dataType == "web map") && dojo.configData.ApplicationSettings.mapViewer.toLowerCase() == "arcgis") {
                                     window.open(dojo.configData.ApplicationSettings.portalURL + '/home/item.html?id=' + itemId, "_self");
                                 } else {
                                     var item = new ItemDetails({ data: data });
@@ -307,22 +309,22 @@ define([
                 }
 
                 domAttr.set(_self.applicationType, "innerHTML", (itemResult.type) ? (itemResult.type) : (nls.showNullValue));
-                domAttr.set(_self.appTitle, "innerHTML", dojo.configData.AGOLItemSettings.mapTitle ? dojo.configData.AGOLItemSettings.mapTitle : itemResult.title ? itemResult.title : "");
-                if (dojo.configData.AGOLItemSettings.showViews) {
+                domAttr.set(_self.appTitle, "innerHTML", dojo.configData.ApplicationSettings.mapTitle ? dojo.configData.ApplicationSettings.mapTitle : itemResult.title ? itemResult.title : "");
+                if (dojo.configData.ApplicationSettings.showViews) {
                     var numberOfComments = (itemResult.numComments) ? (itemResult.numComments) : "0";
                     var numberOfRatings = (itemResult.numRatings) ? (itemResult.numRatings) : "0";
                     var numberOfViews = (itemResult.numViews) ? (number.format(parseInt(itemResult.numViews, 10))) : "0";
                     var itemReviewDetails = "(" + numberOfComments + " " + nls.numberOfCommentsText + ", " + numberOfRatings + " " + nls.numberOfRatingsText + ", " + numberOfViews + " " + nls.numberOfViewsText + ")";
                     domAttr.set(_self.numOfCommentsViews, "innerHTML", itemReviewDetails);
                 }
-                domAttr.set(_self.itemSnippet, "innerHTML", dojo.configData.AGOLItemSettings.mapSnippet ? dojo.configData.AGOLItemSettings.mapSnippet : itemResult.snippet ? itemResult.snippet : "");
+                domAttr.set(_self.itemSnippet, "innerHTML", dojo.configData.ApplicationSettings.mapSnippet ? dojo.configData.ApplicationSettings.mapSnippet : itemResult.snippet ? itemResult.snippet : "");
                 domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.appDesText }, _self.detailsContent);
                 var itemDescription = domConstruct.create('div', { "class": "esriCTText esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
-                if (dojo.configData.AGOLItemSettings.showLicenseInfo) {
+                if (dojo.configData.ApplicationSettings.showLicenseInfo) {
                     var accessContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
                     domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.accessConstraintsText }, accessContainer);
                     var accessInfo = domConstruct.create('div', { "class": "esriCTText" }, accessContainer);
-                    domAttr.set(accessInfo, "innerHTML", dojo.configData.AGOLItemSettings.mapLicenseInfo ? dojo.configData.AGOLItemSettings.mapLicenseInfo : itemResult.licenseInfo ? itemResult.licenseInfo : "");
+                    domAttr.set(accessInfo, "innerHTML", dojo.configData.ApplicationSettings.mapLicenseInfo ? dojo.configData.ApplicationSettings.mapLicenseInfo : itemResult.licenseInfo ? itemResult.licenseInfo : "");
                 }
                 domAttr.set(_self.btnTryItNow, "innerHTML", "");
                 var defObj = new Deferred();
@@ -382,8 +384,8 @@ define([
 
             //Create the item description container
             _createItemDescription: function (itemResult, _self, itemDescription) {
-                domAttr.set(itemDescription, "innerHTML", dojo.configData.AGOLItemSettings.mapItemDescription ? dojo.configData.AGOLItemSettings.mapItemDescription : itemResult.description ? itemResult.description : "");
-                domAttr.set(_self.itemCategory, "innerHTML", dojo.configData.AGOLItemSettings.mapTitle ? dojo.configData.AGOLItemSettings.mapTitle : itemResult.title ? itemResult.title : "");
+                domAttr.set(itemDescription, "innerHTML", dojo.configData.ApplicationSettings.mapItemDescription ? dojo.configData.ApplicationSettings.mapItemDescription : itemResult.description ? itemResult.description : "");
+                domAttr.set(_self.itemCategory, "innerHTML", dojo.configData.ApplicationSettings.mapTitle ? dojo.configData.ApplicationSettings.mapTitle : itemResult.title ? itemResult.title : "");
                 domAttr.set(_self.itemSubmittedBy, "innerHTML", (itemResult.owner) ? (itemResult.owner) : (nls.showNullValue));
                 var tokenString;
                 if (dojo.configData.ApplicationSettings.token) {
@@ -411,7 +413,7 @@ define([
                 topic.publish("queryItemInfo", itemUrl, defObject);
 
                 // if showMoreInfo flag is set to true in config file and item is of type web map
-                if (dojo.configData.AGOLItemSettings.showMoreInfo && itemResult.type.toLowerCase() == "web map") {
+                if (dojo.configData.ApplicationSettings.showMoreInfo && itemResult.type.toLowerCase() == "web map") {
                     // item page link
                     var detailsContainer = domConstruct.create('div', { "class": "esriCTReviewContainer esriCTBottomBorder" }, _self.detailsContent);
                     domConstruct.create('div', { "class": "esriCTReviewHeader", "innerHTML": nls.detailsContentText }, detailsContainer);
@@ -424,11 +426,11 @@ define([
                     }));
                 }
                 // if showComments flag is set to true in config file
-                if (dojo.configData.AGOLItemSettings.showComments) {
+                if (dojo.configData.ApplicationSettings.showComments) {
                     this._createCommentsContainer(itemResult, _self.detailsContent);
                 }
                 // if showRatings flag is set to true in config file
-                if (dojo.configData.AGOLItemSettings.showRatings) {
+                if (dojo.configData.ApplicationSettings.showRatings) {
                     var numberStars = Math.round(itemResult.avgRating);
                     for (var i = 0; i < 5; i++) {
                         var imgRating = document.createElement("span");

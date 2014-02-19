@@ -32,6 +32,7 @@ define([
         "dojo/i18n!nls/localizedStrings",
         "dojo/dom-class",
         "dojo/topic"
+
     ],
     function (declare, domConstruct, lang, domAttr, dom, template, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, on, nls, domClass, topic) {
 
@@ -44,7 +45,7 @@ define([
             /**
             * create header panel
             *
-            * @param {string} dojo.configData.ApplicationName Application name specified in configuration file
+            * @param {string} dojo.configData.ApplicationSettings.applicationName Application name specified in configuration file
             *
             * @class
             * @name widgets/appHeader/appHeader
@@ -71,8 +72,8 @@ define([
                 * @private
                 * @memberOf widgets/appHeader/appHeader
                 */
-                document["title"] = dojo.configData.ApplicationName;
-                domAttr.set(this.applicationHeaderName, "innerHTML", dojo.configData.ApplicationName);
+                document["title"] = dojo.configData.ApplicationSettings.applicationName;
+                domAttr.set(this.applicationHeaderName, "innerHTML", dojo.configData.ApplicationSettings.applicationName);
             },
 
             /**
@@ -101,16 +102,20 @@ define([
             */
             _loadApplicationHeaderIcon: function () {
                 topic.publish("showProgressIndicator");
-                this._loadIcons("shortcut icon", dojo.configData.ApplicationFavicon);
-                this._loadIcons("apple-touch-icon-precomposed", dojo.configData.ApplicationIcon);
-                this._loadIcons("apple-touch-icon", dojo.configData.ApplicationIcon);
+                this._loadIcons("shortcut icon", dojo.configData.ApplicationSettings.applicationFavicon);
+                this._loadIcons("apple-touch-icon-precomposed", dojo.configData.ApplicationSettings.applicationIcon);
+                this._loadIcons("apple-touch-icon", dojo.configData.ApplicationSettings.applicationIcon);
                 /**
                 * applicationHeaderIcon contains application icon for header panel widgets
                 * @member {img} applicationHeaderIcon
                 * @private
                 * @memberOf widgets/appHeader/appHeader
                 */
-                domAttr.set(this.applicationHeaderIcon, "src", dojoConfig.baseURL + dojo.configData.ApplicationIcon);
+                if (dojo.configData.ApplicationSettings.applicationIcon.indexOf("http") == 0) {
+                    domAttr.set(this.applicationHeaderIcon, "src", dojo.configData.ApplicationSettings.applicationIcon);
+                } else {
+                    domAttr.set(this.applicationHeaderIcon, "src", dojoConfig.baseURL + dojo.configData.ApplicationSettings.applicationIcon);
+                }
                 this.own(on(this.applicationHeaderIcon, "click", lang.hitch(this, function () {
                     if (query(".esriCTitemDetails")[0]) {
                         dojo.destroy(query(".esriCTitemDetails")[0]);
@@ -132,7 +137,11 @@ define([
                 var icon = domConstruct.create("link");
                 icon.rel = rel;
                 icon.type = "image/x-icon";
-                icon.href = dojoConfig.baseURL + iconPath;
+                if (iconPath.indexOf("http") == 0) {
+                    icon.href = iconPath;
+                } else {
+                    icon.href = dojoConfig.baseURL + iconPath;
+                }
                 document.getElementsByTagName('head')[0].appendChild(icon);
             },
 

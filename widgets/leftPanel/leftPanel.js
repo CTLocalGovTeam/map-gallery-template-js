@@ -129,7 +129,7 @@ define([
                     maxTags = tagsCollection.length;
                 }
                 var maxUsedTags = this._identifyMaxUsedTags(tagsCollection, maxTags);
-                var fontSizeArray = this._generateFontSize(fontsRange.minValue, fontsRange.maxValue, maxUsedTags.length);
+                var fontSizeArray = this._generateFontSize(dojo.configData.ApplicationSettings.tagCloudFontMinValue, dojo.configData.ApplicationSettings.tagCloudFontMaxValue, maxUsedTags.length);
                 var tagCloudTags = this._mergeTags(maxUsedTags, fontSizeArray);
                 return tagCloudTags;
             },
@@ -183,7 +183,7 @@ define([
             nls: nls,
 
             postCreate: function () {
-                dojo.sortBy = dojo.configData.AGOLItemSettings.sortField;
+                dojo.sortBy = dojo.configData.ApplicationSettings.sortField;
                 if (query(".esriCTSortText")[0]) {
                     if ((dojo.sortBy == "modified") && (query(".esriCTSortText")[0].innerHTML != nls.sortByViewText)) {
                         domAttr.set(query(".esriCTSortText")[0], "innerHTML", nls.sortByViewText);
@@ -194,7 +194,7 @@ define([
                 this._setGroupContent();
                 this._expandGroupdescEvent(this.expandGroupDescription, this);
                 this._queryGroupItems();
-                domAttr.set(this.leftPanelHeader, "innerHTML", dojo.configData.ApplicationName);
+                domAttr.set(this.leftPanelHeader, "innerHTML", dojo.configData.ApplicationSettings.applicationName);
                 topic.subscribe("queryGroupItems", this._queryGroupItems);
             },
 
@@ -205,13 +205,13 @@ define([
                 var defObj = new Deferred();
                 if ((!nextQuery) && (!queryString)) {
                     dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
-                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.ApplicationSettings.sortOrder.toLowerCase(), defObj);
                 } else if (!queryString) {
                     topic.publish("queryGroupItem", null, null, null, defObj, nextQuery);
                 }
                 if (queryString) {
                     dojo.queryString = queryString;
-                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                    topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.ApplicationSettings.sortOrder.toLowerCase(), defObj);
                 }
 
                 defObj.then(function (data) {
@@ -246,12 +246,12 @@ define([
                     var uniqueTags = new collectUniqueTags();
                     var tagsObj = uniqueTags.collectTags(results, dojo.configData.ApplicationSettings.geographiesTagText, dojo.configData.ApplicationSettings.geographiesPrefixText);
                     var tagCloud = new tagCloudObj();
-                    if (!dojo.configData.ApplicationSettings.tagCloudFontRange.minValue && !dojo.configData.ApplicationSettings.tagCloudFontRange.maxValue && dojo.configData.ApplicationSettings.tagCloudFontRange.units) {
-                        dojo.configData.ApplicationSettings.tagCloudFontRange.minValue = 10;
-                        dojo.configData.ApplicationSettings.tagCloudFontRange.maxValue = 18;
-                        dojo.configData.ApplicationSettings.tagCloudFontRange.units = "px";
+                    if (!dojo.configData.ApplicationSettings.tagCloudFontMinValue && !dojo.configData.ApplicationSettings.tagCloudFontMaxValue && dojo.configData.ApplicationSettings.tagCloudFontUnits) {
+                        dojo.configData.ApplicationSettings.tagCloudFontMinValue = 10;
+                        dojo.configData.ApplicationSettings.tagCloudFontMaxValue = 18;
+                        dojo.configData.ApplicationSettings.tagCloudFontUnits = "px";
                     }
-                    if (dojo.configData.ApplicationSettings.tagCloudFontRange.minValue > dojo.configData.ApplicationSettings.tagCloudFontRange.maxValue) {
+                    if (dojo.configData.ApplicationSettings.tagCloudFontMinValue > dojo.configData.ApplicationSettings.tagCloudFontMaxValue) {
                         alert(nls.errorMessages.minfontSizeGreater);
                         return;
                     }
@@ -259,14 +259,14 @@ define([
                         domStyle.set(this.tagsCategoriesContent, "display", "block");
                         uniqueTags.setNodeValue(this.tagsCategories, nls.tagCategoriesHeaderText);
 
-                        var displayCategoryTags = tagCloud.generateTagCloud(tagsObj.groupItemsTagsdata, dojo.configData.ApplicationSettings.showMaxTopTags, dojo.configData.ApplicationSettings.tagCloudFontRange);
+                        var displayCategoryTags = tagCloud.generateTagCloud(tagsObj.groupItemsTagsdata, dojo.configData.ApplicationSettings.showMaxTopTags );
                         this.displayTagCloud(displayCategoryTags, this.tagsCategoriesCloud, this.tagsCategories.innerHTML);
                     }
                     if (dojo.configData.ApplicationSettings.showGeographiesTagCloud && dojo.configData.ApplicationSettings.geographiesTagText && tagsObj.geoTagCollection) {
                         domStyle.set(this.geographicTagsContent, "display", "block");
                         uniqueTags.setNodeValue(this.geoTagsCloudHeader, nls.geographicTagsHeaderText);
 
-                        var displaygeoTags = tagCloud.generateTagCloud(tagsObj.geoTagCollection, dojo.configData.ApplicationSettings.showMaxTopTags, dojo.configData.ApplicationSettings.tagCloudFontRange);
+                        var displaygeoTags = tagCloud.generateTagCloud(tagsObj.geoTagCollection, dojo.configData.ApplicationSettings.showMaxTopTags);
                         this.displayTagCloud(displaygeoTags, this.geoTagsCloud, this.geoTagsCloudHeader.innerHTML);
                     }
                 }
@@ -274,23 +274,23 @@ define([
                 var defObj = new Deferred();
                 var queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")';
                 //if searchString exists in the config file, perform a default serach with the specified string
-                if (dojo.configData.AGOLItemSettings.searchString) {
+                if (dojo.configData.ApplicationSettings.searchString) {
                     queryString += ' AND (';
-                    queryString += ' title:' + dojo.configData.AGOLItemSettings.searchString;
-                    queryString += ' OR tags:' + dojo.configData.AGOLItemSettings.searchString;
-                    queryString += ' OR typeKeywords:' + dojo.configData.AGOLItemSettings.searchString;
-                    queryString += ' OR snippet:' + dojo.configData.AGOLItemSettings.searchString;
+                    queryString += ' title:' + dojo.configData.ApplicationSettings.searchString;
+                    queryString += ' OR tags:' + dojo.configData.ApplicationSettings.searchString;
+                    queryString += ' OR typeKeywords:' + dojo.configData.ApplicationSettings.searchString;
+                    queryString += ' OR snippet:' + dojo.configData.ApplicationSettings.searchString;
                     queryString += ' ) ';
                 }
 
                 //if searchType exists in the config file, perform a default type search with the specified string
-                if (dojo.configData.AGOLItemSettings.searchType) {
-                    queryString += ' AND type:' + dojo.configData.AGOLItemSettings.searchType;
+                if (dojo.configData.ApplicationSettings.searchType) {
+                    queryString += ' AND type:' + dojo.configData.ApplicationSettings.searchType;
                 }
 
                 dojo.queryString = queryString;
-                dojo.sortBy = dojo.configData.AGOLItemSettings.sortField;
-                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                dojo.sortBy = dojo.configData.ApplicationSettings.sortField;
+                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.ApplicationSettings.sortOrder.toLowerCase(), defObj);
                 defObj.then(function (data) {
                     topic.publish("showProgressIndicator");
                     dojo.nextQuery = data.nextQueryParams;
@@ -309,7 +309,7 @@ define([
                 for (var i = 0; i < displayTags.length; i++) {
                     var span = domConstruct.place(domConstruct.create('h3'), node);
                     domClass.add(span, "esriCTTagCloud");
-                    domStyle.set(span, "fontSize", displayTags[i].fontSize + dojo.configData.ApplicationSettings.tagCloudFontRange.units);
+                    domStyle.set(span, "fontSize", displayTags[i].fontSize + dojo.configData.ApplicationSettings.tagCloudFontUnits);
                     if (i != (displayTags.length - 1)) {
                         domAttr.set(span, "innerHTML", displayTags[i].key + ", ");
                     } else {
@@ -366,7 +366,7 @@ define([
             _queryRelatedTags: function (tagName) {
                 var defObj = new Deferred();
                 dojo.queryString = 'group:("' + dojo.configData.ApplicationSettings.group + '")' + ' AND (tags: ("' + tagName + '"))';
-                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.AGOLItemSettings.sortOrder.toLowerCase(), defObj);
+                topic.publish("queryGroupItem", dojo.queryString, dojo.sortBy, dojo.configData.ApplicationSettings.sortOrder.toLowerCase(), defObj);
                 defObj.then(function (data) {
                     if (data.total == 0) {
                         if (query(".esriCTInnerRightPanel")[0]) {
@@ -420,8 +420,8 @@ define([
                 if (dojo.configData.groupTitle) {
                     _self.setNodeText(_self.groupName, dojo.configData.groupTitle);
                 }
-                if (dojo.configData.AGOLItemSettings.groupDescription) {
-                    _self.setNodeText(_self.groupDesc, dojo.configData.AGOLItemSettings.groupDescription);
+                if (dojo.configData.ApplicationSettings.groupDescription) {
+                    _self.setNodeText(_self.groupDesc, dojo.configData.ApplicationSettings.groupDescription);
                     if (query(_self.groupDesc).text().length > 400) {
                         domClass.add(_self.groupDesc, "esriCTLeftTextReadLess");
                         if (nls.expandGroupDescText) {
@@ -429,8 +429,8 @@ define([
                         }
                     }
                 }
-                if (dojo.configData.ApplicationName) {
-                    _self.setNodeText(_self.groupDescPanelHeader, dojo.configData.ApplicationName);
+                if (dojo.configData.ApplicationSettings.applicationName) {
+                    _self.setNodeText(_self.groupDescPanelHeader, dojo.configData.ApplicationSettings.applicationName);
                     topic.publish("setGrpContent");
                 }
             },

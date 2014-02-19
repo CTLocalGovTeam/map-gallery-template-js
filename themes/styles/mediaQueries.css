@@ -84,6 +84,7 @@
     {
         position: fixed !important;
     }
+
     .esriCTMapLogo
     {
         position: fixed !important;
@@ -361,6 +362,11 @@
     {
         width: 100%;
         float: none;
+    }
+
+    .esriCTMapInput
+    {
+        float: left;
     }
 
     .esriCTPadding
@@ -731,7 +737,7 @@
     .esriCTItemSearch
     {
         width: 100% !important;
-                position: relative;
+        position: relative;
         top: 0px;
     }
 
@@ -960,6 +966,7 @@
         background: none repeat scroll 0 0 #007AC2;
         border-bottom: 1px solid #007AC2;
     }
+
     .blueTheme .esriCTBackBtn
     {
         color: #007AC2;
@@ -1132,6 +1139,7 @@
         background: none repeat scroll 0 0 #800000;
         border-bottom: 1px solid #800000;
     }
+
     .redTheme .esriCTBackBtn
     {
         color: #800000;
@@ -1221,6 +1229,11 @@
     {
         width: 100%;
         float: none;
+    }
+
+    .esriCTMapInput
+    {
+        float: left;
     }
 
     .esriCTPadding
@@ -1386,10 +1399,12 @@
     {
         bottom: 54px !important;
     }
+
     .esriCTMapLogo
     {
         bottom: 54px;
     }
+
     .esriCTLegendTab
     {
         display: none;
@@ -1561,12 +1576,6 @@
         margin-bottom: 10px;
     }
 
-    .blueTheme .esriCTListAppContent
-    {
-        border: none;
-        padding: 0px;
-    }
-
     .esriCTImageTopPanel
     {
         background: none !important;
@@ -1586,7 +1595,7 @@
     .esriCTItemSearch
     {
         width: 98% !important;
-                position: relative;
+        position: relative;
         top: 0px;
     }
 
@@ -1597,7 +1606,6 @@
 
     .esriCTAutoSuggest
     {
-
         background: #fff;
         height: 100px;
         overflow: auto;
@@ -1768,6 +1776,12 @@
         color: #007AC2;
     }
 
+    .blueTheme .esriCTListAppContent
+    {
+        border: none;
+        padding: 0px;
+    }
+
     .blueTheme .esriCTGalleryNameCategories, .blueTheme .esriCTGalleryNameSample
     {
         color: #007AC2;
@@ -1828,10 +1842,12 @@
         background: none repeat scroll 0 0 #007AC2;
         border-bottom: 1px solid #007AC2;
     }
+
     .blueTheme .esriCTBackBtn
     {
         color: #007AC2;
     }
+
     /* End of blue theme styles */
 
     /* Green theme styles */
@@ -1916,6 +1932,7 @@
     {
         color: #028d6a;
     }
+
     /* End of green theme styles */
 
     /* Red theme styles */
@@ -2039,6 +2056,11 @@
         font-size: 20px;
     }
 
+    .esriCTMapInput
+    {
+        float: left;
+    }
+
     .esriCTMenuIcon
     {
         font-size: 16px;
@@ -2052,7 +2074,7 @@
     .esriCTItemSearch
     {
         width: 98% !important;
-                position: relative;
+        position: relative;
         top: 0px;
     }
 

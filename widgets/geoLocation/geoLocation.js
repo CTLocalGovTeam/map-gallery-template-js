@@ -49,9 +49,8 @@ function (declare, lang, domConstruct, on, _WidgetBase, GeometryService, Point, 
             * if browser is not supported, geolocation widget is not created
             */
             if (Modernizr.geolocation) {
-                this.domNode = domConstruct.create("div", { "class": "esriCTMapGeoLocation", "title": nls.geolocationBtnTitle }, null);
+                this.domNode = domConstruct.create("div", { "class": "esriCTMapGeoLocation", "title": nls.geolocationBtnTitle }, query(".esriCTIconContainer")[0]);
                 domConstruct.create("span", { "class": "icon-gps esriCTGeolocationIcon" }, this.domNode);
-                domConstruct.place(this.domNode, query(".esriMapGeoInfo")[0], "after");
                 this.own(on(this.domNode, "click", lang.hitch(this, function () {
                     this._showCurrentLocation();
                 })));
@@ -80,7 +79,7 @@ function (declare, lang, domConstruct, on, _WidgetBase, GeometryService, Point, 
 
                 /**
                 * projects the device location on the map
-                * @param {string} dojo.configData.ZoomLevel Zoom level specified in configuration file
+                * @param {string} dojo.configData.zoomLevel Zoom level specified in configuration file
                 * @param {object} mapPoint Map point of device location in spatialReference of wkid:4326
                 * @param {object} newPoint Map point of device location in spatialReference of map
                 */
@@ -93,7 +92,7 @@ function (declare, lang, domConstruct, on, _WidgetBase, GeometryService, Point, 
                         }
                     }
                     mapPoint = newPoint[0];
-                    self.map.centerAndZoom(mapPoint, dojo.configData.LocatorSettings.ZoomLevel);
+                    self.map.centerAndZoom(mapPoint, dojo.configData.ApplicationSettings.zoomLevel);
                     self._addGraphic(mapPoint);
                 }, function (error) {
                     alert(nls.errorMessages.invalidProjection);
@@ -109,9 +108,13 @@ function (declare, lang, domConstruct, on, _WidgetBase, GeometryService, Point, 
         * @memberOf widgets/geoLocation/geoLocation
         */
         _addGraphic: function (mapPoint) {
-            var geoLocationPushpin = dojoConfig.baseURL + dojo.configData.LocatorSettings.DefaultLocatorSymbol,
-            locatorMarkupSymbol = new PictureMarkerSymbol(geoLocationPushpin, "35", "35"),
-            graphic = new Graphic(mapPoint, locatorMarkupSymbol, null, null);
+            if (dojo.configData.ApplicationSettings.defaultLocatorSymbol.indexOf("http") == 0) {
+                var geoLocationPushpin = dojo.configData.ApplicationSettings.defaultLocatorSymbol;
+            } else {
+                var geoLocationPushpin = dojoConfig.baseURL + dojo.configData.ApplicationSettings.defaultLocatorSymbol;
+            }
+            var locatorMarkupSymbol = new PictureMarkerSymbol(geoLocationPushpin, dojo.configData.ApplicationSettings.markupSymbolWidth, dojo.configData.ApplicationSettings.markupSymbolHeight);
+            var graphic = new Graphic(mapPoint, locatorMarkupSymbol, null, null);
             this.map.getLayer("esriGraphicsLayerMapSettings").clear();
             this.map.getLayer("esriGraphicsLayerMapSettings").add(graphic);
         }

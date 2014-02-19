@@ -22,51 +22,32 @@ define([], function () {
         //
         // Use this file to perform the following:
         //
-        // 1.  Specify application Name                      - [ Tag(s) to look for: ApplicationName ]
-        // 2.  Set path for application icon                 - [ Tag(s) to look for: ApplicationIcon ]
-        // 3.  Set path for application favicon              - [ Tag(s) to look for: ApplicationFavicon ]
-        // 4.  Set path for custom map logo                  - [ Tag(s) to look for: CustomLogoUrl ]
-        // 5.  Set the default value to search               - [ Tag(s) to look for: ItemSearchDefaultValue ]
-        // 6.  Customize application settings here           - [ Tag(s) to look for: ApplicationSettings ]
-        // 7.  Customize AGOL settings here                  - [ Tag(s) to look for: AGOLItemSettings ]
-        // 8.  Specify header widget settings                - [ Tag(s) to look for: AppHeaderWidgets ]
-        // 9.  Specify URLs for base maps                    - [ Tag(s) to look for: BaseMapLayers ]
-        // 10.  Customize address search settings            - [ Tag(s) to look for: LocatorSettings]
-
-        // ------------------------------------------------------------------------------------------------------------------------
-        // GENERAL SETTINGS
-        // ------------------------------------------------------------------------------------------------------------------------
-        // Set application title
-        ApplicationName: "Map Gallery",
-
-        // Set application icon path
-        ApplicationIcon: "/themes/images/logo.png",
-
-        // Set application Favicon path
-        ApplicationFavicon: "/themes/images/favicon.ico",
-
-        // Set custom map logo path
-        CustomLogoUrl: "",
-
-        // Set the default value to search
-        ItemSearchDefaultValue: "Web Map",
+        // 1.  Customize application settings here           - [ Tag(s) to look for: ApplicationSettings ]
+        // 2.  Specify header widget settings                - [ Tag(s) to look for: AppHeaderWidgets ]
+        // 3.  Specify URLs for base maps                    - [ Tag(s) to look for: BaseMapLayers ]
+        // 4.  Customize address search settings             - [ Tag(s) to look for: LocatorSettings]
 
         //------------------------------------------------------------------------------------------------------------------------
-        // Header Widget Settings
+        // GENERAL SETTINGS
         //------------------------------------------------------------------------------------------------------------------------
         // group: Set the Group id for the application
+        // appid: ID of application on ArcGIS.com containing your settings for this template
+        // applicationName: Set application title
+        // applicationIcon: Set application icon path
+        // applicationFavicon: Set application Favicon path
+        // customLogoUrl: Set custom map logo path
+        // itemSearchDefaultValue: Set the default value to search
         // theme: Set the application theme. If blank, default blue theme will be loaded. Supported theme keys are blueTheme, greenTheme and redTheme.
         // showCategoriesTagCloud: Set this variable to enable or disable categories tag cloud
         // showGeographiesTagCloud: Set this variable to enable or disable geographies tag cloud
-        // geographiesTagText: Set this variable to search text for search in tags in geographies tag cloud. If set to blank,
-        //                     geographies tag cloud will not be displayed irrespective of the value for showGeographiesTagCloud
-        // geographiesPrefixText: Set this variable to trim text from geographies tag cloud. If set to blank,
+        // geographiesTagText: This identifies the tag for geographies tag cloud. If set to blank,
+        //                     geographies tag cloud will not be displayed irrespective of the value for showGeographiesTagCloud.
+        // geographiesPrefixText: Set this variable to trim prefix text (eg. arcgis.) from geographies tag cloud. If set to blank,
         //                        geographies tag cloud will  be displayed as is. Case sensitive.
         // enableAutoComplete: Set this variable to enable or disable autocomplete on item search
-        // tagCloudFontRange:
-        //                minValue: Set min value of the tag cloud font,
-        //                maxValue: set the max value of the tag cloud font,
-        //                units: Set the units for the text in tag cloud. UI will be distorted if font sizes have inappropriate values
+        // tagCloudFontMinValue: Set min value of the tag cloud font,
+        // tagCloudFontMaxValue: set the max value of the tag cloud font,
+        // tagCloudFontUnits: Set the units for the text in tag cloud. UI will be distorted if font sizes have inappropriate values
         // showMaxTopTags: Set this variable to the maximum number of results to be displayed in geographies and categories tag clouds
         // displaySharingAttribute: If set to true, display sharing attributes ("ALL", "GRP" or "ORG").
         //                          If set to false, sharing attributes ("ALL", "GRP" or "ORG") should not be displayed in item thumbnail
@@ -75,49 +56,54 @@ define([], function () {
         //              If set to false and item is of type other than webmap then download the Item
         // portalURL: Set the portal URL
         // geometryService: Set the URL for geometry service
+        // groupDescription:  Displayed on the left panel of the index page. Defaults to group description.
+        // mapTitle: If not specified, the ArcGIS.com map's title is used.
+        // mapSnippet: If not specified, the ArcGIS.com web map's summary is used
+        // mapItemDescription: Displayed on item details page. Defaults to map description.
+        // mapLicenseInfo: Displayed on item details page. Defaults to map licenseInfo.
+        // defaultLayout: Default layout to use. "grid" or "list".
+        // sortField: Order to display the group items. Valid fields are:  modified, numViews.
+        // sortOrder: Order to sort the group: "asc" or "desc".
+        // mapViewer: URL to open the gallery items to. "simple","arcgis".
+        // searchString: Performs a default search on the group with the set string.
+        // searchType: Performs a default search on the group for the specified item type. Valid fields are valid item types, eg. web map, feature service, map service, etc.
+        // showBasemapGallery: Show basemap gallery on map: true or false.
+        // showMapSearch: Show textbox for address search on map: true or false
+        // showOverviewMap: Show overview on map: true or false.
+        // showMoreInfo: Show more info link on item details page: true or false.
+        // showRatings: Show ratings of items on item details page.
+        // showViews: Show ratings of items on item details page.
+        // showLicenseInfo: Show Use Constraints on item details page.
+        // showAttribution: Show sources on item details page.
+        // showComments: Show comments on item details page.
+        // defaultLocatorSymbol: Set the image path for locator symbol. e.g. pushpin.
+        // markupSymbolWidth: Set the image width in pixels for locator symbol.
+        // markupSymbolHeight: Set the image height in pixels for locator symbol.
+        // zoomLevel: Following zoom level will be set for the map upon searching an address
+        // locatorDefaultAddress: Set the default address to search.
 
         ApplicationSettings: {
             group: "801cffe54b004008a8c316469c1e8326",
+            appid: "",
+            applicationName: "Map Gallery",
+            applicationIcon: "/themes/images/logo.png",
+            applicationFavicon: "/themes/images/favicon.ico",
+            customLogoUrl: "",
+            itemSearchDefaultValue: "Web Map",
             theme: "",
             showCategoriesTagCloud: true,
             showGeographiesTagCloud: true,
             geographiesTagText: "arcgis.",
-            geographiesPrefixText: "arcgis.",
+            geographiesPrefixText: "",
             enableAutoComplete: true,
-            tagCloudFontRange: {
-                minValue: 15,
-                maxValue: 20,
-                units: "px"
-            },
+            tagCloudFontMinValue: 15,
+            tagCloudFontMaxValue: 20,
+            tagCloudFontUnits: "px",
             showMaxTopTags: 10,
             displaySharingAttribute: false,
             useItemPage: false,
             portalURL: "http://www.arcgis.com",
-            geometryService: "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"
-        },
-
-        //  groupDescription:  Displayed on the left panel of the index page. Defaults to group description.
-        //  mapTitle: If not specified, the ArcGIS.com map's title is used.
-        //  mapSnippet: If not specified, the ArcGIS.com web map's summary is used
-        //  mapItemDescription: Displayed on item details page. Defaults to map description.
-        //  mapLicenseInfo: Displayed on item details page. Defaults to map licenseInfo.
-        //  defaultLayout: Default layout to use. "grid" or "list".
-        //  sortField: Order to display the group items. Valid fields are:  modified, numViews.
-        //  sortOrder: Order to sort the group: "asc" or "desc".
-        //  mapViewer: URL to open the gallery items to. "simple","arcgis".
-        //  searchString: Performs a default search on the group with the set string.
-        //  searchType: Performs a default search on the group for the specified item type. Valid fields are valid item types, eg. web map, feature service, map service, etc.
-        //  showBasemapGallery: Show basemap gallery on map: true or false.
-        //  showMapSearch: Show textbox for address search on map: true or false
-        //  showOverviewMap: Show overview on map: true or false.
-        //  showMoreInfo: Show more info link on item details page: true or false.
-        //  showRatings: Show ratings of items on item details page.
-        //  showViews: Show ratings of items on item details page.
-        //  showLicenseInfo: Show Use Constraints on item details page.
-        //  showAttribution: Show sources on item details page.
-        //  showComments: Show comments on item details page.
-
-        AGOLItemSettings: {
+            geometryService: "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer",
             groupDescription: "",
             mapTitle: "",
             mapSnippet: "",
@@ -137,7 +123,12 @@ define([], function () {
             showViews: true,
             showLicenseInfo: true,
             showAttribution: false,
-            showComments: true
+            showComments: true,
+            defaultLocatorSymbol: "/themes/images/redpushpin.png",
+            markupSymbolWidth: 35,
+            markupSymbolHeight: 35,
+            zoomLevel: 12,
+            locatorDefaultAddress: "Lake Echo Rd Tracy City TN 37387"
         },
 
         //------------------------------------------------------------------------------------------------------------------------
@@ -193,10 +184,7 @@ define([], function () {
         // ------------------------------------------------------------------------------------------------------------------------
         // ADDRESS SEARCH SETTINGS
         // ------------------------------------------------------------------------------------------------------------------------
-        // Set locator settings such as locator symbol, size, display fields, match score
-        // DefaultLocatorSymbol: Set the image path for locator symbol. e.g. pushpin.
-        // MarkupSymbolSize: Set the image dimensions in pixels for locator symbol.
-        // LocatorDefaultAddress: Set the default address to search.
+        // Set locator settings such as locator display fields, match score
         // LocatorParameters: Required parameters to search the address candidates.
         //   SearchField: The name of geocode service input field that accepts the search address. e.g. 'SingleLine' or 'Address'.
         //   SearchBoundaryField: The name of geocode service input field that accepts an extent to search an input address within. e.g."searchExtent".
@@ -211,13 +199,6 @@ define([], function () {
         //   FilterFieldValues: Specify the desired match levels to filter address search results. e.g. 'StreetAddress', 'StreetName' etc.
 
         LocatorSettings: {
-            DefaultLocatorSymbol: "/themes/images/redpushpin.png",
-            MarkupSymbolSize: {
-                width: 35,
-                height: 35
-            },
-            ZoomLevel: 12,
-            LocatorDefaultAddress: "Lake Echo Rd Tracy City TN 37387",
             LocatorParameters: {
                 SearchField: "SingleLine",
                 SearchBoundaryField: "searchExtent"

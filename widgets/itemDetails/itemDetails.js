@@ -66,13 +66,13 @@ define([
                 domClass.replace(query(".esriCTMenuTabRight")[0], "displayNoneAll", "displayBlockAll");
                 this.itemIcon.src = this.data.thumbnailUrl;
                 domConstruct.place(this.itemDetailsLeftPanel, applicationHeaderDiv);
-                domAttr.set(this.itemTitle, "innerHTML", dojo.configData.AGOLItemSettings.mapTitle ? dojo.configData.AGOLItemSettings.mapTitle : this.data.title ? this.data.title : "");
+                domAttr.set(this.itemTitle, "innerHTML", dojo.configData.ApplicationSettings.mapTitle ? dojo.configData.ApplicationSettings.mapTitle : this.data.title ? this.data.title : "");
                 this._createMapLayers(this.data);
 
                 this.own(on(query(".esriCTFullScreen")[0], "click", lang.hitch(this, function () {
                     this._toggleFullScreen();
                 })));
-                domAttr.set(this.txtAddressSearch, "defaultAddress", dojo.configData.LocatorSettings.LocatorDefaultAddress);
+                domAttr.set(this.txtAddressSearch, "defaultAddress", dojo.configData.ApplicationSettings.locatorDefaultAddress);
                 domAttr.set(this.txtAddressSearch, "value", domAttr.get(this.txtAddressSearch, "defaultAddress"));
                 this.own(on(this.divLegendLayer, "click", lang.hitch(this, function () {
                     this._slideLegendsPanel();
@@ -112,7 +112,7 @@ define([
                     }
                 }));
                 // if showMapSearch flag is set to true in config file then show textbox for map search or hide the textbox
-                if (dojo.configData.AGOLItemSettings.showMapSearch) {
+                if (dojo.configData.ApplicationSettings.showMapSearch) {
                     this.attachLocatorEvents();
                 } else {
                     domStyle.set(query(".esriCTMapInput")[0], "display", "none");
@@ -274,7 +274,7 @@ define([
                 var _self = this;
                 utils.createMap(mapId, this.itemMap, {
                     mapOptions: {
-                        showAttribution: dojo.configData.AGOLItemSettings.showAttribution,
+                        showAttribution: dojo.configData.ApplicationSettings.showAttribution,
                         slider: true
                     }
                 }).then(function (response) {
@@ -289,12 +289,20 @@ define([
                     var home = _self._addHomeButton();
                     domConstruct.place(home.domNode, query(".esriSimpleSliderIncrementButton")[0], "after");
                     home.startup();
-
+                    if (dojo.configData.ApplicationSettings.showOverviewMap) {
+                        //add overview map
+                        _self._addOverviewMap(_self.map);
+                    }
                     var geoLocationWidget = new geoLocation({
                         map: response.map,
                         basemap: response.itemInfo.itemData.baseMap.baseMapLayers[0].id,
                         graphicsLayer: graphicsLayer
                     });
+                    if (response.errors.length > 0) {
+                        for (var i = 0; i < response.errors.length; i++) {
+                            alert(response.errors[i].message);
+                        }
+                    }
                     topic.publish("hideProgressIndicator");
                 }, function (err) {
                     alert(err.message);
@@ -307,12 +315,12 @@ define([
                 topic.publish("showProgressIndicator");
                 this.map = new esriMap(this.itemMap, {
                     zoom: 2,
-                    showAttribution: dojo.configData.AGOLItemSettings.showAttribution,
+                    showAttribution: dojo.configData.ApplicationSettings.showAttribution,
                     autoResize: true
                 });
                 var home = this._addHomeButton();
                 // if showBasemapGallery flag is set to true in config file
-                if (dojo.configData.AGOLItemSettings.showBasemapGallery) {
+                if (dojo.configData.ApplicationSettings.showBasemapGallery) {
                     //add basemap widget
                     var baseMapGalleryWidget = new baseMapGallery({
                         map: this.map
@@ -323,20 +331,15 @@ define([
                     var layer = new esri.layers.ArcGISTiledMapServiceLayer(baseMapLayers[0].MapURL, { id: baseMapLayers[0].Key, visible: true });
                     this.map.addLayer(layer);
                 }
-                if (dojo.configData.CustomLogoUrl && lang.trim(dojo.configData.CustomLogoUrl).length != 0) {
-                    domConstruct.create("img", { "src": dojoConfig.baseURL + dojo.configData.CustomLogoUrl, "class": "esriCTMapLogo" }, this.itemMap);
+                if (dojo.configData.ApplicationSettings.customLogoUrl && lang.trim(dojo.configData.ApplicationSettings.customLogoUrl).length != 0) {
+                    domConstruct.create("img", { "src": dojoConfig.baseURL + dojo.configData.ApplicationSettings.customLogoUrl, "class": "esriCTMapLogo" }, this.itemMap);
                 }
                 this.map.on("load", lang.hitch(this, function () {
                     domConstruct.place(home.domNode, query(".esriSimpleSliderIncrementButton")[0], "after");
                     home.startup();
-                    if (dojo.configData.AGOLItemSettings.showOverviewMap) {
+                    if (dojo.configData.ApplicationSettings.showOverviewMap) {
                         //add overview map
-                        var overviewMapDijit = new OverviewMap({
-                            map: this.map,
-                            attachTo: "bottom-left",
-                            visible: true
-                        });
-                        overviewMapDijit.startup();
+                        this._addOverviewMap(this.map);
                     }
                     //add graphics layer
                     var graphicsLayer = new GraphicsLayer();
@@ -363,6 +366,16 @@ define([
                         this._addWMSLayer(this.map, mapId, url, title, data);
                     }
                 }));
+            },
+
+            // Add overview map
+            _addOverviewMap: function(map) {
+                var overviewMapDijit = new OverviewMap({
+                    map: map,
+                    attachTo: "bottom-left",
+                    visible: true
+                });
+                overviewMapDijit.startup();
             },
 
             // Add KML layer to map

@@ -17,8 +17,8 @@
 */
 define({
     root: {
-        tagCategoriesHeaderText: "Categories",
-        geographicTagsHeaderText: "Geographies",
+        tagCategoriesHeaderText: "Category",
+        geographicTagsHeaderText: "Geography",
         expandGroupDescText: "More",
         shrinkGroupDescText: "Less",
         layoutText: "Layout",
@@ -66,6 +66,8 @@ define({
         backToMapButtonText: "Map",
         showMoreResultsGalleryText: "Show more results",
         geolocationBtnTitle: "Geolocation",
+        clearBtnTitle: "Clear",
+        addressSearchBtnTitle: "Address Search",
         fullScreenBtnTitle: "Full screen",
         noLegendText: "No Legend",
         detailsContentText: "Details",
